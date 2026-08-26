@@ -35,8 +35,8 @@ export async function checkAvailability(tenantId: string, date: string, timeSlot
       .from('bookings')
       .select('*')
       .eq('tenant_id', tenantId)
-      .eq('date', date)
-      .eq('time_slot', timeSlot)
+      .eq('booking_date', date)
+      .eq('booking_time', timeSlot)
       .neq('status', 'cancelled')
       .maybeSingle();
 
@@ -64,13 +64,13 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       .from('bookings')
       .insert({
         tenant_id: bookingData.tenantId,
-        date: bookingData.date,
-        time_slot: bookingData.timeSlot,
+        booking_date: bookingData.date,
+        booking_time: bookingData.timeSlot,
         customer_name: bookingData.customerName,
         customer_email: bookingData.customerEmail,
         customer_phone: bookingData.customerPhone ?? null,
         service_type: bookingData.serviceType,
-        estimated_price: bookingData.estimatedPrice,
+        price: bookingData.estimatedPrice,
         status: 'pending',
         created_at: new Date().toISOString(),
       })
@@ -82,7 +82,23 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       return { success: false, error: error.message };
     }
 
-    return { success: true, booking: data as Booking };
+    // Map DB row -> app-shaped Booking so the UI contract stays stable.
+    const row = data as Record<string, unknown>;
+    const booking: Booking = {
+      id: String(row.id),
+      tenantId: String(row.tenant_id),
+      date: String(row.booking_date),
+      timeSlot: String(row.booking_time),
+      customerName: String(row.customer_name),
+      customerEmail: String(row.customer_email),
+      customerPhone: row.customer_phone ? String(row.customer_phone) : undefined,
+      serviceType: String(row.service_type),
+      estimatedPrice: Number(row.price),
+      status: (row.status as Booking['status']) ?? 'pending',
+      createdAt: String(row.created_at),
+    };
+
+    return { success: true, booking };
   } catch (error) {
     console.error('Supabase Error:', error);
     return { success: false, error: 'Failed to create booking' };
