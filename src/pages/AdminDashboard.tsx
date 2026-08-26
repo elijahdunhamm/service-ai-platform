@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchBookings, updateBookingStatus, type Booking } from '../services/adminService';
-import { Search, TrendingUp, Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Search, TrendingUp, Clock, CheckCircle, Loader2 } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);

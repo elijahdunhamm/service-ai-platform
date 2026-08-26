@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export interface BookingData {
   tenantId: string;
@@ -6,6 +6,7 @@ export interface BookingData {
   timeSlot: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
   serviceType: string;
   estimatedPrice: number;
 }
@@ -17,6 +18,7 @@ export interface Booking {
   timeSlot: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
   serviceType: string;
   estimatedPrice: number;
   status: 'pending' | 'confirmed' | 'cancelled';
@@ -24,6 +26,10 @@ export interface Booking {
 }
 
 export async function checkAvailability(tenantId: string, date: string, timeSlot: string): Promise<boolean> {
+  if (!isSupabaseConfigured || !supabase) {
+    console.error('Supabase Error: not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). Cannot check availability.');
+    return true;
+  }
   try {
     const { data, error } = await supabase
       .from('bookings')
@@ -32,25 +38,27 @@ export async function checkAvailability(tenantId: string, date: string, timeSlot
       .eq('date', date)
       .eq('time_slot', timeSlot)
       .neq('status', 'cancelled')
-      .single();
+      .maybeSingle();
 
     if (error) {
-      // If no exact match found, treat as available
-      if (error.code === 'PGRST116') {
-        return true;
-      }
-      console.error('Error checking availability:', error);
+      console.error('Supabase Error:', error);
       return false;
     }
 
-    return !data; // Return false if booking exists, true if available
+    // No existing active booking for that slot => available
+    return !data;
   } catch (error) {
-    console.error('Error checking availability:', error);
+    console.error('Supabase Error:', error);
     return false;
   }
 }
 
 export async function createBooking(bookingData: BookingData): Promise<{ success: boolean; booking?: Booking; error?: string }> {
+  if (!isSupabaseConfigured || !supabase) {
+    console.error('Supabase Error: not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). Cannot save booking.');
+    return { success: false, error: 'Supabase is not configured. Booking was not saved.' };
+  }
+
   try {
     const { data, error } = await supabase
       .from('bookings')
@@ -60,6 +68,7 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
         time_slot: bookingData.timeSlot,
         customer_name: bookingData.customerName,
         customer_email: bookingData.customerEmail,
+        customer_phone: bookingData.customerPhone ?? null,
         service_type: bookingData.serviceType,
         estimated_price: bookingData.estimatedPrice,
         status: 'pending',
@@ -69,13 +78,13 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       .single();
 
     if (error) {
-      console.error('Error creating booking:', error);
+      console.error('Supabase Error:', error);
       return { success: false, error: error.message };
     }
 
     return { success: true, booking: data as Booking };
   } catch (error) {
-    console.error('Error creating booking:', error);
+    console.error('Supabase Error:', error);
     return { success: false, error: 'Failed to create booking' };
   }
 }
