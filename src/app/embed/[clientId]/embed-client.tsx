@@ -3,8 +3,6 @@
 // and booking modal hold local state (selected service, price, modal open,
 // booked slots), they must run in a client component — this thin wrapper is
 // the client boundary, rendered by the server page with the resolved preset.
-"use client";
-
 import { useState } from "react";
 import {
   PriceCalculator,

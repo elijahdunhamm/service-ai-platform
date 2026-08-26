@@ -1,10 +1,30 @@
-// src/App.tsx
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import CleaningLayout from "./components/CleaningLayout";
 import { cleaningPreset } from "./config/presets/cleaning";
+import { EmbedClient } from "./app/embed/[clientId]/embed-client";
+import AdminDashboard from "./pages/AdminDashboard";
+
+function EmbedWrapper() {
+  const { clientId } = useParams();
+  const config = clientId && clientId === "cleaning" ? cleaningPreset : cleaningPreset;
+  return <EmbedClient config={config} />;
+}
 
 function App() {
-  // The layout is fully config-driven. Swap `cleaningPreset` for any other
-  // registered preset (e.g. `hvacPreset`) to re-skin the entire site.
-  return <CleaningLayout config={cleaningPreset} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Main Website Route */}
+        <Route path="/" element={<CleaningLayout config={cleaningPreset} />} />
+
+        {/* Dynamic Embed Route for Clients */}
+        <Route path="/embed/:clientId" element={<EmbedWrapper />} />
+
+        {/* Admin Dashboard Route */}
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
+
 export default App;

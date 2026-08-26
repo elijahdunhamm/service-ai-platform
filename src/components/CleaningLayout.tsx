@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type { IconName, IndustryConfig } from "../config/types";
 import { defaultPreset } from "../config/presets";
+import { checkAvailability, createBooking } from "../services/bookingService";
 
 // Map icon-name strings to real lucide-react components. `types.ts` stays
 // dependency-free of the icon library; every icon referenced by a preset is
@@ -79,33 +80,71 @@ export function BookingModal({
     b.initialBookedSlots
   );
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const currentDayBookings = bookedSlots[selectedDate] || [];
 
-  const handleBooking = (e: React.FormEvent) => {
+  const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTime) return;
 
-    const newBooking: BookedInfo = {
-      id: "BOOK-" + Math.floor(1000 + Math.random() * 9000),
-      date: selectedDate,
-      time: selectedTime,
-      customerName,
-      customerEmail,
-      price: estimatedPrice,
-      serviceDetails,
-      createdAt: new Date().toISOString(),
-    };
+    setIsLoading(true);
+    setError(null);
 
-    setBookedSlots((prev) => ({
-      ...prev,
-      [selectedDate]: [...(prev[selectedDate] || []), selectedTime],
-    }));
+    try {
+      // Check availability first
+      const isAvailable = await checkAvailability(config.id, selectedDate, selectedTime);
+      
+      if (!isAvailable) {
+        setError('This time slot is already booked. Please select another time.');
+        setIsLoading(false);
+        return;
+      }
 
-    onBookingConfirmed(newBooking);
-    setIsSuccess(true);
+      // Create the booking
+      const bookingData = {
+        tenantId: config.id,
+        date: selectedDate,
+        timeSlot: selectedTime,
+        customerName,
+        customerEmail,
+        serviceType: serviceDetails.serviceType,
+        estimatedPrice,
+      };
+
+      const result = await createBooking(bookingData);
+
+      if (result.success && result.booking) {
+        const newBooking: BookedInfo = {
+          id: result.booking.id,
+          date: selectedDate,
+          time: selectedTime,
+          customerName,
+          customerEmail,
+          price: estimatedPrice,
+          serviceDetails,
+          createdAt: result.booking.createdAt,
+        };
+
+        setBookedSlots((prev) => ({
+          ...prev,
+          [selectedDate]: [...(prev[selectedDate] || []), selectedTime],
+        }));
+
+        onBookingConfirmed(newBooking);
+        setIsSuccess(true);
+      } else {
+        setError(result.error || 'Failed to create booking. Please try again.');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Booking error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const resetAndClose = () => {
@@ -254,13 +293,27 @@ export function BookingModal({
               </div>
             </div>
 
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
+                {error}
+              </div>
+            )}
             <button
               type="submit"
-              disabled={!selectedTime}
-              className={`w-full py-4 rounded-xl ${t.primaryBg} text-white font-bold text-sm shadow-md ${t.primaryBgHover} disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
+              disabled={!selectedTime || isLoading}
+              className={`w-full py-4 rounded-xl ${t.primaryBg} text-white font-bold text-sm shadow-md ${t.primaryBgHover} disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2`}
             >
-              {b.copy.confirmButton} ({config.estimator.currency}
-              {estimatedPrice})
+              {isLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  {b.copy.confirmButton} ({config.estimator.currency}
+                  {estimatedPrice})
+                </>
+              )}
             </button>
           </form>
         )}
