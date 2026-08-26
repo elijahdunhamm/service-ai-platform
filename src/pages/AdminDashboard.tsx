@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     total: bookings.length,
     pending: bookings.filter(b => b.status === 'pending').length,
     confirmed: bookings.filter(b => b.status === 'confirmed').length,
-    revenue: bookings.reduce((sum, b) => sum + b.estimated_price, 0),
+    revenue: bookings.reduce((sum, b) => sum + b.price, 0),
   };
 
   const getStatusColor = (status: Booking['status']) => {
@@ -187,11 +187,11 @@ export default function AdminDashboard() {
                         <div className="text-sm text-slate-900">{booking.service_type}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-slate-900">{booking.date}</div>
-                        <div className="text-sm text-slate-500">{booking.time_slot}</div>
+                        <div className="text-sm text-slate-900">{booking.booking_date}</div>
+                        <div className="text-sm text-slate-500">{booking.booking_time}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-slate-900">${booking.estimated_price}</div>
+                        <div className="text-sm font-medium text-slate-900">${booking.price}</div>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}>

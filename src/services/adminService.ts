@@ -3,13 +3,13 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 export interface Booking {
   id: string;
   tenant_id: string;
-  date: string;
-  time_slot: string;
+  booking_date: string;
+  booking_time: string;
   customer_name: string;
   customer_email: string;
   customer_phone?: string;
   service_type: string;
-  estimated_price: number;
+  price: number;
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   created_at: string;
 }
