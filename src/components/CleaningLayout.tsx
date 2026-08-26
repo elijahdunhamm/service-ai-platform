@@ -54,7 +54,7 @@ interface BookedInfo {
 }
 
 /* ================= AUTOMATED SCHEDULING MODAL ================= */
-function BookingModal({
+export function BookingModal({
   config,
   isOpen,
   onClose,
@@ -270,7 +270,7 @@ function BookingModal({
 }
 
 /* ================= INTERACTIVE PRICE CALCULATOR ================= */
-function PriceCalculator({
+export function PriceCalculator({
   config,
   onOpenBooking,
 }: {
