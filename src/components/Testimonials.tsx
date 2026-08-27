@@ -1,6 +1,5 @@
 import {
   Star,
-  Quote,
   Check,
 } from "lucide-react";
 import type { IndustryConfig, Testimonial } from "../config/types";
@@ -61,8 +60,7 @@ function ReviewCard({
 }) {
   const stars = item.stars ?? defaultRating;
   return (
-    <div className="relative flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg">
-      <Quote className="absolute right-5 top-5 h-7 w-7 text-royal-soft" />
+    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg">
       <div className="flex items-center justify-between">
         <Stars count={Math.min(5, Math.max(1, stars))} />
         <PlatformBadge platform={item.platform} />

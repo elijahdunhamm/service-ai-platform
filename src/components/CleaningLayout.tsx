@@ -628,12 +628,12 @@ export default function CleaningLayout({
             </span>
           </a>
 
-          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+          <nav className="hidden items-center gap-1 text-sm font-medium text-slate-600 md:flex">
             {config.navigation.links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`transition-colors ${t.primaryHoverText}`}
+                className={`rounded-full px-3.5 py-2 transition-colors ${t.primaryHoverText} hover:bg-slate-100`}
               >
                 {link.label}
               </a>
