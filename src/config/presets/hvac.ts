@@ -271,7 +271,7 @@ export const hvacPreset: IndustryConfig = {
   },
 
   storage: {
-    bucket: "client images",
+    bucket: "clientimages",
   },
 
   testimonials: {
