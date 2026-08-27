@@ -14,7 +14,11 @@ export const cleaningPreset: IndustryConfig = {
     businessName: "Pull Up & Clean",
     tagline: "Residential & Commercial",
     logo: "/images/LOGO.PNG",
-    heroImage: "/images/cleaning3.jpeg",
+    heroImage: "/images/cleanteam.jpeg",
+    // NOTE (owner action required): `public/images/cleanteam.jpeg` does NOT exist
+    // in the repo yet — the owner must drop the client's file into public/images/
+    // with exactly that name. Until then the hero falls back to heroImageFallback
+    // gracefully. Do NOT substitute a placeholder image.
     commercialImage: "/images/cleaning2.jpeg",
     residentialImage:
       "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1920&q=80",
