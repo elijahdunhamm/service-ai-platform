@@ -660,7 +660,7 @@ export default function CleaningLayout({
           <div className="flex items-center gap-3">
             <a
               href={config.brand.phoneHref}
-              className="hidden items-center gap-1.5 text-sm font-semibold text-slate-700 sm:flex"
+              className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-slate-700 sm:flex"
             >
               <Phone className={`h-4 w-4 ${t.primaryText}`} />
               {config.brand.phone}

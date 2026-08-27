@@ -58,11 +58,11 @@ export const hvacPreset: IndustryConfig = {
   navigation: {
     cta: "Book Service",
     links: [
-      { label: "Services & Residential", href: "#services" },
+      { label: "Services", href: "#services" },
       { label: "Results", href: "#results" },
-      { label: "Service Areas", href: "#service-areas" },
+      { label: "Locations", href: "#service-areas" },
       { label: "Commercial", href: "#commercial" },
-      { label: "Estimate Tool", href: "#estimate" },
+      { label: "Estimate", href: "#estimate" },
       { label: "Reviews", href: "#reviews" },
       { label: "Contact", href: "#contact" },
     ],
