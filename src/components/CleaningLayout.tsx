@@ -123,24 +123,41 @@ export function BookingModal({
     setWarning(null);
 
     try {
-      // Upload the required photo (defensively, never crashes the booking).
+      // Check availability FIRST (before uploading a photo that isn't needed
+      // for a slot already taken). verified:false means the check errored —
+      // never block on it: show a neutral notice and proceed, so valid
+      // submissions are not falsely rejected as "already booked".
+      const availability = await checkAvailability(config.id, selectedDate, selectedTime);
+
+      // Hard-block ONLY when availability is genuinely verified as unavailable.
+      if (availability.verified && !availability.available) {
+        setError('This time slot is already booked. Please select another time.');
+        setIsLoading(false);
+        return;
+      }
+
+      let warningMessage: string | null = null;
+      if (!availability.verified) {
+        warningMessage =
+          "We couldn't verify this slot's availability, but we'll attempt to save your booking.";
+      }
+
+      // Upload the photo (defensively, never crashes the booking). Failure is a
+      // non-blocking warning only — the booking proceeds without the image.
       let imageUrl: string | undefined;
       const uploadResult = await uploadBookingImage(imageFile);
       if (uploadResult.url) {
         imageUrl = uploadResult.url;
       } else {
-        setWarning(
+        const uploadWarning =
           uploadResult.error ||
-            "Your photo could not be uploaded, but your booking will still be saved."
-        );
+          "Your photo could not be uploaded, but your booking will still be saved.";
+        warningMessage = warningMessage
+          ? `${warningMessage} ${uploadWarning}`
+          : uploadWarning;
       }
-      // Check availability first
-      const isAvailable = await checkAvailability(config.id, selectedDate, selectedTime);
-      
-      if (!isAvailable) {
-        setError('This time slot is already booked. Please select another time.');
-        setIsLoading(false);
-        return;
+      if (warningMessage) {
+        setWarning(warningMessage);
       }
 
       // Create the booking

@@ -25,29 +25,48 @@ export interface Booking {
   createdAt: string;
   imageUrl?: string;
 }
-export async function checkAvailability(tenantId: string, date: string, timeSlot: string): Promise<boolean> {
+/**
+ * Discriminated availability result:
+ * - `verified: true`  => check ran cleanly; `available` is a real answer.
+ * - `verified: false` => the check could NOT be determined (query/RLS/network
+ *   error). Callers MUST NOT treat this as "booked" — they should surface a
+ *   neutral notice and proceed (attempting the save) rather than block.
+ */
+export interface AvailabilityResult {
+  verified: boolean;
+  available: boolean;
+}
+
+export async function checkAvailability(
+  tenantId: string,
+  date: string,
+  timeSlot: string
+): Promise<AvailabilityResult> {
   if (!isSupabaseConfigured || !supabase) {
     console.error('Supabase Error: not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). Cannot check availability.');
-    return true;
+    return { verified: false, available: false };
   }
   try {
+    // Use `.select('id').limit(1)` (NOT `.maybeSingle()`) so duplicate/stale
+    // rows for the same slot can never error the query. A slot with any
+    // non-cancelled row is booked; if no row is returned it is available.
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select('id')
       .eq('tenant_id', tenantId)
       .eq('booking_date', date)
       .eq('booking_time', timeSlot)
       .neq('status', 'cancelled')
-      .maybeSingle();
+      .limit(1);
     if (error) {
       console.error('Supabase Error:', error);
-      return false;
+      return { verified: false, available: false };
     }
     // No existing active booking for that slot => available
-    return !data;
+    return { verified: true, available: !data || data.length === 0 };
   } catch (error) {
     console.error('Supabase Error:', error);
-    return false;
+    return { verified: false, available: false };
   }
 }
 
