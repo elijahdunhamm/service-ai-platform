@@ -321,7 +321,7 @@ export const cleaningPreset: IndustryConfig = {
   },
 
   storage: {
-    bucket: "client images",
+    bucket: "clientimages",
   },
 
   testimonials: {
