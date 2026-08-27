@@ -18,6 +18,7 @@ export const hvacPreset: IndustryConfig = {
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImage:
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+    residentialImage: "/images/residential-bg.svg",
     heroImageFallback:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImageFallback:
@@ -56,6 +57,9 @@ export const hvacPreset: IndustryConfig = {
   navigation: {
     cta: "Book Service",
     links: [
+      { label: "Services", href: "#services" },
+      { label: "Results", href: "#results" },
+      { label: "Service Areas", href: "#service-areas" },
       { label: "Residential", href: "#residential" },
       { label: "Commercial", href: "#commercial" },
       { label: "Estimate Tool", href: "#estimate" },
@@ -120,7 +124,43 @@ export const hvacPreset: IndustryConfig = {
           "Scheduled inspections, filter programs, and priority dispatch for portfolios of any size.",
       },
     ],
+    addons: [
+      "Duct Cleaning & Sanitization",
+      "Smart Thermostat Installation",
+      "Air Purifier & Filtration Systems",
+      "Indoor Air Quality Assessment",
+      "UV Germicidal Light Systems",
+      "Maintenance Plan Membership",
+    ],
   },
+
+  beforeAfter: {
+    title: "Before & After Results",
+    description:
+      "Real transformations from our recent jobs. See the difference a Pull Up & Clean visit makes.",
+    results: [
+      {
+        beforeImage: "/images/before-after/furnace-before.svg",
+        afterImage: "/images/before-after/furnace-after.svg",
+        caption: "Furnace & duct cleaning",
+      },
+      {
+        beforeImage: "/images/before-after/kitchen-before.svg",
+        afterImage: "/images/before-after/kitchen-after.svg",
+        caption: "Clean install workspace",
+      },
+    ],
+  },
+
+  serviceAreas: [
+    "Stockton",
+    "Elk Grove",
+    "Pleasanton",
+    "Tracy",
+    "Manteca",
+    "Lathrop",
+    "Modesto",
+  ],
 
   sections: {
     residential: {
@@ -145,6 +185,20 @@ export const hvacPreset: IndustryConfig = {
     },
     reviews: {
       title: "Trusted by Local Homeowners",
+    },
+    beforeAfter: {
+      eyebrow: "See the Difference",
+      title: "Before & After Results",
+      description:
+        "Real transformations from our recent jobs. See the difference a Summit Air technician visit makes.",
+      icon: "sparkles",
+    },
+    serviceAreas: {
+      eyebrow: "Where We Work",
+      title: "Proudly Serving Your Neighborhood",
+      description:
+        "Licensed HVAC technicians serving homes and businesses across the region. If your city is listed, we've got you covered.",
+      icon: "home",
     },
   },
 
@@ -271,6 +325,8 @@ export const hvacPreset: IndustryConfig = {
     showCommercial: true,
     showEstimator: true,
     showReviews: true,
+    showBeforeAfter: true,
+    showServiceAreas: true,
     showBooking: true,
     showContact: true,
   },

@@ -72,6 +72,8 @@ export interface Brand {
   heroImage: string;
   /** Commercial section image path. */
   commercialImage: string;
+  /** Professional stock background image used behind the residential services section. */
+  residentialImage: string;
   /** Fallback image used if the hero image fails to load. */
   heroImageFallback: string;
   /** Fallback image used if the commercial image fails to load. */
@@ -117,6 +119,21 @@ export interface ResidentialService {
 export interface CommercialService {
   title: string;
   description: string;
+}
+
+/** One before/after image pair shown as a "results" card. */
+export interface BeforeAfterResult {
+  beforeImage: string;
+  afterImage: string;
+  /** Optional short caption describing the transformation. */
+  caption?: string;
+}
+
+/** Config for the "Before & After Results" section. */
+export interface BeforeAfterConfig {
+  title: string;
+  description?: string;
+  results: BeforeAfterResult[];
 }
 
 export interface Testimonial {
@@ -226,6 +243,8 @@ export interface SectionCopy {
   commercial: SectionHeading;
   estimator: SectionHeading;
   reviews: SectionHeading;
+  beforeAfter: SectionHeading;
+  serviceAreas: SectionHeading;
 }
 
 /** Boolean feature flags controlling which sections render. */
@@ -234,6 +253,10 @@ export interface FeatureFlags {
   showCommercial: boolean;
   showEstimator: boolean;
   showReviews: boolean;
+  /** Enables the Before & After results section. */
+  showBeforeAfter: boolean;
+  /** Enables the "Where We Work" service-area section. */
+  showServiceAreas: boolean;
   /** Enables the booking modal + header booking CTA. */
   showBooking: boolean;
   /** Enables the contact/footer contact block. */
@@ -272,7 +295,12 @@ export interface IndustryConfig {
   services: {
     residential: ResidentialService[];
     commercial: CommercialService[];
+    /** Compact add-on offerings listed alongside the service catalog. */
+    addons: string[];
   };
+  beforeAfter: BeforeAfterConfig;
+  /** Service area / location names served by this tenant (rendered as bullets). */
+  serviceAreas: string[];
   sections: SectionCopy;
   estimator: EstimatorConfig;
   booking: BookingConfig;
