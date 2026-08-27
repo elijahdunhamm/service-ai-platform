@@ -18,7 +18,8 @@ export const hvacPreset: IndustryConfig = {
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImage:
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
-    residentialImage: "/images/residential-bg.svg",
+    residentialImage:
+      "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1920&q=80",
     heroImageFallback:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImageFallback:
@@ -57,10 +58,9 @@ export const hvacPreset: IndustryConfig = {
   navigation: {
     cta: "Book Service",
     links: [
-      { label: "Services", href: "#services" },
+      { label: "Services & Residential", href: "#services" },
       { label: "Results", href: "#results" },
       { label: "Service Areas", href: "#service-areas" },
-      { label: "Residential", href: "#residential" },
       { label: "Commercial", href: "#commercial" },
       { label: "Estimate Tool", href: "#estimate" },
       { label: "Reviews", href: "#reviews" },
@@ -124,6 +124,7 @@ export const hvacPreset: IndustryConfig = {
           "Scheduled inspections, filter programs, and priority dispatch for portfolios of any size.",
       },
     ],
+    addonsTitle: "Add-ons",
     addons: [
       "Duct Cleaning & Sanitization",
       "Smart Thermostat Installation",
@@ -138,6 +139,8 @@ export const hvacPreset: IndustryConfig = {
     title: "Before & After Results",
     description:
       "Real transformations from our recent jobs. See the difference a Pull Up & Clean visit makes.",
+    beforeLabel: "Before",
+    afterLabel: "After",
     results: [
       {
         beforeImage: "/images/before-after/furnace-before.svg",

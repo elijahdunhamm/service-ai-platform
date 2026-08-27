@@ -756,7 +756,7 @@ export default function CleaningLayout({
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-white/75" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/70 to-white/85" />
           <div id="residential" className="relative mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2
@@ -772,75 +772,79 @@ export default function CleaningLayout({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {config.services.residential.map((service, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
-                >
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+              <div className="grid gap-8 sm:grid-cols-2">
+                {config.services.residential.map((service, idx) => (
                   <div
-                    className={`h-12 w-12 rounded-xl ${t.primaryLightBg} flex items-center justify-center ${t.primaryText} mb-6`}
+                    key={idx}
+                    className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <ResIcon className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">
-                    {service.title}
-                  </h3>
-                  {service.price && (
-                    <p className="mb-2 flex items-baseline gap-1.5">
-                      <span className={`text-2xl font-extrabold ${t.primaryText}`}>
-                        {service.price}
-                      </span>
-                      {service.priceSuffix && (
-                        <span className="text-xs font-medium text-slate-500">
-                          {service.priceSuffix}
+                    <div
+                      className={`h-12 w-12 rounded-xl ${t.primaryLightBg} flex items-center justify-center ${t.primaryText} mb-6`}
+                    >
+                      <ResIcon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">
+                      {service.title}
+                    </h3>
+                    {service.price && (
+                      <p className="mb-2 flex items-baseline gap-1.5">
+                        <span
+                          className={`text-2xl font-extrabold ${t.primaryText}`}
+                        >
+                          {service.price}
                         </span>
-                      )}
+                        {service.priceSuffix && (
+                          <span className="text-xs font-medium text-slate-500">
+                            {service.priceSuffix}
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+                      {service.description}
                     </p>
-                  )}
-                  <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-                  <ul className="space-y-2.5 border-t border-slate-100 pt-6">
-                    {service.features.map((feature, fIdx) => (
+                    <ul className="space-y-2.5 border-t border-slate-100 pt-6">
+                      {service.features.map((feature, fIdx) => (
+                        <li
+                          key={fIdx}
+                          className="flex items-center gap-2 text-xs font-medium text-slate-700"
+                        >
+                          <CheckCircle2
+                            className={`h-4 w-4 ${t.primaryText} shrink-0`}
+                          />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              {config.services.addons.length > 0 && (
+                <aside
+                  className={`h-fit rounded-2xl border ${t.primaryBorder} bg-white/90 p-6 shadow-sm`}
+                >
+                  <div className="mb-5 flex items-center gap-2">
+                    <Sparkles className={`h-5 w-5 ${t.primaryText}`} />
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700">
+                      {config.services.addonsTitle}
+                    </h4>
+                  </div>
+                  <ul className="space-y-3">
+                    {config.services.addons.map((addon, idx) => (
                       <li
-                        key={fIdx}
-                        className="flex items-center gap-2 text-xs font-medium text-slate-700"
+                        key={idx}
+                        className="flex items-center gap-2 text-sm font-medium text-slate-700"
                       >
-                        <CheckCircle2
-                          className={`h-4 w-4 ${t.primaryText} shrink-0`}
-                        />
-                        {feature}
+                        <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
+                        {addon}
                       </li>
                     ))}
                   </ul>
-                </div>
-              ))}
+                </aside>
+              )}
             </div>
-
-            {config.services.addons.length > 0 && (
-              <div
-                className={`mt-12 rounded-2xl border ${t.primaryBorder} bg-white/90 p-6 shadow-sm`}
-              >
-                <div className="mb-5 flex items-center gap-2">
-                  <Sparkles className={`h-5 w-5 ${t.primaryText}`} />
-                  <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700">
-                    Add-ons
-                  </h4>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {config.services.addons.map((addon, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-2 text-sm font-medium text-slate-700"
-                    >
-                      <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
-                      {addon}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </section>
       )}
@@ -876,23 +880,23 @@ export default function CleaningLayout({
                     <div className="relative">
                       <img
                         src={result.beforeImage}
-                        alt={`Before${result.caption ? ` — ${result.caption}` : ""}`}
+                        alt={`${config.beforeAfter.beforeLabel}${result.caption ? ` — ${result.caption}` : ""}`}
                         className="h-44 w-full object-cover"
                       />
                       <span className="absolute left-2 top-2 rounded-full bg-slate-700/80 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
-                        Before
+                        {config.beforeAfter.beforeLabel}
                       </span>
                     </div>
                     <div className="relative">
                       <img
                         src={result.afterImage}
-                        alt={`After${result.caption ? ` — ${result.caption}` : ""}`}
+                        alt={`${config.beforeAfter.afterLabel}${result.caption ? ` — ${result.caption}` : ""}`}
                         className="h-44 w-full object-cover"
                       />
                       <span
                         className={`absolute left-2 top-2 rounded-full ${t.primaryBg} px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white`}
                       >
-                        After
+                        {config.beforeAfter.afterLabel}
                       </span>
                     </div>
                   </div>

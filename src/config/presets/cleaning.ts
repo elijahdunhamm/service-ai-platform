@@ -16,7 +16,8 @@ export const cleaningPreset: IndustryConfig = {
     logo: "/images/LOGO.PNG",
     heroImage: "/images/cleaning3.jpeg",
     commercialImage: "/images/cleaning2.jpeg",
-    residentialImage: "/images/residential-bg.svg",
+    residentialImage:
+      "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1920&q=80",
     heroImageFallback:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImageFallback:
@@ -55,10 +56,9 @@ export const cleaningPreset: IndustryConfig = {
   navigation: {
     cta: "Book Now",
     links: [
-      { label: "Services", href: "#services" },
+      { label: "Services & Residential", href: "#services" },
       { label: "Results", href: "#results" },
       { label: "Service Areas", href: "#service-areas" },
-      { label: "Residential", href: "#residential" },
       { label: "Commercial", href: "#commercial" },
       { label: "Estimate Tool", href: "#estimate" },
       { label: "Reviews", href: "#reviews" },
@@ -140,6 +140,7 @@ export const cleaningPreset: IndustryConfig = {
           "Dust and debris cleanup after renovations or property management tenant turnovers.",
       },
     ],
+    addonsTitle: "Add-ons",
     addons: [
       "Garbage Can Sanitation",
       "Home Declutter & Organization",
@@ -154,6 +155,8 @@ export const cleaningPreset: IndustryConfig = {
     title: "Before & After Results",
     description:
       "Real transformations from our recent jobs. See the difference a Pull Up & Clean visit makes.",
+    beforeLabel: "Before",
+    afterLabel: "After",
     results: [
       {
         beforeImage: "/images/before-after/kitchen-before.svg",
