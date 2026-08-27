@@ -23,6 +23,7 @@ import { defaultPreset } from "../config/presets";
 import { checkAvailability, createBooking, uploadBookingImage } from "../services/bookingService";
 import Testimonials from "./Testimonials";
 import ChatWidget from "./ChatWidget";
+import BrandLogo from "./BrandLogo";
 
 // Map icon-name strings to real lucide-react components. `types.ts` stays
 // dependency-free of the icon library; every icon referenced by a preset is
@@ -637,13 +638,10 @@ export default function CleaningLayout({
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-3">
-            <img
+            <BrandLogo
               src={config.brand.logo}
               alt={`${config.brand.businessName} Logo`}
-              className="h-10 w-auto object-contain"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
+              className="h-10 w-auto"
             />
             <span className="leading-tight">
               <span className="block font-bold text-slate-900 text-lg">
@@ -1079,9 +1077,16 @@ export default function CleaningLayout({
       >
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-3 gap-8">
           <div>
-            <span className="font-bold text-xl block mb-2">
-              {config.brand.businessName}
-            </span>
+            <div className="flex items-center gap-3 mb-2">
+              <BrandLogo
+                src={config.brand.logo}
+                alt={`${config.brand.businessName} Logo`}
+                className="h-10 w-auto"
+              />
+              <span className="font-bold text-xl">
+                {config.brand.businessName}
+              </span>
+            </div>
             <p className={`${t.footerMuted} text-sm leading-relaxed`}>
               {config.brand.footerBlurb}
             </p>

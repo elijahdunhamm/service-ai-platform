@@ -12,6 +12,12 @@ export interface Booking {
   price: number;
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   created_at: string;
+  /**
+   * Public Storage URL of the customer's uploaded media (photo or video) in the
+   * `clientimages` bucket, set by the booking flow's createBooking insert. Only
+   * present when the upload succeeded.
+   */
+  image_url?: string;
 }
 
 export async function fetchBookings(): Promise<{ success: boolean; bookings?: Booking[]; error?: string }> {
@@ -59,5 +65,25 @@ export async function updateBookingStatus(id: string, status: 'pending' | 'confi
   } catch (error) {
     console.error('Supabase Error:', error);
     return { success: false, error: 'Failed to update booking status' };
+  }
+}
+export async function deleteBooking(id: string): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured || !supabase) {
+    console.error('Supabase Error: not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). Cannot delete booking.');
+    return { success: false, error: 'Supabase is not configured. Booking not deleted.' };
+  }
+  try {
+    const { error } = await supabase
+      .from('bookings')
+      .delete()
+      .eq('id', id);
+    if (error) {
+      console.error('Supabase Error:', error);
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Supabase Error:', error);
+    return { success: false, error: 'Failed to delete booking' };
   }
 }
