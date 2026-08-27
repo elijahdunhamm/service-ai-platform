@@ -142,12 +142,31 @@ export const cleaningPreset: IndustryConfig = {
     ],
     addonsTitle: "Add-ons",
     addons: [
-      "Garbage Can Sanitation",
-      "Home Declutter & Organization",
-      "Inside Fridge & Oven Detail",
-      "Carpet Steam Cleaning",
-      "Window & Track Cleaning",
-      "Post-Party / Event Cleanup",
+      {
+        name: "Garbage Can Sanitation (Option 1)",
+        price: "$25+",
+        duration: "20 mins",
+      },
+      {
+        name: "Garbage Can Sanitation (Option 2)",
+        price: "Price varies / $45",
+        duration: "45 mins",
+      },
+      {
+        name: "Garbage Can Sanitation (Option 3)",
+        price: "$60",
+        duration: "60 mins",
+      },
+      {
+        name: "Garbage Can Sanitation (Standard add-on with any cleaning service)",
+        price: "$15",
+        duration: "20 mins",
+      },
+      {
+        name: "Home Declutter and Organization",
+        price: "Free",
+        duration: "15 mins",
+      },
     ],
   },
 
