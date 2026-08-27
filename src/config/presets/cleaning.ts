@@ -33,22 +33,22 @@ export const cleaningPreset: IndustryConfig = {
   },
 
   theme: {
-    primaryBg: "bg-blue-600",
-    primaryBgHover: "hover:bg-blue-700",
-    primaryText: "text-blue-600",
-    primaryLightBg: "bg-blue-50",
-    primaryLightBgHover: "hover:bg-blue-50",
-    primaryLightText: "text-blue-700",
-    primaryBorder: "border-blue-600",
-    primaryBorderHover: "hover:border-blue-400",
-    primarySoft: "text-blue-100",
-    primaryDeep: "text-blue-400",
-    primaryHoverText: "hover:text-blue-600",
-    footerBg: "bg-slate-900",
-    footerBorder: "border-slate-800",
-    footerHeading: "text-slate-200",
-    footerMuted: "text-slate-400",
-    footerBase: "text-slate-500",
+    primaryBg: "bg-royal",
+    primaryBgHover: "hover:bg-royal-dark",
+    primaryText: "text-royal",
+    primaryLightBg: "bg-royal-light",
+    primaryLightBgHover: "hover:bg-royal-light",
+    primaryLightText: "text-royal-dark",
+    primaryBorder: "border-royal",
+    primaryBorderHover: "hover:border-gold",
+    primarySoft: "text-royal-soft",
+    primaryDeep: "text-gold",
+    primaryHoverText: "hover:text-gold",
+    footerBg: "bg-royal-dark",
+    footerBorder: "border-royal-dark",
+    footerHeading: "text-amber-50",
+    footerMuted: "text-slate-300",
+    footerBase: "text-slate-400",
   },
 
   navigation: {
@@ -71,33 +71,51 @@ export const cleaningPreset: IndustryConfig = {
   services: {
     residential: [
       {
-        title: "Standard Home & Apartment Cleaning",
+        title: "Standard Royal Cleaning — 2 Hours",
+        price: "$80",
+        priceSuffix: "per clean",
         description:
-          "Recurring weekly, bi-weekly, or monthly cleaning to keep your living space spotless and fresh.",
+          "Our classic Standard 2-Hour Royal Cleaning is fully customizable — you choose the areas of your home that matter most, and we make them shine.",
         features: [
-          "Kitchen & Bath Sanitization",
-          "Dusting & Vacuuming",
-          "Trash Removal & Linen Change",
+          "Choose Your Priority Areas",
+          "Kitchen & Bath Refresh",
+          "Dusting, Vacuuming & Mopping",
         ],
       },
       {
-        title: "Deep Detail Cleaning",
+        title: "Standard Royal Cleaning — 3 Hours",
+        price: "$120",
+        priceSuffix: "per clean",
         description:
-          "A comprehensive top-to-bottom clean focusing on baseboards, appliance interiors, and hard-to-reach spots.",
+          "A Standard 3-Hour Royal Cleaning gives your home more thorough coverage while still being tailored to your specific needs.",
         features: [
-          "Inside Oven & Fridge",
-          "Detail Baseboard Scrub",
+          "Extended Room Coverage",
+          "Kitchen & Bath Detail",
           "High-Touch Surface Disinfection",
         ],
       },
       {
-        title: "Move-In / Move-Out Cleaning",
+        title: "Standard Premium Royal Cleaning — 4 Hours",
+        price: "$140",
+        priceSuffix: "per clean",
         description:
-          "Ensure you get your security deposit back or step into a completely sanitized new home.",
+          "Our Premium Royal Cleaning is designed for a more complete top-to-bottom refresh. With 4 hours of service we cover more ground at a premium finish.",
         features: [
-          "Cabinet & Closet Interior",
-          "Deep Appliance Reset",
-          "Full Fixture Polish",
+          "Top-to-Bottom Deep Polish",
+          "Inside Appliances & Fixtures",
+          "Detail Baseboards & Trim",
+        ],
+      },
+      {
+        title: "Royal Deep Cleaning (Walk-Through Required)",
+        price: "Free",
+        priceSuffix: "estimate",
+        description:
+          "For homes that need extra attention beyond standard cleaning — inside ovens and fridges, baseboards, closets, and hard-to-reach spots. A quick walk-through gives you an exact quote.",
+        features: [
+          "Inside Oven & Fridge",
+          "Detail Baseboard Scrub",
+          "Personalized Walk-Through Quote",
         ],
       },
     ],
@@ -142,23 +160,33 @@ export const cleaningPreset: IndustryConfig = {
         "No hidden fees. Customize your plan and see an estimate in real time.",
     },
     reviews: {
-      title: "Loved by Local Homeowners",
+      title: "Google & Yelp Testimonials",
+      description:
+        "Real reviews from real neighbors. Rated 5.0 by homeowners across the community.",
     },
   },
 
   estimator: {
     currency: "$",
-    baseRates: { standard: 90, deep: 160, move: 210 },
-    bedRate: 25,
-    bathRate: 35,
+    baseRates: {
+      "royal-2hr": 80,
+      "royal-3hr": 120,
+      "royal-4hr": 140,
+      "royal-deep": 0,
+    },
+    // The Royal packages are flat, hour-based cleanings, so room add-ons are
+    // zeroed to honor the exact reference pricing.
+    bedRate: 0,
+    bathRate: 0,
     minRooms: 1,
     defaultBedrooms: 2,
     defaultBathrooms: 1,
     defaultFrequency: "biweekly",
     serviceTypes: [
-      { id: "standard", label: "Standard Home Clean" },
-      { id: "deep", label: "Deep Detail Clean" },
-      { id: "move", label: "Move-In / Move-Out Clean" },
+      { id: "royal-2hr", label: "Standard Royal Cleaning — 2 Hours" },
+      { id: "royal-3hr", label: "Standard Royal Cleaning — 3 Hours" },
+      { id: "royal-4hr", label: "Standard Premium Royal — 4 Hours" },
+      { id: "royal-deep", label: "Royal Deep Cleaning (Walk-Through)" },
     ],
     frequencies: [
       { id: "one-time", label: "One-Time Service", multiplier: 1 },
@@ -166,15 +194,15 @@ export const cleaningPreset: IndustryConfig = {
       { id: "weekly", label: "Weekly Clean (Save 15%)", multiplier: 0.85 },
     ],
     copy: {
-      title: "Instant Price Estimator",
+      title: "Royal Price Estimator",
       subtitle:
-        "Select your home size and service needs for a real-time quote.",
+        "Pick your Royal package for a real-time, all-inclusive quote — no hidden fees.",
       serviceTypeLabel: "Service Type",
       bedroomsLabel: "Bedrooms",
       bathroomsLabel: "Bathrooms",
       frequencyLabel: "Frequency",
       estimatedLabel: "Estimated Price",
-      perSuffix: "/ cleaning",
+      perSuffix: "/ clean",
       bookButton: "Book Now",
     },
   },
@@ -199,6 +227,8 @@ export const cleaningPreset: IndustryConfig = {
       emailLabel: "Email Address",
       emailPlaceholder: "jane@example.com",
       confirmButton: "Confirm Booking",
+      photoLabel: "Attach a Photo (required)",
+      photoHint: "Upload a photo of the area you'd like cleaned.",
       doneButton: "Done",
       successTitle: "Appointment Confirmed!",
       successTextBefore: "Automated AI verification logged your booking for",
@@ -216,19 +246,79 @@ export const cleaningPreset: IndustryConfig = {
         quote:
           "Pull Up & Clean has been a lifesaver for our busy household. Coming home to a spotless house every Friday is the best feeling!",
         name: "Sarah M.",
-        role: "Homeowner",
+        role: "Homeowner · Verified Google Review",
+        platform: "google",
+        stars: 5,
       },
       {
         quote:
           "They handle our home cleaning bi-weekly and also take care of our small dental office. Punctual, thorough, and super trustworthy.",
         name: "David K.",
         role: "Residential & Business Client",
+        platform: "google",
+        stars: 5,
       },
       {
         quote:
-          "The move-out clean was so detailed that our landlord refunded our security deposit without a single question.",
+          "The Royal Deep Cleaning was so detailed that our landlord refunded our security deposit without a single question.",
         name: "Jessica T.",
+        role: "Apartment Tenant · Verified Yelp Review",
+        platform: "yelp",
+        stars: 5,
+      },
+      {
+        quote:
+          "Great service, very professional, would highly recommend to anyone!",
+        name: "Dru Bedard",
+        role: "Homeowner",
+        platform: "google",
+        stars: 5,
+      },
+      {
+        quote:
+          "The team left everything spotless and clean and worked efficiently. I would definitely recommend them.",
+        name: "Brian",
         role: "Apartment Tenant",
+        platform: "google",
+        stars: 5,
+      },
+      {
+        quote:
+          "Great as always — wonderful job cleaning my home. Highly recommend!",
+        name: "Shivam Vohra",
+        role: "Homeowner",
+        platform: "yelp",
+        stars: 5,
+      },
+    ],
+  },
+
+  chat: {
+    enabled: true,
+    title: "Customer Support",
+    greeting:
+      "Hi there! 👋 How can we help you today? Pick a topic below or type your question.",
+    placeholder: "Type your question...",
+    faqs: [
+      {
+        question: "Pricing",
+        answer:
+          "Our Royal cleanings start at $80 (2 hours), $120 (3 hours), and $140 (4 hours). Deep cleaning is quoted after a quick walk-through — use the Royal Price Estimator on our homepage for an instant estimate.",
+      },
+      {
+        question: "Booking",
+        answer:
+          "You can book online in under a minute with our scheduler — just pick your date and an available time slot. You'll get an instant confirmation, and we'll send a reminder before your appointment.",
+      },
+      {
+        question: "Services",
+        answer:
+          "We offer Standard Royal Cleaning (2, 3, or 4 hours), Royal Deep Cleaning (walk-through required), plus add-ons like Garbage Can Sanitation and Home Declutter & Organization.",
+      },
+      {
+        question: "Hours",
+        answer:
+          "We operate Monday through Saturday, 8:00 AM to 4:00 PM. Book a time slot online and we'll be right on time!",
       },
     ],
   },

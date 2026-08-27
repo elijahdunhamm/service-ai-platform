@@ -19,7 +19,9 @@ import {
 } from "lucide-react";
 import type { IconName, IndustryConfig } from "../config/types";
 import { defaultPreset } from "../config/presets";
-import { checkAvailability, createBooking } from "../services/bookingService";
+import { checkAvailability, createBooking, uploadBookingImage } from "../services/bookingService";
+import Testimonials from "./Testimonials";
+import ChatWidget from "./ChatWidget";
 
 // Map icon-name strings to real lucide-react components. `types.ts` stays
 // dependency-free of the icon library; every icon referenced by a preset is
@@ -55,6 +57,20 @@ interface BookedInfo {
 }
 
 /* ================= AUTOMATED SCHEDULING MODAL ================= */
+
+/**
+ * Returns a local-timezone YYYY-MM-DD string. Using toISOString() would give a
+ * UTC date, which can disagree with the local date near midnight and make the
+ * scheduler's min-date and booked-slot keys inconsistent. Everything in the
+ * booking flow uses this same local date string.
+ */
+function toLocalDateString(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export function BookingModal({
   config,
   isOpen,
@@ -72,7 +88,10 @@ export function BookingModal({
 }) {
   const t = config.theme;
   const b = config.booking;
-  const [selectedDate, setSelectedDate] = useState<string>(b.defaultDate);
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    const today = toLocalDateString(new Date());
+    return b.defaultDate >= today ? b.defaultDate : today;
+  });
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -82,6 +101,9 @@ export function BookingModal({
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -90,11 +112,27 @@ export function BookingModal({
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTime) return;
+    if (!imageFile) {
+      setError("Please attach a photo of your space before confirming.");
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
+    setWarning(null);
 
     try {
+      // Upload the required photo (defensively, never crashes the booking).
+      let imageUrl: string | undefined;
+      const uploadResult = await uploadBookingImage(imageFile);
+      if (uploadResult.url) {
+        imageUrl = uploadResult.url;
+      } else {
+        setWarning(
+          uploadResult.error ||
+            "Your photo could not be uploaded, but your booking will still be saved."
+        );
+      }
       // Check availability first
       const isAvailable = await checkAvailability(config.id, selectedDate, selectedTime);
       
@@ -113,6 +151,7 @@ export function BookingModal({
         customerEmail,
         serviceType: serviceDetails.serviceType,
         estimatedPrice,
+        imageUrl,
       };
 
       const result = await createBooking(bookingData);
@@ -150,6 +189,9 @@ export function BookingModal({
   const resetAndClose = () => {
     setIsSuccess(false);
     setSelectedTime("");
+    setWarning(null);
+    setImageFile(null);
+    setImagePreview(null);
     onClose();
   };
 
@@ -217,7 +259,7 @@ export function BookingModal({
               <input
                 type="date"
                 value={selectedDate}
-                min={new Date().toISOString().split("T")[0]}
+                min={toLocalDateString(new Date())}
                 onChange={(e) => {
                   setSelectedDate(e.target.value);
                   setSelectedTime("");
@@ -291,8 +333,42 @@ export function BookingModal({
                   className="w-full p-3 rounded-xl border border-slate-200 text-sm"
                 />
               </div>
+              {/* Mandatory photo upload */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  {b.copy.photoLabel}
+                </label>
+                <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-sm text-slate-600 transition-colors hover:border-royal">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    required
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setImageFile(file);
+                      setImagePreview(file ? URL.createObjectURL(file) : null);
+                    }}
+                  />
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Upload preview"
+                      className="h-14 w-14 rounded-lg object-cover shadow-sm"
+                    />
+                  ) : null}
+                  <span className="text-xs">
+                    {imageFile ? imageFile.name : b.copy.photoHint}
+                  </span>
+                </label>
+              </div>
             </div>
 
+            {warning && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+                {warning}
+              </div>
+            )}
             {error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
                 {error}
@@ -696,9 +772,21 @@ export default function CleaningLayout({
                   >
                     <ResIcon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">
+                  <h3 className="text-xl font-bold text-slate-900 mb-1">
                     {service.title}
                   </h3>
+                  {service.price && (
+                    <p className="mb-2 flex items-baseline gap-1.5">
+                      <span className={`text-2xl font-extrabold ${t.primaryText}`}>
+                        {service.price}
+                      </span>
+                      {service.priceSuffix && (
+                        <span className="text-xs font-medium text-slate-500">
+                          {service.priceSuffix}
+                        </span>
+                      )}
+                    </p>
+                  )}
                   <p className="text-slate-600 text-sm mb-6 leading-relaxed">
                     {service.description}
                   </p>
@@ -801,42 +889,7 @@ export default function CleaningLayout({
       )}
 
       {/* ================= REVIEWS ================= */}
-      {f.showReviews && (
-        <section id="reviews" className="py-20 bg-slate-50 border-t border-slate-200">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <div className="flex justify-center gap-1 text-amber-400 mb-3">
-                {[...Array(config.testimonials.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-amber-400" />
-                ))}
-              </div>
-              <h2 className="text-3xl font-bold text-slate-900">
-                {config.sections.reviews.title}
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {config.testimonials.items.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm relative"
-                >
-                  <Quote
-                    className={`h-8 w-8 ${t.primarySoft} absolute top-6 right-6`}
-                  />
-                  <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                    "{item.quote}"
-                  </p>
-                  <div>
-                    <p className="font-bold text-slate-900 text-sm">{item.name}</p>
-                    <p className="text-xs text-slate-500">{item.role}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {f.showReviews && <Testimonials config={config} />}
 
       {/* ================= FOOTER ================= */}
       <footer
@@ -899,6 +952,9 @@ export default function CleaningLayout({
           reserved.
         </div>
       </footer>
+
+      {/* Floating AI support chat */}
+      {config.chat.enabled && <ChatWidget config={config} />}
     </div>
   );
 }

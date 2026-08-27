@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * "Modern Royal Elegance" global theme.
+ * Royal Blue (#1E3A8A) + Gold (#D4AF37) on clean white / neutral surfaces.
+ * These are the base layer defaults; per-tenant accent classes come from
+ * each preset's ThemeColors (fully-written utility strings).
+ */
+@layer base {
+  :root {
+    --royal: #1e3a8a;
+    --royal-dark: #16295f;
+    --gold: #d4af37;
+    --gold-dark: #b8942a;
+    --surface: #ffffff;
+    --surface-muted: #f8fafc;
+    --line: #e7e6e1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--gold);
+    color: #0f172a;
+  }
+
+  /* Refined, luxury scrollbar (WebKit) */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--surface-muted);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--royal), var(--royal-dark));
+    border-radius: 8px;
+    border: 2px solid var(--surface-muted);
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}

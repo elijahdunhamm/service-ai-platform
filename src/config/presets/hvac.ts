@@ -201,6 +201,8 @@ export const hvacPreset: IndustryConfig = {
       emailLabel: "Email Address",
       emailPlaceholder: "jane@example.com",
       confirmButton: "Confirm Booking",
+      photoLabel: "Attach a Photo (required)",
+      photoHint: "Upload a photo of the equipment or area needing service.",
       doneButton: "Done",
       successTitle: "Appointment Confirmed!",
       successTextBefore: "Automated AI verification logged your booking for",
@@ -231,6 +233,35 @@ export const hvacPreset: IndustryConfig = {
           "The new AC install was flawless — done in a day, area left spotless, and our energy bill dropped noticeably that summer.",
         name: "Daniel F.",
         role: "Homeowner",
+      },
+    ],
+  },
+
+  chat: {
+    enabled: false,
+    title: "Customer Support",
+    greeting: "Hi! How can we help you today?",
+    placeholder: "Type your question...",
+    faqs: [
+      {
+        question: "Pricing",
+        answer:
+          "We offer free estimates on all installations and repairs. Call us for a quote tailored to your system.",
+      },
+      {
+        question: "Booking",
+        answer:
+          "Book online using our scheduler or call us directly — we offer same-day service for emergencies.",
+      },
+      {
+        question: "Services",
+        answer:
+          "We handle heating, cooling, maintenance plans, and air-quality solutions for homes and businesses.",
+      },
+      {
+        question: "Hours",
+        answer:
+          "We're available 24/7 for emergencies and offer regular appointments during business hours.",
       },
     ],
   },
