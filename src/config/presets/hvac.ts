@@ -258,8 +258,8 @@ export const hvacPreset: IndustryConfig = {
       emailLabel: "Email Address",
       emailPlaceholder: "jane@example.com",
       confirmButton: "Confirm Booking",
-      photoLabel: "Attach a Photo (required)",
-      photoHint: "Upload a photo of the equipment or area needing service.",
+      mediaLabel: "Attach a Photo or Video (required)",
+      mediaHint: "Upload a photo or video of the equipment or area needing service.",
       doneButton: "Done",
       successTitle: "Appointment Confirmed!",
       successTextBefore: "Automated AI verification logged your booking for",
@@ -268,6 +268,10 @@ export const hvacPreset: IndustryConfig = {
       totalLabel: "Estimated Total",
       clientLabel: "Client",
     },
+  },
+
+  storage: {
+    bucket: "client images",
   },
 
   testimonials: {

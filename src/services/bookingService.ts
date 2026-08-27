@@ -71,40 +71,67 @@ export async function checkAvailability(
 }
 
 /**
- * Upload a booking image to Supabase Storage ("bookings" bucket) and return its
- * public URL. Defensive: every failure is swallowed and surfaced as a message
- * so the caller can still complete the booking without crashing.
+ * Upload customer booking media (image or video) to Supabase Storage and return
+ * its public URL. The bucket name is supplied by the caller from the active
+ * tenant's config (never hardcoded here). Defensive: every failure is swallowed
+ * and surfaced as a message so the caller can still complete the booking
+ * without crashing.
  */
+export type UploadMediaKind = "image" | "video" | "other";
+export interface UploadResult {
+  url?: string;
+  error?: string;
+  /** Determined from `file.type` — 'image' or 'video' when recognized. */
+  kind?: UploadMediaKind;
+}
+
+const IMAGE_TYPE_RE = /^image\/(jpe?g|png|webp|gif|heic)$/i;
+const VIDEO_TYPE_RE = /^video\/(mp4|webm|mov)$/i;
+
+function mediaKind(file: File): UploadMediaKind {
+  const type = (file.type || "").toLowerCase();
+  if (IMAGE_TYPE_RE.test(type)) return "image";
+  if (VIDEO_TYPE_RE.test(type)) return "video";
+  return "other";
+}
+
 export async function uploadBookingImage(
-  file: File
-): Promise<{ url?: string; error?: string }> {
+  file: File,
+  bucket: string
+): Promise<UploadResult> {
+  const kind = mediaKind(file);
   if (!isSupabaseConfigured || !supabase) {
     return {
       error:
-        'Image upload is unavailable (Supabase not configured). Your booking can still be saved without the photo.',
+        'Media upload is unavailable (Supabase not configured). Your booking can still be saved without it.',
     };
   }
   try {
-    // Keep a safe, unique object key.
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_') || 'photo';
-    const path = `bookings/${Date.now()}-${safeName}`;
+    // Keep a safe, unique object key under a folder. Content type is taken from
+    // the file itself (falling back only when absent) so both image/* and
+    // video/* upload correctly.
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_") || "media";
+    const path = `booking-media/${Date.now()}-${safeName}`;
+    const contentType =
+      file.type ||
+      (kind === "video" ? "video/mp4" : kind === "image" ? "image/jpeg" : "application/octet-stream");
     const { error: uploadError } = await supabase.storage
-      .from('bookings')
-      .upload(path, file, { contentType: file.type, upsert: false });
+      .from(bucket)
+      .upload(path, file, { contentType, upsert: false });
     if (uploadError) {
-      console.error('Supabase Storage Error:', uploadError);
+      console.error("Supabase Storage Error:", uploadError);
       return {
         error:
-          'Your photo could not be uploaded right now. Your booking can still be saved without it.',
+          'Your photo or video could not be uploaded right now. Your booking can still be saved without it.',
       };
     }
-    const { data } = supabase.storage.from('bookings').getPublicUrl(path);
-    return { url: data.publicUrl };
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+    return { url: data.publicUrl, kind };
   } catch (error) {
-    console.error('Supabase Storage Error:', error);
+    console.error("Supabase Storage Error:", error);
     return {
       error:
-        'Your photo could not be uploaded right now. Your booking can still be saved without it.',
+        'Your photo or video could not be uploaded right now. Your booking can still be saved without it.',
     };
   }
 }
