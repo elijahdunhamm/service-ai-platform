@@ -108,6 +108,10 @@ export interface ResidentialService {
   title: string;
   description: string;
   features: string[];
+  /** Display price for the service (e.g. "$80"). */
+  price?: string;
+  /** Small label shown next to the price (e.g. "per clean"). */
+  priceSuffix?: string;
 }
 
 export interface CommercialService {
@@ -119,6 +123,10 @@ export interface Testimonial {
   quote: string;
   name: string;
   role: string;
+  /** Review platform badge to show (Google or Yelp). */
+  platform?: "google" | "yelp";
+  /** Star rating for this review (defaults to the section rating). */
+  stars?: number;
 }
 
 /** Section header copy + optional icon, rendered above a content block. */
@@ -187,6 +195,10 @@ export interface BookingCopy {
   emailLabel: string;
   emailPlaceholder: string;
   confirmButton: string;
+  /** Label for the required photo upload field. */
+  photoLabel: string;
+  /** Helper hint under the photo upload field. */
+  photoHint: string;
   /** Confirm button price is appended as " ({currency}{price})". */
   doneButton: string;
   successTitle: string;
@@ -228,6 +240,22 @@ export interface FeatureFlags {
   showContact: boolean;
 }
 
+/** One customer-support FAQ item used by the floating chat widget. */
+export interface Faq {
+  question: string;
+  answer: string;
+}
+
+/** Config for the floating customer-support chat widget. */
+export interface ChatConfig {
+  enabled: boolean;
+  title: string;
+  greeting: string;
+  placeholder: string;
+  /** Rule-based FAQ list shown as quick replies in the chat drawer. */
+  faqs: Faq[];
+}
+
 /** Full description of one tenant's site. */
 export interface IndustryConfig {
   /** Stable slug identifying the preset (e.g. "cleaning"). */
@@ -252,5 +280,6 @@ export interface IndustryConfig {
     rating: number;
     items: Testimonial[];
   };
+  chat: ChatConfig;
   features: FeatureFlags;
-}
+  }
