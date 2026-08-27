@@ -159,18 +159,18 @@ export const cleaningPreset: IndustryConfig = {
     afterLabel: "After",
     results: [
       {
-        beforeImage: "/images/before-after/kitchen-before.svg",
-        afterImage: "/images/before-after/kitchen-after.svg",
+        beforeImage: "/images/before-after/kitchen-before.jpg",
+        afterImage: "/images/before-after/kitchen-after.jpg",
         caption: "Kitchen deep clean",
       },
       {
-        beforeImage: "/images/before-after/living-before.svg",
-        afterImage: "/images/before-after/living-after.svg",
+        beforeImage: "/images/before-after/living-before.jpg",
+        afterImage: "/images/before-after/living-after.jpg",
         caption: "Living room refresh",
       },
       {
-        beforeImage: "/images/before-after/bath-before.svg",
-        afterImage: "/images/before-after/bath-after.svg",
+        beforeImage: "/images/before-after/bath-before.jpg",
+        afterImage: "/images/before-after/bath-after.jpg",
         caption: "Bathroom detail",
       },
     ],
