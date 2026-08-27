@@ -133,6 +133,10 @@ export interface BeforeAfterResult {
 export interface BeforeAfterConfig {
   title: string;
   description?: string;
+  /** Badge label shown on each "before" image. */
+  beforeLabel: string;
+  /** Badge label shown on each "after" image. */
+  afterLabel: string;
   results: BeforeAfterResult[];
 }
 
@@ -295,6 +299,8 @@ export interface IndustryConfig {
   services: {
     residential: ResidentialService[];
     commercial: CommercialService[];
+    /** Heading shown above the add-ons list. */
+    addonsTitle: string;
     /** Compact add-on offerings listed alongside the service catalog. */
     addons: string[];
   };

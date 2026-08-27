@@ -36,6 +36,33 @@ cannot build class names like `bg-${color}-600` at runtime. Instead,
 scans and generates them. Change a color family by editing a preset's theme
 strings — never by composing classes dynamically.
 
+## Managing site images (config-driven)
+
+All site images are referenced from the config **presets** — never hardcoded in
+components. Each image lives in one of two places:
+
+- a local file under `public/images/...` (e.g. `/images/LOGO.PNG`), served
+  directly by Vite, or
+- a hosted URL (e.g. an Unsplash `https://images.unsplash.com/...` address).
+
+The relevant config fields (in `src/config/types.ts`, set per preset) are:
+
+- `brand.logo`, `brand.heroImage`, `brand.commercialImage`,
+  `brand.residentialImage` (+ `heroImageFallback`,
+  `commercialImageFallback`)
+- `beforeAfter.results[].beforeImage` / `afterImage` (before/after pairs)
+
+To replace an image:
+
+1. Drop the new file under `public/images/` (e.g.
+   `public/images/herobanner.jpg`), or grab a hosted URL.
+2. Update the corresponding path/URL in
+   `src/config/presets/cleaning.ts` or `src/config/presets/hvac.ts`.
+
+No component code changes are needed — the layout renders purely from whatever
+preset is active. After any image change, rebuild (`npm run build`) to make sure
+the new public asset is emitted.
+
 ## Commands
 
 - `npm run dev` — Vite dev server
