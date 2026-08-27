@@ -126,12 +126,12 @@ export const hvacPreset: IndustryConfig = {
     ],
     addonsTitle: "Add-ons",
     addons: [
-      "Duct Cleaning & Sanitization",
-      "Smart Thermostat Installation",
-      "Air Purifier & Filtration Systems",
-      "Indoor Air Quality Assessment",
-      "UV Germicidal Light Systems",
-      "Maintenance Plan Membership",
+      { name: "Duct Cleaning & Sanitization" },
+      { name: "Smart Thermostat Installation" },
+      { name: "Air Purifier & Filtration Systems" },
+      { name: "Indoor Air Quality Assessment" },
+      { name: "UV Germicidal Light Systems" },
+      { name: "Maintenance Plan Membership" },
     ],
   },
 

@@ -855,7 +855,19 @@ export default function CleaningLayout({
                         className="flex items-center gap-2 text-sm font-medium text-slate-700"
                       >
                         <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
-                        {addon}
+                        <span className="flex-1">{addon.name}</span>
+                        {addon.duration && (
+                          <span className="shrink-0 text-xs text-slate-500">
+                            {addon.duration}
+                          </span>
+                        )}
+                        {addon.price && (
+                          <span
+                            className={`shrink-0 ${t.primaryText} font-semibold`}
+                          >
+                            {addon.price}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>

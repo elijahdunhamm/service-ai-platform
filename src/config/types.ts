@@ -121,6 +121,15 @@ export interface CommercialService {
   description: string;
 }
 
+/** A compact add-on offering listed alongside the service catalog. */
+export interface Addon {
+  name: string;
+  /** Price display, e.g. "$25+", "Free". Omit/empty when price isn't fixed. */
+  price?: string;
+  /** Duration display, e.g. "20 mins". Omit/empty when not applicable. */
+  duration?: string;
+}
+
 /** One before/after image pair shown as a "results" card. */
 export interface BeforeAfterResult {
   beforeImage: string;
@@ -302,7 +311,7 @@ export interface IndustryConfig {
     /** Heading shown above the add-ons list. */
     addonsTitle: string;
     /** Compact add-on offerings listed alongside the service catalog. */
-    addons: string[];
+    addons: Addon[];
   };
   beforeAfter: BeforeAfterConfig;
   /** Service area / location names served by this tenant (rendered as bullets). */
