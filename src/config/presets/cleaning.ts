@@ -16,6 +16,7 @@ export const cleaningPreset: IndustryConfig = {
     logo: "/images/LOGO.PNG",
     heroImage: "/images/cleaning3.jpeg",
     commercialImage: "/images/cleaning2.jpeg",
+    residentialImage: "/images/residential-bg.svg",
     heroImageFallback:
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImageFallback:
@@ -54,6 +55,9 @@ export const cleaningPreset: IndustryConfig = {
   navigation: {
     cta: "Book Now",
     links: [
+      { label: "Services", href: "#services" },
+      { label: "Results", href: "#results" },
+      { label: "Service Areas", href: "#service-areas" },
       { label: "Residential", href: "#residential" },
       { label: "Commercial", href: "#commercial" },
       { label: "Estimate Tool", href: "#estimate" },
@@ -136,7 +140,48 @@ export const cleaningPreset: IndustryConfig = {
           "Dust and debris cleanup after renovations or property management tenant turnovers.",
       },
     ],
+    addons: [
+      "Garbage Can Sanitation",
+      "Home Declutter & Organization",
+      "Inside Fridge & Oven Detail",
+      "Carpet Steam Cleaning",
+      "Window & Track Cleaning",
+      "Post-Party / Event Cleanup",
+    ],
   },
+
+  beforeAfter: {
+    title: "Before & After Results",
+    description:
+      "Real transformations from our recent jobs. See the difference a Pull Up & Clean visit makes.",
+    results: [
+      {
+        beforeImage: "/images/before-after/kitchen-before.svg",
+        afterImage: "/images/before-after/kitchen-after.svg",
+        caption: "Kitchen deep clean",
+      },
+      {
+        beforeImage: "/images/before-after/living-before.svg",
+        afterImage: "/images/before-after/living-after.svg",
+        caption: "Living room refresh",
+      },
+      {
+        beforeImage: "/images/before-after/bath-before.svg",
+        afterImage: "/images/before-after/bath-after.svg",
+        caption: "Bathroom detail",
+      },
+    ],
+  },
+
+  serviceAreas: [
+    "Stockton",
+    "Elk Grove",
+    "Pleasanton",
+    "Tracy",
+    "Manteca",
+    "Lathrop",
+    "Modesto",
+  ],
 
   sections: {
     residential: {
@@ -163,6 +208,20 @@ export const cleaningPreset: IndustryConfig = {
       title: "Google & Yelp Testimonials",
       description:
         "Real reviews from real neighbors. Rated 5.0 by homeowners across the community.",
+    },
+    beforeAfter: {
+      eyebrow: "See the Difference",
+      title: "Before & After Results",
+      description:
+        "Real transformations from our recent jobs. Slide between before and after to see what a Pull Up & Clean visit can do.",
+      icon: "sparkles",
+    },
+    serviceAreas: {
+      eyebrow: "Where We Work",
+      title: "Proudly Serving Your Neighborhood",
+      description:
+        "Mobile cleaning teams covering the San Joaquin Valley and East Bay. If your city is listed, we'll pull up to your door.",
+      icon: "home",
     },
   },
 
@@ -328,6 +387,8 @@ export const cleaningPreset: IndustryConfig = {
     showCommercial: true,
     showEstimator: true,
     showReviews: true,
+    showBeforeAfter: true,
+    showServiceAreas: true,
     showBooking: true,
     showContact: true,
   },

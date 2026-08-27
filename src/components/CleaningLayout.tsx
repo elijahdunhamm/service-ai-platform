@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   Sparkle,
   Check,
+  MapPin,
   type LucideIcon,
 } from "lucide-react";
 import type { IconName, IndustryConfig } from "../config/types";
@@ -745,8 +746,18 @@ export default function CleaningLayout({
 
       {/* ================= RESIDENTIAL SERVICES ================= */}
       {f.showResidential && (
-        <section id="residential" className="py-20 bg-slate-50">
-          <div className="mx-auto max-w-7xl px-6">
+        <section
+          id="services"
+          className="relative overflow-hidden py-20 bg-slate-50"
+        >
+          <img
+            src={config.brand.residentialImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-white/75" />
+          <div id="residential" className="relative mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2
                 className={`text-xs uppercase tracking-wider font-bold ${t.primaryText}`}
@@ -761,7 +772,7 @@ export default function CleaningLayout({
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {config.services.residential.map((service, idx) => (
                 <div
                   key={idx}
@@ -803,6 +814,131 @@ export default function CleaningLayout({
                       </li>
                     ))}
                   </ul>
+                </div>
+              ))}
+            </div>
+
+            {config.services.addons.length > 0 && (
+              <div
+                className={`mt-12 rounded-2xl border ${t.primaryBorder} bg-white/90 p-6 shadow-sm`}
+              >
+                <div className="mb-5 flex items-center gap-2">
+                  <Sparkles className={`h-5 w-5 ${t.primaryText}`} />
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700">
+                    Add-ons
+                  </h4>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {config.services.addons.map((addon, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center gap-2 text-sm font-medium text-slate-700"
+                    >
+                      <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
+                      {addon}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ================= BEFORE & AFTER RESULTS ================= */}
+      {f.showBeforeAfter && (
+        <section
+          id="results"
+          className="py-20 bg-white border-t border-slate-200"
+        >
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <span
+                className={`text-xs uppercase tracking-wider font-bold ${t.primaryText}`}
+              >
+                {config.sections.beforeAfter.eyebrow}
+              </span>
+              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+                {config.sections.beforeAfter.title}
+              </h2>
+              <p className="mt-3 text-slate-600">
+                {config.sections.beforeAfter.description}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {config.beforeAfter.results.map((result, idx) => (
+                <div
+                  key={idx}
+                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                >
+                  <div className="grid grid-cols-2 gap-1 bg-slate-100">
+                    <div className="relative">
+                      <img
+                        src={result.beforeImage}
+                        alt={`Before${result.caption ? ` — ${result.caption}` : ""}`}
+                        className="h-44 w-full object-cover"
+                      />
+                      <span className="absolute left-2 top-2 rounded-full bg-slate-700/80 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
+                        Before
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <img
+                        src={result.afterImage}
+                        alt={`After${result.caption ? ` — ${result.caption}` : ""}`}
+                        className="h-44 w-full object-cover"
+                      />
+                      <span
+                        className={`absolute left-2 top-2 rounded-full ${t.primaryBg} px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white`}
+                      >
+                        After
+                      </span>
+                    </div>
+                  </div>
+                  {result.caption && (
+                    <div className="px-4 py-3 text-center text-sm font-semibold text-slate-700">
+                      {result.caption}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ================= WHERE WE WORK / SERVICE AREAS ================= */}
+      {f.showServiceAreas && (
+        <section
+          id="service-areas"
+          className="py-20 bg-slate-50 border-t border-slate-200"
+        >
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <span
+                className={`text-xs uppercase tracking-wider font-bold ${t.primaryText}`}
+              >
+                {config.sections.serviceAreas.eyebrow}
+              </span>
+              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+                {config.sections.serviceAreas.title}
+              </h2>
+              <p className="mt-3 text-slate-600">
+                {config.sections.serviceAreas.description}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+              {config.serviceAreas.map((area, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                >
+                  <MapPin className={`h-4 w-4 ${t.primaryText} shrink-0`} />
+                  <span className="text-sm font-medium text-slate-800">
+                    {area}
+                  </span>
                 </div>
               ))}
             </div>
