@@ -113,8 +113,13 @@ export function BookingModal({
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTime) return;
+
     if (!imageFile) {
-      setError("Please attach a photo of your space before confirming.");
+      setError(
+        b.copy.mediaLabel.includes("Video")
+          ? "Please attach a photo or video of your space before confirming."
+          : "Please attach a photo of your space before confirming."
+      );
       return;
     }
 
@@ -142,16 +147,16 @@ export function BookingModal({
           "We couldn't verify this slot's availability, but we'll attempt to save your booking.";
       }
 
-      // Upload the photo (defensively, never crashes the booking). Failure is a
-      // non-blocking warning only — the booking proceeds without the image.
+      // Upload the media (defensively, never crashes the booking). Failure is a
+      // non-blocking warning only — the booking proceeds without the upload.
       let imageUrl: string | undefined;
-      const uploadResult = await uploadBookingImage(imageFile);
+      const uploadResult = await uploadBookingImage(imageFile, config.storage.bucket);
       if (uploadResult.url) {
         imageUrl = uploadResult.url;
       } else {
         const uploadWarning =
           uploadResult.error ||
-          "Your photo could not be uploaded, but your booking will still be saved.";
+          "Your photo or video could not be uploaded, but your booking will still be saved.";
         warningMessage = warningMessage
           ? `${warningMessage} ${uploadWarning}`
           : uploadWarning;
@@ -354,12 +359,12 @@ export function BookingModal({
               {/* Mandatory photo upload */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {b.copy.photoLabel}
+                  {b.copy.mediaLabel}
                 </label>
                 <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-sm text-slate-600 transition-colors hover:border-royal">
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/*,video/*"
                     required
                     className="hidden"
                     onChange={(e) => {
@@ -369,14 +374,21 @@ export function BookingModal({
                     }}
                   />
                   {imagePreview ? (
-                    <img
-                      src={imagePreview}
-                      alt="Upload preview"
-                      className="h-14 w-14 rounded-lg object-cover shadow-sm"
-                    />
+                    imageFile?.type.startsWith("video/") ? (
+                      <video
+                        src={imagePreview}
+                        className="h-14 w-14 rounded-lg object-cover shadow-sm"
+                      />
+                    ) : (
+                      <img
+                        src={imagePreview}
+                        alt="Upload preview"
+                        className="h-14 w-14 rounded-lg object-cover shadow-sm"
+                      />
+                    )
                   ) : null}
                   <span className="text-xs">
-                    {imageFile ? imageFile.name : b.copy.photoHint}
+                    {imageFile ? imageFile.name : b.copy.mediaHint}
                   </span>
                 </label>
               </div>

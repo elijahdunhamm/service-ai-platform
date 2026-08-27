@@ -225,10 +225,10 @@ export interface BookingCopy {
   emailLabel: string;
   emailPlaceholder: string;
   confirmButton: string;
-  /** Label for the required photo upload field. */
-  photoLabel: string;
-  /** Helper hint under the photo upload field. */
-  photoHint: string;
+  /** Label for the required media (photo/video) upload field. */
+  mediaLabel: string;
+  /** Helper hint under the media upload field. */
+  mediaHint: string;
   /** Confirm button price is appended as " ({currency}{price})". */
   doneButton: string;
   successTitle: string;
@@ -282,6 +282,15 @@ export interface Faq {
   answer: string;
 }
 
+/** Customer media upload storage configuration. */
+export interface StorageConfig {
+  /**
+   * Supabase Storage bucket used for customer-uploaded booking media
+   * (images/videos). Supplied via config so components never hardcode a bucket.
+   */
+  bucket: string;
+}
+
 /** Config for the floating customer-support chat widget. */
 export interface ChatConfig {
   enabled: boolean;
@@ -319,6 +328,7 @@ export interface IndustryConfig {
   sections: SectionCopy;
   estimator: EstimatorConfig;
   booking: BookingConfig;
+  storage: StorageConfig;
   testimonials: {
     rating: number;
     items: Testimonial[];
