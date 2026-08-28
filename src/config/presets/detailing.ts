@@ -189,8 +189,7 @@ export const detailingPreset: IndustryConfig = {
           "Leather Clean & Condition",
           "Steam Clean Vents & Crevices",
         ],
-        image:
-          "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?auto=format&fit=crop&w=1200&q=80",
+        image: "/images/detailing-interior-after.jpg",
       },
       {
         title: "Exterior Wash & Wax",
