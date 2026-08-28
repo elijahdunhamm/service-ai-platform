@@ -3,6 +3,7 @@ import {
   Check,
 } from "lucide-react";
 import type { IndustryConfig, Testimonial } from "../config/types";
+import { lightSurface, defaultFonts } from "../config/theme";
 
 /** Renders a single review card with stars + a Google/Yelp platform badge. */
 function PlatformBadge({ platform }: { platform?: "google" | "yelp" }) {
@@ -54,23 +55,27 @@ function Stars({
 function ReviewCard({
   item,
   defaultRating,
+  S,
+  F,
 }: {
   item: Testimonial;
   defaultRating: number;
+  S: typeof lightSurface;
+  F: typeof defaultFonts;
 }) {
   const stars = item.stars ?? defaultRating;
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-lg">
+    <div className={`flex flex-col gap-3 rounded-2xl border ${S.cardBorder} ${S.cardBg} p-6 shadow-sm transition-shadow ${S.cardHover}`}>
       <div className="flex items-center justify-between">
         <Stars count={Math.min(5, Math.max(1, stars))} />
         <PlatformBadge platform={item.platform} />
       </div>
-      <p className="flex-1 text-sm leading-relaxed text-slate-600">
+      <p className={`flex-1 text-sm leading-relaxed ${S.textMuted}`}>
         "{item.quote}"
       </p>
-      <div className="border-t border-slate-100 pt-4">
-        <p className="text-sm font-bold text-slate-900">{item.name}</p>
-        <p className="text-xs text-slate-500">{item.role}</p>
+      <div className={`border-t ${S.borderSubtle} pt-4`}>
+        <p className={`text-sm font-bold ${F.heading} ${S.textPrimary}`}>{item.name}</p>
+        <p className={`text-xs ${S.textSubtle}`}>{item.role}</p>
       </div>
     </div>
   );
@@ -83,11 +88,13 @@ function ReviewCard({
 export default function Testimonials({ config }: { config: IndustryConfig }) {
   const { rating, items } = config.testimonials;
   const heading = config.sections.reviews;
+  const S = config.surface ?? lightSurface;
+  const F = config.fonts ?? defaultFonts;
 
   return (
     <section
       id="reviews"
-      className="border-t border-slate-200 bg-slate-50 py-20"
+      className={`border-t ${S.cardBorder} ${S.surfaceBg} py-20`}
     >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-14 max-w-2xl text-center">
@@ -99,11 +106,11 @@ export default function Testimonials({ config }: { config: IndustryConfig }) {
               />
             ))}
           </div>
-          <h2 className="text-3xl font-bold text-slate-900">{heading.title}</h2>
+          <h2 className={`text-3xl font-bold ${F.heading} ${S.textPrimary}`}>{heading.title}</h2>
           {heading.description && (
-            <p className="mt-3 text-slate-600">{heading.description}</p>
+            <p className={`mt-3 ${S.textMuted}`}>{heading.description}</p>
           )}
-          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
+          <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full ${S.cardBg} px-3 py-1 text-xs font-semibold ${S.textMuted} shadow-sm`}>
             <Check className="h-3.5 w-3.5 text-royal" />
             Rated {rating}.0 on Google &amp; Yelp
           </p>
@@ -111,7 +118,7 @@ export default function Testimonials({ config }: { config: IndustryConfig }) {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item, idx) => (
-            <ReviewCard key={idx} item={item} defaultRating={rating} />
+            <ReviewCard key={idx} item={item} defaultRating={rating} S={S} F={F} />
           ))}
         </div>
       </div>

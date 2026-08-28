@@ -37,22 +37,114 @@ export const detailingPreset: IndustryConfig = {
   },
 
   theme: {
-    primaryBg: "bg-blue-600",
-    primaryBgHover: "hover:bg-blue-700",
-    primaryText: "text-blue-600",
-    primaryLightBg: "bg-blue-50",
-    primaryLightBgHover: "hover:bg-blue-50",
-    primaryLightText: "text-blue-700",
-    primaryBorder: "border-blue-600",
-    primaryBorderHover: "hover:border-blue-400",
-    primarySoft: "text-blue-100",
-    primaryDeep: "text-blue-400",
-    primaryHoverText: "hover:text-blue-600",
-    footerBg: "bg-slate-950",
-    footerBorder: "border-slate-900",
-    footerHeading: "text-slate-200",
-    footerMuted: "text-slate-400",
-    footerBase: "text-slate-500",
+    primaryBg: "bg-gold",
+    primaryBgHover: "hover:bg-gold-dark",
+    primaryText: "text-gold",
+    primaryLightBg: "bg-gold/10",
+    primaryLightBgHover: "hover:bg-gold/20",
+    primaryLightText: "text-gold-light",
+    primaryBorder: "border-gold",
+    primaryBorderHover: "hover:border-gold",
+    primarySoft: "text-gold/40",
+    primaryDeep: "text-gold",
+    primaryHoverText: "hover:text-gold",
+    footerBg: "bg-black",
+    footerBorder: "border-white/10",
+    footerHeading: "text-ivory",
+    footerMuted: "text-ivory-muted",
+    footerBase: "text-ivory-muted/60",
+  },
+
+  // "Noir Et Or" — deep charcoal/matte-black luxury surfaces, metallic gold
+  // accents, soft ivory text. Fully-written Tailwind class strings.
+  surface: {
+    surfaceBg: "bg-noir",
+    cardBg: "bg-noir-card",
+    cardBorder: "border-white/10",
+    borderSubtle: "border-white/10",
+    textPrimary: "text-ivory",
+    textSecondary: "text-ivory",
+    textMuted: "text-ivory-muted",
+    textSubtle: "text-ivory-muted",
+    textFaint: "text-ivory-muted/60",
+    headerBg: "bg-noir/90",
+    headerBorder: "border-white/10",
+    navHoverBg: "hover:bg-white/5",
+    mobileNavBg: "bg-noir",
+    mobileNavBorder: "border-white/10",
+    mobileNavText: "text-ivory",
+    heroBg: "bg-noir",
+    secondaryButton:
+      "border border-gold/40 bg-transparent text-ivory hover:bg-gold/10",
+    imageFrameBg: "bg-noir-card",
+    imageFrameBorder: "border-white/10",
+    residentialOverlay:
+      "bg-gradient-to-b from-noir/95 via-noir/85 to-noir/95",
+    sectionAltBg: "bg-black",
+    mutedBg: "bg-noir-card",
+    mutedBorder: "border-white/10",
+    inputBg: "bg-noir-card",
+    inputBorder: "border-white/15",
+    selectBg: "bg-noir-card",
+    selectText: "text-ivory",
+    stepBg: "bg-white/5",
+    stepHoverBg: "hover:bg-white/10",
+    stepText: "text-ivory",
+    takenBg: "bg-white/5",
+    takenBorder: "border-white/10",
+    takenText: "text-ivory-muted/50",
+    slotBg: "bg-noir-card",
+    slotText: "text-ivory",
+    optionBorder: "border-white/15",
+    optionText: "text-ivory",
+    optionHoverBg: "hover:bg-white/5",
+    uploadBorder: "border-white/25",
+    uploadHoverBorder: "hover:border-gold",
+    successBadge: "bg-gold/20 text-gold",
+    closeButton: "text-ivory-muted hover:text-ivory hover:bg-white/5",
+    cardHover:
+      "hover:shadow-xl hover:shadow-gold/10 hover:border-gold/40",
+    heroOverlay:
+      "bg-gradient-to-r from-black/90 via-black/70 to-black/40",
+    statementOverlay:
+      "bg-gradient-to-b from-noir/95 via-noir/85 to-black/95",
+  },
+
+  fonts: {
+    heading: "font-display",
+    body: "font-body",
+  },
+
+  // Full-width cinematic hero (background image + overlayed content).
+  hero: {
+    cinematic: true,
+  },
+
+  // Craftsmanship spotlight section (feature-flagged ON for detailing).
+  craftsmanship: {
+    eyebrow: "The Craft",
+    title: "Obsessive, Hand-Finished Detailing.",
+    description:
+      "Every detail is performed by certified technicians using studio-grade compounds, dual-action polishers, and premium coatings. We don't cut corners — we cut swirls. The result is a finish that looks poured-on and stays protected long after we roll away.",
+    image:
+      "https://images.unsplash.com/photo-1600661653561-629509216228?auto=format&fit=crop&w=1600&q=80",
+    bullets: [
+      "Multi-stage machine polishing & paint correction",
+      "Premium ceramic coatings and hydrophobic sealants",
+      "Leather cleaning, conditioning & steam sanitization",
+    ],
+    stat: { value: "500+", label: "vehicles finished showroom-fresh" },
+  },
+
+  // Full-width brand statement / featured testimonial (feature-flagged ON).
+  statement: {
+    eyebrow: "The autodetaildemo Standard",
+    quote:
+      "We don't just clean cars — we finish them. If it doesn't look better than the day it left the showroom, we haven't done our job.",
+    name: "Team autodetaildemo",
+    role: "Certified detail technicians",
+    backgroundImage:
+      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1920&q=80",
   },
 
   navigation: {
@@ -83,6 +175,8 @@ export const detailingPreset: IndustryConfig = {
           "Interior Vacuum",
           "Dusting of Dash & Console",
         ],
+        image:
+          "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1200&q=80",
       },
       {
         title: "Full Interior Detail",
@@ -95,6 +189,8 @@ export const detailingPreset: IndustryConfig = {
           "Leather Clean & Condition",
           "Steam Clean Vents & Crevices",
         ],
+        image:
+          "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?auto=format&fit=crop&w=1200&q=80",
       },
       {
         title: "Exterior Wash & Wax",
@@ -107,6 +203,8 @@ export const detailingPreset: IndustryConfig = {
           "Clay Bar Treatment",
           "Machine Polish & Wax Sealant",
         ],
+        image:
+          "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80",
       },
       {
         title: "Premium Paint Correction & Ceramic Coating",
@@ -119,6 +217,8 @@ export const detailingPreset: IndustryConfig = {
           "Ceramic Coating Protection",
           "Wheels, Trim & Glass Detail",
         ],
+        image:
+          "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1200&q=80",
       },
     ],
     commercial: [
@@ -216,6 +316,18 @@ export const detailingPreset: IndustryConfig = {
       description:
         "Mobile detailing teams covering the San Joaquin Valley and East Bay. If your city is listed, we'll come to you.",
       icon: "home",
+    },
+    craftsmanship: {
+      eyebrow: "The Craft",
+      title: "Obsessive, Hand-Finished Detailing.",
+      description:
+        "Studio-grade compounds, machine polishing, and premium coatings — applied by hand, finished to a mirror shine.",
+      icon: "sparkles",
+    },
+    statement: {
+      eyebrow: "The autodetaildemo Standard",
+      title: "A Finish That Speaks for Itself",
+      icon: "quote",
     },
   },
 
@@ -371,6 +483,9 @@ export const detailingPreset: IndustryConfig = {
     showServiceAreas: true,
     showBooking: true,
     showContact: true,
+    showCraftsmanship: true,
+    showStatement: true,
+    showGallery: true,
   },
 };
 

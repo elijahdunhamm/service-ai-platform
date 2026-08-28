@@ -336,6 +336,9 @@ export const hvacPreset: IndustryConfig = {
     showServiceAreas: true,
     showBooking: true,
     showContact: true,
+    showCraftsmanship: false,
+    showStatement: false,
+    showGallery: false,
   },
 };
 

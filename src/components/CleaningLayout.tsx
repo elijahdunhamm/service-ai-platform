@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import type { IconName, IndustryConfig } from "../config/types";
 import { defaultPreset } from "../config/presets";
+import { lightSurface, defaultFonts } from "../config/theme";
 import { checkAvailability, createBooking, uploadBookingImage } from "../services/bookingService";
 import Testimonials from "./Testimonials";
 import ChatWidget from "./ChatWidget";
@@ -58,6 +59,17 @@ interface BookedInfo {
   createdAt: string;
 }
 
+// Resolve a preset's surface + font theming, falling back to light defaults
+// (byte-for-byte identical to the original hardcoded light theme) so light
+// tenants that omit `surface`/`fonts` render unchanged.
+function useTheme(config: IndustryConfig) {
+  return {
+    t: config.theme,
+    S: config.surface ?? lightSurface,
+    F: config.fonts ?? defaultFonts,
+  };
+}
+
 /* ================= AUTOMATED SCHEDULING MODAL ================= */
 
 /**
@@ -88,7 +100,7 @@ export function BookingModal({
   serviceDetails: ServiceDetails;
   onBookingConfirmed: (booking: BookedInfo) => void;
 }) {
-  const t = config.theme;
+  const { t, S, F } = useTheme(config);
   const b = config.booking;
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const today = toLocalDateString(new Date());
@@ -221,27 +233,27 @@ export function BookingModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+      <div className={`${S.cardBg} rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border ${S.cardBorder} relative max-h-[90vh] overflow-y-auto`}>
         <button
           onClick={resetAndClose}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100"
+          className={`absolute top-5 right-5 p-2 rounded-full ${S.closeButton}`}
         >
           <X className="h-5 w-5" />
         </button>
 
         {isSuccess ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className={`w-16 h-16 ${S.successBadge} rounded-full flex items-center justify-center mx-auto mb-4`}>
               <Check className="h-8 w-8" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900">
+            <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>
               {b.copy.successTitle}
             </h3>
-            <p className="text-slate-600 text-sm mt-2">
+            <p className={`${S.textMuted} text-sm mt-2`}>
               {b.copy.successTextBefore} <strong>{selectedDate}</strong>{" "}
               {b.copy.successTextAt} <strong>{selectedTime}</strong>.
             </p>
-            <div className="mt-6 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5 text-slate-700">
+            <div className={`mt-6 ${S.mutedBg} p-4 rounded-2xl border ${S.cardBorder} text-left text-xs space-y-1.5 ${S.textSecondary}`}>
               <p>
                 <strong>{b.copy.serviceLabel}:</strong>{" "}
                 {serviceDetails.serviceType.toUpperCase()} {config.name}
@@ -271,13 +283,13 @@ export function BookingModal({
               >
                 <Sparkle className="h-3.5 w-3.5" /> {b.copy.schedulerBadge}
               </div>
-              <h3 className="text-2xl font-bold text-slate-900">{b.copy.title}</h3>
-              <p className="text-xs text-slate-500 mt-1">{b.copy.subtitle}</p>
+              <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>{b.copy.title}</h3>
+              <p className={`text-xs ${S.textSubtle} mt-1`}>{b.copy.subtitle}</p>
             </div>
 
             {/* Date Selection */}
             <div>
-              <label className="block text-xs font-bold uppercase text-slate-700 mb-2">
+              <label className={`block text-xs font-bold uppercase ${S.textSecondary} mb-2`}>
                 {b.copy.selectDateLabel}
               </label>
               <input
@@ -288,14 +300,14 @@ export function BookingModal({
                   setSelectedDate(e.target.value);
                   setSelectedTime("");
                 }}
-                className="w-full p-3 rounded-xl border border-slate-200 text-sm font-medium bg-slate-50"
+                className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm font-medium ${S.inputBg}`}
                 required
               />
             </div>
 
             {/* Time Slots */}
             <div>
-              <label className="block text-xs font-bold uppercase text-slate-700 mb-2">
+              <label className={`block text-xs font-bold uppercase ${S.textSecondary} mb-2`}>
                 {b.copy.timeWindowLabel}
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -311,15 +323,15 @@ export function BookingModal({
                       onClick={() => setSelectedTime(slot)}
                       className={`p-3 rounded-xl text-xs font-bold border text-center transition-all ${
                         isTaken
-                          ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed line-through"
+                          ? `${S.takenBg} border ${S.takenBorder} ${S.takenText} cursor-not-allowed line-through`
                           : isSelected
                           ? `${t.primaryBg} text-white ${t.primaryBorder} shadow-md`
-                          : `bg-white text-slate-700 border-slate-200 ${t.primaryBorderHover} ${t.primaryLightBgHover}`
+                          : `${S.slotBg} ${S.slotText} border ${S.optionBorder} ${t.primaryBorderHover} ${t.primaryLightBgHover}`
                       }`}
                     >
                       {slot}
                       {isTaken && (
-                        <span className="block text-[10px] font-normal text-slate-400">
+                        <span className={`block text-[10px] font-normal ${S.takenText}`}>
                           {b.copy.bookedLabel}
                         </span>
                       )}
@@ -330,9 +342,9 @@ export function BookingModal({
             </div>
 
             {/* Customer Details */}
-            <div className="space-y-3 border-t border-slate-100 pt-4">
+            <div className={`space-y-3 border-t ${S.borderSubtle} pt-4`}>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className={`block text-xs font-bold ${S.textSecondary} mb-1`}>
                   {b.copy.nameLabel}
                 </label>
                 <input
@@ -341,11 +353,11 @@ export function BookingModal({
                   placeholder={b.copy.namePlaceholder}
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-slate-200 text-sm"
+                  className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className={`block text-xs font-bold ${S.textSecondary} mb-1`}>
                   {b.copy.emailLabel}
                 </label>
                 <input
@@ -354,15 +366,15 @@ export function BookingModal({
                   placeholder={b.copy.emailPlaceholder}
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-slate-200 text-sm"
+                  className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
                 />
               </div>
               {/* Mandatory photo upload */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className={`block text-xs font-bold ${S.textSecondary} mb-1`}>
                   {b.copy.mediaLabel}
                 </label>
-                <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-sm text-slate-600 transition-colors hover:border-royal">
+                <label className={`flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-dashed ${S.uploadBorder} ${S.mutedBg} p-3 text-sm ${S.textMuted} transition-colors ${S.uploadHoverBorder}`}>
                   <input
                     type="file"
                     accept="image/*,video/*"
@@ -437,7 +449,7 @@ export function PriceCalculator({
   config: IndustryConfig;
   onOpenBooking: (details: ServiceDetails, price: number) => void;
 }) {
-  const t = config.theme;
+  const { t, S, F } = useTheme(config);
   const est = config.estimator;
   const [serviceType, setServiceType] = useState<string>(est.serviceTypes[0].id);
   const [bedrooms, setBedrooms] = useState<number>(est.defaultBedrooms);
@@ -456,15 +468,15 @@ export function PriceCalculator({
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl max-w-3xl mx-auto">
+    <div className={`${S.cardBg} rounded-3xl p-6 sm:p-8 border ${S.cardBorder} shadow-xl max-w-3xl mx-auto`}>
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-slate-900">{est.copy.title}</h3>
-        <p className="text-sm text-slate-600 mt-1">{est.copy.subtitle}</p>
+        <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>{est.copy.title}</h3>
+        <p className={`text-sm ${S.textMuted} mt-1`}>{est.copy.subtitle}</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+          <label className={`block text-xs font-bold uppercase tracking-wider ${S.textSecondary} mb-2`}>
             {est.copy.serviceTypeLabel}
           </label>
           <div className="space-y-2">
@@ -476,7 +488,7 @@ export function PriceCalculator({
                 className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
                   serviceType === s.id
                     ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
-                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                    : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
                 }`}
               >
                 {s.label}
@@ -487,24 +499,24 @@ export function PriceCalculator({
 
         <div className="space-y-5">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+            <label className={`block text-xs font-bold uppercase tracking-wider ${S.textSecondary} mb-2`}>
               {est.copy.bedroomsLabel}
             </label>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setBedrooms(Math.max(est.minRooms, bedrooms - 1))}
-                className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 font-bold hover:bg-slate-200"
+                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
               >
                 -
               </button>
-              <span className="font-bold text-slate-900 w-8 text-center">
+              <span className={`font-bold ${S.textPrimary} w-8 text-center`}>
                 {bedrooms}
               </span>
               <button
                 type="button"
                 onClick={() => setBedrooms(bedrooms + 1)}
-                className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 font-bold hover:bg-slate-200"
+                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
               >
                 +
               </button>
@@ -512,24 +524,24 @@ export function PriceCalculator({
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+            <label className={`block text-xs font-bold uppercase tracking-wider ${S.textSecondary} mb-2`}>
               {est.copy.bathroomsLabel}
             </label>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setBathrooms(Math.max(est.minRooms, bathrooms - 1))}
-                className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 font-bold hover:bg-slate-200"
+                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
               >
                 -
               </button>
-              <span className="font-bold text-slate-900 w-8 text-center">
+              <span className={`font-bold ${S.textPrimary} w-8 text-center`}>
                 {bathrooms}
               </span>
               <button
                 type="button"
                 onClick={() => setBathrooms(bathrooms + 1)}
-                className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 font-bold hover:bg-slate-200"
+                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
               >
                 +
               </button>
@@ -537,13 +549,13 @@ export function PriceCalculator({
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+            <label className={`block text-xs font-bold uppercase tracking-wider ${S.textSecondary} mb-2`}>
               {est.copy.frequencyLabel}
             </label>
             <select
               value={frequency}
               onChange={(e) => setFrequency(e.target.value)}
-              className="w-full p-3 rounded-xl border border-slate-200 text-sm font-medium bg-white text-slate-800"
+              className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm font-medium ${S.selectBg} ${S.selectText}`}
             >
               {est.frequencies.map((f) => (
                 <option key={f.id} value={f.id}>
@@ -555,15 +567,15 @@ export function PriceCalculator({
         </div>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 rounded-2xl p-6">
+      <div className={`mt-8 pt-6 border-t ${S.borderSubtle} flex flex-col sm:flex-row items-center justify-between gap-4 ${S.mutedBg} rounded-2xl p-6`}>
         <div>
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <span className={`text-xs font-semibold ${S.textSubtle} uppercase tracking-wider`}>
             {est.copy.estimatedLabel}
           </span>
           <div className={`text-3xl font-extrabold ${t.primaryText}`}>
             {est.currency}
             {total}{" "}
-            <span className="text-sm font-normal text-slate-500">
+            <span className={`text-sm font-normal ${S.textSubtle}`}>
               {est.copy.perSuffix}
             </span>
           </div>
@@ -586,7 +598,7 @@ export default function CleaningLayout({
 }: {
   config?: IndustryConfig;
 }) {
-  const t = config.theme;
+  const { t, S, F } = useTheme(config);
   const f = config.features;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -621,8 +633,11 @@ export default function CleaningLayout({
     ? ICON_MAP[config.sections.commercial.icon]
     : Building2;
 
+  // Cinematic hero: full-width background image + overlay, enabled via config.
+  const cinematic = config.hero?.cinematic === true;
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+    <div className={`min-h-screen ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
       {f.showBooking && (
         <BookingModal
           config={config}
@@ -635,7 +650,7 @@ export default function CleaningLayout({
       )}
 
       {/* ================= HEADER ================= */}
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className={`sticky top-0 z-40 border-b ${S.headerBorder} ${S.headerBg} backdrop-blur`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-3">
             <BrandLogo
@@ -644,7 +659,7 @@ export default function CleaningLayout({
               className="h-10 w-auto"
             />
             <span className="leading-tight">
-              <span className="block font-bold text-slate-900 text-lg">
+              <span className={`block font-bold ${F.heading} ${S.textPrimary} text-lg`}>
                 {config.brand.businessName}
               </span>
               <span
@@ -655,12 +670,12 @@ export default function CleaningLayout({
             </span>
           </a>
 
-          <nav className="hidden items-center gap-1 text-sm font-medium text-slate-600 md:flex">
+          <nav className={`hidden items-center gap-1 text-sm font-medium ${S.textMuted} md:flex`}>
             {config.navigation.links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-3.5 py-2 transition-colors ${t.primaryHoverText} hover:bg-slate-100`}
+                className={`rounded-full px-3.5 py-2 transition-colors ${t.primaryHoverText} ${S.navHoverBg}`}
               >
                 {link.label}
               </a>
@@ -670,7 +685,7 @@ export default function CleaningLayout({
           <div className="flex items-center gap-3">
             <a
               href={config.brand.phoneHref}
-              className="hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-slate-700 sm:flex"
+              className={`hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold ${S.textSecondary} sm:flex`}
             >
               <Phone className={`h-4 w-4 ${t.primaryText}`} />
               {config.brand.phone}
@@ -685,7 +700,7 @@ export default function CleaningLayout({
             )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-600 md:hidden"
+              className={`p-2 ${S.textMuted} md:hidden`}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -693,8 +708,8 @@ export default function CleaningLayout({
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-b border-slate-200 bg-white px-6 py-4 md:hidden">
-            <nav className="flex flex-col gap-4 text-sm font-medium text-slate-700">
+          <div className={`border-b ${S.mobileNavBorder} ${S.mobileNavBg} px-6 py-4 md:hidden`}>
+            <nav className={`flex flex-col gap-4 text-sm font-medium ${S.mobileNavText}`}>
               {config.navigation.links.map((link) => (
                 <a
                   key={link.href}
@@ -711,71 +726,166 @@ export default function CleaningLayout({
       </header>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="relative overflow-hidden bg-white py-16 md:py-24 border-b border-slate-200">
-        <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div
-              className={`inline-flex items-center gap-2 rounded-full ${t.primaryLightBg} px-3.5 py-1.5 text-xs font-semibold ${t.primaryLightText} mb-6`}
-            >
-              <Sparkle className="h-4 w-4" /> {config.brand.heroEyebrow}
-            </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-              {config.brand.heroHeadline}
-            </h1>
-            <p className="mt-4 text-lg text-slate-600 leading-relaxed">
-              {config.brand.heroSubhead}
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#estimate"
-                className={`rounded-xl ${t.primaryBg} px-6 py-3.5 text-base font-semibold text-white shadow-md transition-all ${t.primaryBgHover} hover:shadow-lg flex items-center gap-2`}
+      {cinematic ? (
+        <section className={`relative overflow-hidden py-24 md:py-36 border-b ${S.surfaceBg}`}>
+          <img
+            src={config.brand.heroImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = config.brand.heroImageFallback;
+            }}
+          />
+          <div className={`absolute inset-0 ${S.heroOverlay}`} />
+          <div className="relative mx-auto max-w-7xl px-6">
+            <div className="max-w-2xl">
+              <div
+                className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-3.5 py-1.5 text-xs font-semibold text-white mb-6`}
               >
-                Calculate Your Price <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href="#commercial"
-                className="rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                <Sparkle className="h-4 w-4" /> {config.brand.heroEyebrow}
+              </div>
+              <h1 className={`${F.heading} text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight`}>
+                {config.brand.heroHeadline}
+              </h1>
+              <p className="mt-4 text-lg text-white/80 leading-relaxed">
+                {config.brand.heroSubhead}
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="#estimate"
+                  className={`rounded-xl ${t.primaryBg} px-6 py-3.5 text-base font-semibold text-white shadow-md transition-all ${t.primaryBgHover} hover:shadow-lg flex items-center gap-2`}
+                >
+                  Calculate Your Price <ArrowRight className="h-4 w-4" />
+                </a>
+                {f.showCommercial && (
+                  <a
+                    href="#commercial"
+                    className="rounded-xl border border-white/30 bg-white/10 px-6 py-3.5 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
+                  >
+                    Commercial Services
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className={`relative overflow-hidden ${S.heroBg} py-16 md:py-24 border-b ${S.cardBorder}`}>
+          <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div
+                className={`inline-flex items-center gap-2 rounded-full ${t.primaryLightBg} px-3.5 py-1.5 text-xs font-semibold ${t.primaryLightText} mb-6`}
               >
-                Commercial Services
-              </a>
+                <Sparkle className="h-4 w-4" /> {config.brand.heroEyebrow}
+              </div>
+              <h1 className={`${F.heading} text-4xl md:text-5xl font-extrabold tracking-tight ${S.textPrimary} leading-tight`}>
+                {config.brand.heroHeadline}
+              </h1>
+              <p className={`mt-4 text-lg ${S.textMuted} leading-relaxed`}>
+                {config.brand.heroSubhead}
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="#estimate"
+                  className={`rounded-xl ${t.primaryBg} px-6 py-3.5 text-base font-semibold text-white shadow-md transition-all ${t.primaryBgHover} hover:shadow-lg flex items-center gap-2`}
+                >
+                  Calculate Your Price <ArrowRight className="h-4 w-4" />
+                </a>
+                {f.showCommercial && (
+                  <a
+                    href="#commercial"
+                    className={`rounded-xl ${S.secondaryButton} px-6 py-3.5 text-base font-semibold transition-colors`}
+                  >
+                    Commercial Services
+                  </a>
+                )}
+              </div>
+
+              <div className={`mt-10 grid grid-cols-3 gap-4 border-t ${S.borderSubtle} pt-6`}>
+                {config.trustBadges.map((badge, idx) => {
+                  const BadgeIcon = ICON_MAP[badge.icon] ?? ShieldCheck;
+                  return (
+                    <div key={idx} className="flex items-center gap-2">
+                      <BadgeIcon className={`h-5 w-5 ${t.primaryText} shrink-0`} />
+                      <span className={`text-xs font-medium ${S.textMuted}`}>
+                        {badge.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-3 gap-4 border-t border-slate-100 pt-6">
-              {config.trustBadges.map((badge, idx) => {
-                const BadgeIcon = ICON_MAP[badge.icon] ?? ShieldCheck;
-                return (
-                  <div key={idx} className="flex items-center gap-2">
-                    <BadgeIcon className={`h-5 w-5 ${t.primaryText} shrink-0`} />
-                    <span className="text-xs font-medium text-slate-600">
-                      {badge.label}
+            <div className="relative">
+              <div className={`overflow-hidden rounded-3xl ${S.imageFrameBg} shadow-xl border ${S.imageFrameBorder}`}>
+                <img
+                  src={config.brand.heroImage}
+                  alt="Clean modern living room"
+                  className="h-[420px] w-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = config.brand.heroImageFallback;
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ================= CRAFTSMANSHIP SPOTLIGHT ================= */}
+      {f.showCraftsmanship && config.craftsmanship && config.sections.craftsmanship && (
+        <section id="craftsmanship" className={`py-20 ${S.surfaceBg}`}>
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="overflow-hidden rounded-3xl shadow-2xl border border-gold/20">
+                <img
+                  src={config.craftsmanship.image}
+                  alt={config.sections.craftsmanship.title}
+                  className="h-[540px] w-full object-cover"
+                />
+              </div>
+              <div>
+                <span className={`text-xs uppercase tracking-[0.2em] font-bold ${t.primaryText}`}>
+                  {config.sections.craftsmanship.eyebrow ?? config.craftsmanship.eyebrow}
+                </span>
+                <h2 className={`mt-3 text-3xl md:text-4xl font-bold ${F.heading} ${S.textPrimary} leading-tight`}>
+                  {config.sections.craftsmanship.title ?? config.craftsmanship.title}
+                </h2>
+                <p className={`mt-4 ${S.textMuted} leading-relaxed`}>
+                  {config.craftsmanship.description}
+                </p>
+                {config.craftsmanship.bullets && config.craftsmanship.bullets.length > 0 && (
+                  <ul className="mt-6 space-y-3">
+                    {config.craftsmanship.bullets.map((bullet, i) => (
+                      <li key={i} className={`flex items-center gap-3 text-sm font-medium ${S.textSecondary}`}>
+                        <CheckCircle2 className={`h-5 w-5 ${t.primaryText} shrink-0`} />
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {config.craftsmanship.stat && (
+                  <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-gold/30 bg-gold/10 px-6 py-4">
+                    <span className={`text-4xl font-extrabold ${F.heading} ${t.primaryText}`}>
+                      {config.craftsmanship.stat.value}
                     </span>
+                    <span className={`text-sm ${S.textMuted}`}>{config.craftsmanship.stat.label}</span>
                   </div>
-                );
-              })}
+                )}
+              </div>
             </div>
           </div>
+        </section>
+      )}
 
-          <div className="relative">
-            <div className="overflow-hidden rounded-3xl bg-slate-100 shadow-xl border border-slate-200">
-              <img
-                src={config.brand.heroImage}
-                alt="Clean modern living room"
-                className="h-[420px] w-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = config.brand.heroImageFallback;
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= RESIDENTIAL SERVICES ================= */}
+      {/* ================= RESIDENTIAL SERVICES / GALLERY GRID ================= */}
       {f.showResidential && (
         <section
           id="services"
-          className="relative overflow-hidden py-20 bg-slate-50"
+          className={`relative overflow-hidden py-20 ${S.surfaceBg}`}
         >
           <img
             src={config.brand.residentialImage}
@@ -783,7 +893,7 @@ export default function CleaningLayout({
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/70 to-white/85" />
+          <div className={`absolute inset-0 ${S.residentialOverlay}`} />
           <div id="residential" className="relative mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2
@@ -791,98 +901,210 @@ export default function CleaningLayout({
               >
                 {config.sections.residential.eyebrow}
               </h2>
-              <p className="mt-2 text-3xl font-bold text-slate-900">
+              <p className={`mt-2 text-3xl font-bold ${F.heading} ${S.textPrimary}`}>
                 {config.sections.residential.title}
               </p>
-              <p className="mt-3 text-slate-600">
+              <p className={`mt-3 ${S.textMuted}`}>
                 {config.sections.residential.description}
               </p>
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
-              <div className="grid gap-8 sm:grid-cols-2">
+            {f.showGallery ? (
+              <div className="grid gap-8 md:grid-cols-2">
                 {config.services.residential.map((service, idx) => (
                   <div
                     key={idx}
-                    className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+                    className={`${S.cardBg} overflow-hidden rounded-3xl border ${S.cardBorder} shadow-lg transition-all ${S.cardHover}`}
                   >
-                    <div
-                      className={`h-12 w-12 rounded-xl ${t.primaryLightBg} flex items-center justify-center ${t.primaryText} mb-6`}
-                    >
-                      <ResIcon className="h-6 w-6" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-1">
-                      {service.title}
-                    </h3>
-                    {service.price && (
-                      <p className="mb-2 flex items-baseline gap-1.5">
-                        <span
-                          className={`text-2xl font-extrabold ${t.primaryText}`}
-                        >
-                          {service.price}
-                        </span>
-                        {service.priceSuffix && (
-                          <span className="text-xs font-medium text-slate-500">
-                            {service.priceSuffix}
+                    {service.image && (
+                      <div className="relative h-72 overflow-hidden">
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        {service.price && (
+                          <span className={`absolute bottom-4 left-4 rounded-full ${t.primaryBg} px-4 py-1.5 text-sm font-bold text-white shadow-lg`}>
+                            {service.price}
+                            {service.priceSuffix && (
+                              <span className="ml-1 text-xs font-medium opacity-90">{service.priceSuffix}</span>
+                            )}
                           </span>
                         )}
-                      </p>
+                      </div>
                     )}
-                    <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                      {service.description}
-                    </p>
-                    <ul className="space-y-2.5 border-t border-slate-100 pt-6">
-                      {service.features.map((feature, fIdx) => (
-                        <li
-                          key={fIdx}
-                          className="flex items-center gap-2 text-xs font-medium text-slate-700"
-                        >
-                          <CheckCircle2
-                            className={`h-4 w-4 ${t.primaryText} shrink-0`}
-                          />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="p-7">
+                      <h3 className={`text-2xl font-bold ${F.heading} ${S.textPrimary}`}>
+                        {service.title}
+                      </h3>
+                      <p className={`mt-2 text-sm ${S.textMuted} leading-relaxed`}>
+                        {service.description}
+                      </p>
+                      <ul className="mt-5 space-y-2 border-t border-gold/20 pt-5">
+                        {service.features.map((feature, fIdx) => (
+                          <li key={fIdx} className={`flex items-center gap-2 text-sm font-medium ${S.textSecondary}`}>
+                            <CheckCircle2 className={`h-4 w-4 ${t.primaryText} shrink-0`} />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 ))}
               </div>
-
-              {config.services.addons.length > 0 && (
-                <aside
-                  className={`h-fit rounded-2xl border ${t.primaryBorder} bg-white/90 p-6 shadow-sm`}
-                >
-                  <div className="mb-5 flex items-center gap-2">
-                    <Sparkles className={`h-5 w-5 ${t.primaryText}`} />
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-700">
-                      {config.services.addonsTitle}
-                    </h4>
-                  </div>
-                  <ul className="space-y-3">
-                    {config.services.addons.map((addon, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center gap-2 text-sm font-medium text-slate-700"
+            ) : (
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+                <div className="grid gap-8 sm:grid-cols-2">
+                  {config.services.residential.map((service, idx) => (
+                    <div
+                      key={idx}
+                      className={`${S.cardBg} rounded-2xl p-8 border ${S.cardBorder} shadow-sm transition-shadow ${S.cardHover}`}
+                    >
+                      <div
+                        className={`h-12 w-12 rounded-xl ${t.primaryLightBg} flex items-center justify-center ${t.primaryText} mb-6`}
                       >
-                        <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
-                        <span className="flex-1">{addon.name}</span>
-                        {addon.duration && (
-                          <span className="shrink-0 text-xs text-slate-500">
-                            {addon.duration}
-                          </span>
-                        )}
-                        {addon.price && (
+                        <ResIcon className="h-6 w-6" />
+                      </div>
+                      <h3 className={`text-xl font-bold ${F.heading} ${S.textPrimary} mb-1`}>
+                        {service.title}
+                      </h3>
+                      {service.price && (
+                        <p className="mb-2 flex items-baseline gap-1.5">
                           <span
-                            className={`shrink-0 ${t.primaryText} font-semibold`}
+                            className={`text-2xl font-extrabold ${t.primaryText}`}
                           >
-                            {addon.price}
+                            {service.price}
                           </span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </aside>
-              )}
+                          {service.priceSuffix && (
+                            <span className={`text-xs font-medium ${S.textSubtle}`}>
+                              {service.priceSuffix}
+                            </span>
+                          )}
+                        </p>
+                      )}
+                      <p className={`${S.textMuted} text-sm mb-6 leading-relaxed`}>
+                        {service.description}
+                      </p>
+                      <ul className={`space-y-2.5 border-t ${S.borderSubtle} pt-6`}>
+                        {service.features.map((feature, fIdx) => (
+                          <li
+                            key={fIdx}
+                            className={`flex items-center gap-2 text-xs font-medium ${S.textSecondary}`}
+                          >
+                            <CheckCircle2
+                              className={`h-4 w-4 ${t.primaryText} shrink-0`}
+                            />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+
+                {config.services.addons.length > 0 && (
+                  <aside
+                    className={`h-fit rounded-2xl border ${t.primaryBorder} ${S.cardBg}/90 p-6 shadow-sm`}
+                  >
+                    <div className="mb-5 flex items-center gap-2">
+                      <Sparkles className={`h-5 w-5 ${t.primaryText}`} />
+                      <h4 className={`text-sm font-bold uppercase tracking-wider ${S.textSecondary}`}>
+                        {config.services.addonsTitle}
+                      </h4>
+                    </div>
+                    <ul className="space-y-3">
+                      {config.services.addons.map((addon, idx) => (
+                        <li
+                          key={idx}
+                          className={`flex items-center gap-2 text-sm font-medium ${S.textSecondary}`}
+                        >
+                          <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
+                          <span className="flex-1">{addon.name}</span>
+                          {addon.duration && (
+                            <span className={`shrink-0 text-xs ${S.textSubtle}`}>
+                              {addon.duration}
+                            </span>
+                          )}
+                          {addon.price && (
+                            <span
+                              className={`shrink-0 ${t.primaryText} font-semibold`}
+                            >
+                              {addon.price}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
+                )}
+              </div>
+            )}
+
+            {/* Add-ons below the gallery grid (so they stay visible on dark) */}
+            {f.showGallery && config.services.addons.length > 0 && (
+              <div
+                className={`mt-10 mx-auto max-w-3xl rounded-2xl border ${t.primaryBorder} ${S.cardBg} p-6 shadow-sm`}
+              >
+                <div className="mb-5 flex items-center justify-center gap-2">
+                  <Sparkles className={`h-5 w-5 ${t.primaryText}`} />
+                  <h4 className={`text-sm font-bold uppercase tracking-wider ${S.textSecondary}`}>
+                    {config.services.addonsTitle}
+                  </h4>
+                </div>
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {config.services.addons.map((addon, idx) => (
+                    <li
+                      key={idx}
+                      className={`flex items-center gap-2 text-sm font-medium ${S.textSecondary} rounded-xl ${S.mutedBg} border ${S.mutedBorder} px-4 py-3`}
+                    >
+                      <Check className={`h-4 w-4 ${t.primaryText} shrink-0`} />
+                      <span className="flex-1">{addon.name}</span>
+                      {addon.duration && (
+                        <span className={`shrink-0 text-xs ${S.textSubtle}`}>
+                          {addon.duration}
+                        </span>
+                      )}
+                      {addon.price && (
+                        <span className={`shrink-0 ${t.primaryText} font-semibold`}>
+                          {addon.price}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ================= FULL-WIDTH BRAND STATEMENT ================= */}
+      {f.showStatement && config.statement && (
+        <section id="statement" className="relative overflow-hidden py-24 md:py-32">
+          {config.statement.backgroundImage && (
+            <img
+              src={config.statement.backgroundImage}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
+          <div className={`absolute inset-0 ${S.statementOverlay}`} />
+          <div className="relative mx-auto max-w-4xl px-6 text-center">
+            <Quote className={`mx-auto h-12 w-12 ${t.primaryText} opacity-80`} />
+            {config.statement.eyebrow && (
+              <p className={`mt-6 text-xs uppercase tracking-[0.25em] font-bold ${t.primaryText}`}>
+                {config.statement.eyebrow}
+              </p>
+            )}
+            <blockquote className={`mt-6 text-2xl md:text-4xl font-semibold leading-snug ${F.heading} text-white`}>
+              "{config.statement.quote}"
+            </blockquote>
+            <div className="mt-8">
+              <p className="text-base font-bold text-white">{config.statement.name}</p>
+              <p className="text-sm text-white/70">{config.statement.role}</p>
             </div>
           </div>
         </section>
@@ -892,7 +1114,7 @@ export default function CleaningLayout({
       {f.showBeforeAfter && (
         <section
           id="results"
-          className="py-20 bg-white border-t border-slate-200"
+          className={`py-20 ${S.cardBg} border-t ${S.cardBorder}`}
         >
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
@@ -901,10 +1123,10 @@ export default function CleaningLayout({
               >
                 {config.sections.beforeAfter.eyebrow}
               </span>
-              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+              <h2 className={`mt-2 text-3xl font-bold ${F.heading} ${S.textPrimary}`}>
                 {config.sections.beforeAfter.title}
               </h2>
-              <p className="mt-3 text-slate-600">
+              <p className={`mt-3 ${S.textMuted}`}>
                 {config.sections.beforeAfter.description}
               </p>
             </div>
@@ -913,9 +1135,9 @@ export default function CleaningLayout({
               {config.beforeAfter.results.map((result, idx) => (
                 <div
                   key={idx}
-                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                  className={`overflow-hidden rounded-2xl border ${S.cardBorder} ${S.cardBg} shadow-sm`}
                 >
-                  <div className="grid grid-cols-2 gap-1 bg-slate-100">
+                  <div className={`grid grid-cols-2 gap-1 ${S.mutedBg}`}>
                     <div className="relative">
                       <img
                         src={result.beforeImage}
@@ -940,7 +1162,7 @@ export default function CleaningLayout({
                     </div>
                   </div>
                   {result.caption && (
-                    <div className="px-4 py-3 text-center text-sm font-semibold text-slate-700">
+                    <div className={`px-4 py-3 text-center text-sm font-semibold ${S.textSecondary}`}>
                       {result.caption}
                     </div>
                   )}
@@ -955,7 +1177,7 @@ export default function CleaningLayout({
       {f.showServiceAreas && (
         <section
           id="service-areas"
-          className="py-20 bg-slate-50 border-t border-slate-200"
+          className={`py-20 ${S.surfaceBg} border-t ${S.cardBorder}`}
         >
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
@@ -964,10 +1186,10 @@ export default function CleaningLayout({
               >
                 {config.sections.serviceAreas.eyebrow}
               </span>
-              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+              <h2 className={`mt-2 text-3xl font-bold ${F.heading} ${S.textPrimary}`}>
                 {config.sections.serviceAreas.title}
               </h2>
-              <p className="mt-3 text-slate-600">
+              <p className={`mt-3 ${S.textMuted}`}>
                 {config.sections.serviceAreas.description}
               </p>
             </div>
@@ -976,10 +1198,10 @@ export default function CleaningLayout({
               {config.serviceAreas.map((area, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                  className={`flex items-center gap-2 rounded-xl border ${S.cardBorder} ${S.cardBg} px-4 py-3 shadow-sm`}
                 >
                   <MapPin className={`h-4 w-4 ${t.primaryText} shrink-0`} />
-                  <span className="text-sm font-medium text-slate-800">
+                  <span className={`text-sm font-medium ${S.selectText}`}>
                     {area}
                   </span>
                 </div>
@@ -991,10 +1213,10 @@ export default function CleaningLayout({
 
       {/* ================= COMMERCIAL SECTION ================= */}
       {f.showCommercial && (
-        <section id="commercial" className="py-20 bg-white border-t border-slate-200">
+        <section id="commercial" className={`py-20 ${S.cardBg} border-t ${S.cardBorder}`}>
           <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
-              <div className="overflow-hidden rounded-3xl bg-slate-100 shadow-lg border border-slate-200">
+              <div className={`overflow-hidden rounded-3xl ${S.imageFrameBg} shadow-lg border ${S.imageFrameBorder}`}>
                 <img
                   src={config.brand.commercialImage}
                   alt="Clean commercial office space"
@@ -1012,10 +1234,10 @@ export default function CleaningLayout({
               >
                 {config.sections.commercial.eyebrow}
               </span>
-              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+              <h2 className={`mt-2 text-3xl font-bold ${F.heading} ${S.textPrimary}`}>
                 {config.sections.commercial.title}
               </h2>
-              <p className="mt-4 text-slate-600 leading-relaxed">
+              <p className={`mt-4 ${S.textMuted} leading-relaxed`}>
                 {config.sections.commercial.description}
               </p>
 
@@ -1023,16 +1245,16 @@ export default function CleaningLayout({
                 {config.services.commercial.map((cService, idx) => (
                   <div
                     key={idx}
-                    className="flex gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100"
+                    className={`flex gap-4 p-4 rounded-xl ${S.mutedBg} border ${S.mutedBorder}`}
                   >
                     <ComIcon
                       className={`h-6 w-6 ${t.primaryText} shrink-0 mt-0.5`}
                     />
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
+                      <h4 className={`font-bold ${F.heading} ${S.textPrimary} text-sm`}>
                         {cService.title}
                       </h4>
-                      <p className="text-xs text-slate-600 mt-1">
+                      <p className={`text-xs ${S.textMuted} mt-1`}>
                         {cService.description}
                       </p>
                     </div>
@@ -1046,7 +1268,7 @@ export default function CleaningLayout({
 
       {/* ================= INSTANT ESTIMATOR SECTION ================= */}
       {f.showEstimator && (
-        <section id="estimate" className="py-20 bg-slate-100 border-t border-slate-200">
+        <section id="estimate" className={`py-20 ${S.sectionAltBg} border-t ${S.cardBorder}`}>
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-12">
               <span
@@ -1054,10 +1276,10 @@ export default function CleaningLayout({
               >
                 {config.sections.estimator.eyebrow}
               </span>
-              <h2 className="mt-2 text-3xl font-bold text-slate-900">
+              <h2 className={`mt-2 text-3xl font-bold ${F.heading} ${S.textPrimary}`}>
                 {config.sections.estimator.title}
               </h2>
-              <p className="mt-3 text-slate-600">
+              <p className={`mt-3 ${S.textMuted}`}>
                 {config.sections.estimator.description}
               </p>
             </div>
@@ -1083,7 +1305,7 @@ export default function CleaningLayout({
                 alt={`${config.brand.businessName} Logo`}
                 className="h-10 w-auto"
               />
-              <span className="font-bold text-xl">
+              <span className={`font-bold ${F.heading} text-xl`}>
                 {config.brand.businessName}
               </span>
             </div>
@@ -1092,7 +1314,7 @@ export default function CleaningLayout({
             </p>
           </div>
           <div>
-            <h4 className={`font-semibold mb-3 text-sm ${t.footerHeading}`}>
+            <h4 className={`font-semibold mb-3 text-sm ${F.heading} ${t.footerHeading}`}>
               Quick Links
             </h4>
             <ul className={`space-y-2 text-sm ${t.footerMuted}`}>
@@ -1115,7 +1337,7 @@ export default function CleaningLayout({
           </div>
           {f.showContact && (
             <div>
-              <h4 className={`font-semibold mb-3 text-sm ${t.footerHeading}`}>
+              <h4 className={`font-semibold mb-3 text-sm ${F.heading} ${t.footerHeading}`}>
                 Contact Us
               </h4>
               <p
