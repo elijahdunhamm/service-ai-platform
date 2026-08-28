@@ -2,8 +2,7 @@
 import type { IndustryConfig } from "../types";
 
 /**
- * Preset for the premium automotive detailing industry ("Precision Auto
- * Detailing"). Mirrors the exact IndustryConfig schema used by the cleaning and
+ * Preset for the premium automotive detailing industry ("autodetaildemo"). Mirrors the exact IndustryConfig schema used by the cleaning and
  * HVAC presets so the shared layout renders a fully themed detailing site from
  * this single object. All content here is config data — the UI stays generic.
  */
@@ -12,24 +11,29 @@ export const detailingPreset: IndustryConfig = {
   name: "Car Detailing",
 
   brand: {
-    businessName: "Precision Auto Detailing",
-    tagline: "Premium Mobile Detailing",
+    businessName: "autodetaildemo",
+    tagline: "Premium Mobile Car Detailing",
     logo: "/images/detailing-logo.png",
-    heroImage: "/images/detailing-hero.jpg",
-    commercialImage: "/images/detailing-exterior-after.jpg",
-    residentialImage: "/images/detailing-garage-bg.jpg",
-    heroImageFallback: "/images/detailing-exterior-after.jpg",
-    commercialImageFallback: "/images/detailing-interior-after.jpg",
+    heroImage:
+      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80",
+    commercialImage:
+      "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",
+    residentialImage:
+      "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=1200&q=80",
+    heroImageFallback:
+      "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1600&q=80",
+    commercialImageFallback:
+      "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1200&q=80",
     phone: "(555) 010-0220",
     phoneHref: "tel:+15550100220",
-    email: "hello@precisiondetail.example.com",
+    email: "hello@autodetaildemo.example.com",
     heroEyebrow: "Premier Mobile Auto Detailing",
     heroHeadline: "Showroom Shine, Delivered to Your Door.",
     heroSubhead:
       "Expert interior and exterior detailing brought straight to your home or office. We bring the garage-grade equipment and leave your vehicle showroom-fresh.",
     footerBlurb:
-      "Professional mobile car detailing for interiors, exteriors, and paint correction. Showroom-quality results on your schedule.",
-    copyrightName: "Precision Auto Detailing",
+      "Professional mobile car detailing by autodetaildemo — interiors, exteriors, and paint correction. Showroom-quality results on your schedule.",
+    copyrightName: "autodetaildemo",
   },
 
   theme: {
@@ -146,7 +150,7 @@ export const detailingPreset: IndustryConfig = {
   beforeAfter: {
     title: "Before & After Results",
     description:
-      "Real transformations from our recent details. See the difference a Precision visit makes.",
+      "Real transformations from our recent details. See the difference an autodetaildemo visit makes.",
     beforeLabel: "Before",
     afterLabel: "After",
     results: [
@@ -203,7 +207,7 @@ export const detailingPreset: IndustryConfig = {
       eyebrow: "See the Difference",
       title: "Before & After Results",
       description:
-        "Real transformations from our recent details. Slide between before and after to see what Precision Auto Detailing can do.",
+        "Real transformations from our recent details. Slide between before and after to see what autodetaildemo can do.",
       icon: "sparkles",
     },
     serviceAreas: {
