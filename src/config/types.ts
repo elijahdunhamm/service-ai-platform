@@ -114,6 +114,12 @@ export interface ResidentialService {
   price?: string;
   /** Small label shown next to the price (e.g. "per clean"). */
   priceSuffix?: string;
+  /**
+   * Optional representative image for this service tier. When set and the
+   * `showGallery` feature flag is on, the layout renders the service as a
+   * large image "gallery grid" card instead of the default compact card.
+   */
+  image?: string;
 }
 
 export interface CommercialService {
@@ -128,6 +134,118 @@ export interface Addon {
   price?: string;
   /** Duration display, e.g. "20 mins". Omit/empty when not applicable. */
   duration?: string;
+}
+
+/**
+ * Surface + typography theming tokens. Unlike `ThemeColors` (accent/footer
+ * colors), these describe the *page surfaces* — backgrounds, borders, body text,
+ * cards, inputs, overlay gradients — that the shared layout was previously
+ * hardcoding (bg-slate-50, bg-white, text-slate-900, etc.).
+ *
+ * Every field is a *fully-written* Tailwind utility class string so the JIT can
+ * detect it in the preset source. Light defaults (exposed as `lightSurface` in
+ * `src/config/theme.ts`) reproduce the original layout verbatim, so any preset
+ * that omits `surface` renders exactly as it did before.
+ */
+export interface ThemeSurface {
+  /** Entire page background behind all sections. */
+  surfaceBg: string;
+  /** Card / panel / dropdown background. */
+  cardBg: string;
+  /** Card & primary section border. */
+  cardBorder: string;
+  /** Subtle divider / under-border. */
+  borderSubtle: string;
+  /** Headings & strong body text. */
+  textPrimary: string;
+  /** Secondary/medium text. */
+  textSecondary: string;
+  /** Standard body text. */
+  textMuted: string;
+  /** Subdued / tertiary text. */
+  textSubtle: string;
+  /** Very faint text (labels, icons that can recede). */
+  textFaint: string;
+  /** Header background (translucent). */
+  headerBg: string;
+  /** Header bottom border. */
+  headerBorder: string;
+  /** Nav link hover background. */
+  navHoverBg: string;
+  /** Mobile menu dropdown background. */
+  mobileNavBg: string;
+  /** Mobile menu dropdown border. */
+  mobileNavBorder: string;
+  /** Mobile menu link text. */
+  mobileNavText: string;
+  /** Hero section background. */
+  heroBg: string;
+  /** Secondary / outline action button styling. */
+  secondaryButton: string;
+  /** Background of framed images (hero/commercial). */
+  imageFrameBg: string;
+  /** Border of framed images. */
+  imageFrameBorder: string;
+  /** Gradient overlay over the residential section background image. */
+  residentialOverlay: string;
+  /** Alternative section band background (estimator). */
+  sectionAltBg: string;
+  /** Muted panel background (summary boxes, list items, pills). */
+  mutedBg: string;
+  /** Muted panel border. */
+  mutedBorder: string;
+  /** Input field background. */
+  inputBg: string;
+  /** Input field border. */
+  inputBorder: string;
+  /** Select dropdown background. */
+  selectBg: string;
+  /** Select dropdown text. */
+  selectText: string;
+  /** Stepper (- / +) button background. */
+  stepBg: string;
+  /** Stepper button hover background. */
+  stepHoverBg: string;
+  /** Stepper button text. */
+  stepText: string;
+  /** Booked (taken) time-slot background. */
+  takenBg: string;
+  /** Booked (taken) time-slot border. */
+  takenBorder: string;
+  /** Booked (taken) time-slot text. */
+  takenText: string;
+  /** Unselected time-slot background. */
+  slotBg: string;
+  /** Unselected time-slot text. */
+  slotText: string;
+  /** Unselected calculator option border. */
+  optionBorder: string;
+  /** Unselected calculator option text. */
+  optionText: string;
+  /** Unselected calculator option hover background. */
+  optionHoverBg: string;
+  /** Upload drop-zone border. */
+  uploadBorder: string;
+  /** Upload drop-zone hover border. */
+  uploadHoverBorder: string;
+  /** Success confirmation circle. */
+  successBadge: string;
+  /** Booking modal close-button hover styling. */
+  closeButton: string;
+  /** Card hover shadow / intent. */
+  cardHover: string;
+  /** Overlay gradient over the full-width cinematic hero image. */
+  heroOverlay: string;
+  /** Overlay gradient over the full-width brand statement background image. */
+  statementOverlay: string;
+}
+
+/** Font pairing, applied as Tailwind font-family utility classes. */
+export interface ThemeFonts {
+  /** Heading font family class (e.g. "font-display"). */
+  heading: string;
+  /** Body font family class (e.g. "font-body"). */
+  body: string;
 }
 
 /** One before/after image pair shown as a "results" card. */
@@ -258,6 +376,42 @@ export interface SectionCopy {
   reviews: SectionHeading;
   beforeAfter: SectionHeading;
   serviceAreas: SectionHeading;
+  /** Optional heading copy for the craftsmanship spotlight section. */
+  craftsmanship?: SectionHeading;
+  /** Optional heading copy for the full-width brand statement section. */
+  statement?: SectionHeading;
+}
+
+/**
+ * "Craftsmanship spotlight" — a full-width, large close-up image of the
+ * detailing process paired with short evocative copy. Feature-flagged off for
+ * light tenants so they render identically.
+ */
+export interface CraftsmanshipConfig {
+  eyebrow: string;
+  title: string;
+  description: string;
+  /** Large close-up detailing-process image. */
+  image: string;
+  /** Optional supporting bullet points. */
+  bullets?: string[];
+  /** Optional headline stat (e.g. "500+" / "happy clients"). */
+  stat?: { value: string; label: string };
+}
+
+/**
+ * Full-width brand statement / featured testimonial — a powerful quote or
+ * mission statement on a dark section with an optional subtle background image.
+ */
+export interface StatementConfig {
+  eyebrow?: string;
+  quote: string;
+  /** Attribution name. */
+  name: string;
+  /** Attribution role/title. */
+  role: string;
+  /** Optional subtle background image layered under an overlay. */
+  backgroundImage?: string;
 }
 
 /** Boolean feature flags controlling which sections render. */
@@ -274,6 +428,12 @@ export interface FeatureFlags {
   showBooking: boolean;
   /** Enables the contact/footer contact block. */
   showContact: boolean;
+  /** Enables the craftsmanship spotlight section. Default OFF. */
+  showCraftsmanship: boolean;
+  /** Enables the full-width brand statement section. Default OFF. */
+  showStatement: boolean;
+  /** Renders services as a large image "gallery grid". Default OFF. */
+  showGallery: boolean;
 }
 
 /** One customer-support FAQ item used by the floating chat widget. */
@@ -309,6 +469,23 @@ export interface IndustryConfig {
   name: string;
   brand: Brand;
   theme: ThemeColors;
+  /**
+   * Surface + typography theming. Optional: when omitted, `lightSurface` /
+   * `defaultFonts` from `src/config/theme.ts` are used, reproducing the
+   * original light look verbatim. Light tenants may omit this entirely.
+   */
+  surface?: ThemeSurface;
+  /** Font pairing as Tailwind font-family classes (optional, light default). */
+  fonts?: ThemeFonts;
+  /** Optional craftsmanship spotlight section (feature-flagged). */
+  craftsmanship?: CraftsmanshipConfig;
+  /** Optional full-width brand statement section (feature-flagged). */
+  statement?: StatementConfig;
+  /** Hero layout overrides (optional, light stays split). */
+  hero?: {
+    /** Render a full-width cinematic hero with background image + overlay. */
+    cinematic: boolean;
+  };
   navigation: {
     links: NavLink[];
     cta: string;
