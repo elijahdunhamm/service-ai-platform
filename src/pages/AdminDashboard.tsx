@@ -7,7 +7,9 @@ import {
 } from '../services/adminService';
 import { Search, TrendingUp, Clock, CheckCircle, Loader2, Trash2, X, DollarSign } from 'lucide-react';
 import BrandLogo from '../components/BrandLogo';
-import { cleaningPreset } from '../config/presets/cleaning';
+import { PRESETS, DEFAULT_PRESET_ID, defaultPreset } from '../config/presets';
+import { lightSurface, defaultFonts } from '../config/theme';
+import type { IndustryConfig } from '../config/types';
 
 /**
  * Decide whether a public Storage URL is a video or an image. Media URLs come
@@ -24,7 +26,29 @@ interface LightboxState {
   kind: 'image' | 'video';
 }
 
-export default function AdminDashboard() {
+/**
+ * Tenant-aware, theme-driven admin dashboard.
+ *
+ * `tenantId` selects the active tenant's preset from the PRESETS registry by
+ * id. Everything branded and visual comes from that preset:
+ *  - `brand.logo` + `brand.businessName` drive the header branding (no hardcoded
+ *    cleaning import).
+ *  - `theme` (accent) + `surface`/`fonts` drive all surfaces, text, borders and
+ *    accent colors, so the detailing admin adopts its dark "Noir & Or" look and
+ *    the cleaning admin keeps the original light look (via the lightSurface
+ *    defaults), byte-for-byte where unchanged.
+ * Bookings are fetched scoped to the active tenant (`.eq('tenant_id')`), so each
+ * admin's stats / revenue / monthly-profit are computed from that tenant's rows
+ * only.
+ */
+export default function AdminDashboard({ tenantId = DEFAULT_PRESET_ID }: { tenantId?: string }) {
+  // Resolve the active preset by id; fall back to the default (cleaning) if the
+  // id is not a registered preset.
+  const config: IndustryConfig = PRESETS[tenantId] ?? defaultPreset;
+  const t = config.theme;
+  const S = config.surface ?? lightSurface;
+  const F = config.fonts ?? defaultFonts;
+
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,12 +60,15 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadBookings();
-  }, []);
+    // Re-fetch whenever the active tenant changes so each admin shows only its
+    // own bookings.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.id]);
 
   const loadBookings = async () => {
     setLoading(true);
     setError(null);
-    const result = await fetchBookings();
+    const result = await fetchBookings(config.id);
     if (result.success && result.bookings) {
       setBookings(result.bookings);
     } else {
@@ -90,10 +117,10 @@ export default function AdminDashboard() {
   });
 
   /**
-   * Monthly profit, computed dynamically from the fetched bookings — no
-   * hardcoded numbers. A booking counts as revenue only when its status is
-   * `completed` or `confirmed` (both are revenue-earning); `pending` and
-   * `cancelled` are excluded. The month is derived from each booking's
+   * Monthly profit, computed dynamically from the fetched (tenant-scoped)
+   * bookings — no hardcoded numbers. A booking counts as revenue only when its
+   * status is `completed` or `confirmed` (both are revenue-earning); `pending`
+   * and `cancelled` are excluded. The month is derived from each booking's
    * `created_at` timestamp, compared against the current calendar month.
    */
   const REVENUE_STATUSES: Booking['status'][] = ['completed', 'confirmed'];
@@ -126,41 +153,45 @@ export default function AdminDashboard() {
     }
   };
 
+  // Themed focus ring: "ring-current" follows the active text color (config-
+  // driven) so it reads correctly on both light and dark surfaces.
+  const focusRing = 'focus:outline-none focus:ring-2 focus:ring-current focus:border-transparent';
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className={`min-h-screen ${S.surfaceBg} ${F.body} flex items-center justify-center`}>
         <div className="text-center">
           <BrandLogo
-            src={cleaningPreset.brand.logo}
-            alt={`${cleaningPreset.brand.businessName} Logo`}
+            src={config.brand.logo}
+            alt={`${config.brand.businessName} Logo`}
             className="h-12 w-auto mx-auto mb-4"
           />
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-slate-600">Loading dashboard...</p>
+          <Loader2 className={`h-8 w-8 animate-spin ${t.primaryText} mx-auto mb-4`} />
+          <p className={S.textMuted}>Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className={`min-h-screen ${S.surfaceBg} ${F.body} p-6`}>
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3">
             <BrandLogo
-              src={cleaningPreset.brand.logo}
-              alt={`${cleaningPreset.brand.businessName} Logo`}
+              src={config.brand.logo}
+              alt={`${config.brand.businessName} Logo`}
               className="h-12 w-auto"
             />
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
-              <p className="text-slate-600">Manage bookings and monitor performance</p>
+              <h1 className={`text-3xl font-bold ${F.heading} ${S.textPrimary}`}>{config.brand.businessName} Admin</h1>
+              <p className={S.textMuted}>Manage bookings and monitor performance</p>
             </div>
           </div>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+          <div className={`mb-6 p-4 ${S.mutedBg} border ${S.cardBorder} rounded-xl ${t.primaryText}`}>
             {error}
           </div>
         )}
@@ -200,63 +231,63 @@ export default function AdminDashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <div className={`${S.cardBg} rounded-xl p-6 border ${S.cardBorder} shadow-sm`}>
             <div className="flex items-center justify-between mb-4">
-              <TrendingUp className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-slate-900">{stats.total}</span>
+              <TrendingUp className={`h-8 w-8 ${t.primaryText}`} />
+              <span className={`text-2xl font-bold ${S.textPrimary}`}>{stats.total}</span>
             </div>
-            <p className="text-sm text-slate-600">Total Bookings</p>
+            <p className={`text-sm ${S.textMuted}`}>Total Bookings</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <div className={`${S.cardBg} rounded-xl p-6 border ${S.cardBorder} shadow-sm`}>
             <div className="flex items-center justify-between mb-4">
-              <Clock className="h-8 w-8 text-yellow-600" />
-              <span className="text-2xl font-bold text-slate-900">{stats.pending}</span>
+              <Clock className={`h-8 w-8 ${t.primaryText}`} />
+              <span className={`text-2xl font-bold ${S.textPrimary}`}>{stats.pending}</span>
             </div>
-            <p className="text-sm text-slate-600">Pending</p>
+            <p className={`text-sm ${S.textMuted}`}>Pending</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <div className={`${S.cardBg} rounded-xl p-6 border ${S.cardBorder} shadow-sm`}>
             <div className="flex items-center justify-between mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
-              <span className="text-2xl font-bold text-slate-900">{stats.confirmed}</span>
+              <CheckCircle className={`h-8 w-8 ${t.primaryText}`} />
+              <span className={`text-2xl font-bold ${S.textPrimary}`}>{stats.confirmed}</span>
             </div>
-            <p className="text-sm text-slate-600">Confirmed</p>
+            <p className={`text-sm ${S.textMuted}`}>Confirmed</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <div className={`${S.cardBg} rounded-xl p-6 border ${S.cardBorder} shadow-sm`}>
             <div className="flex items-center justify-between mb-4">
-              <TrendingUp className="h-8 w-8 text-purple-600" />
-              <span className="text-2xl font-bold text-slate-900">${stats.revenue.toLocaleString()}</span>
+              <TrendingUp className={`h-8 w-8 ${t.primaryText}`} />
+              <span className={`text-2xl font-bold ${S.textPrimary}`}>${stats.revenue.toLocaleString()}</span>
             </div>
-            <p className="text-sm text-slate-600">Total Revenue</p>
+            <p className={`text-sm ${S.textMuted}`}>Total Revenue</p>
           </div>
 
-          {/* Monthly profit — computed from bookings with a revenue status this month */}
-          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          {/* Monthly profit — computed from tenant-scoped bookings with a revenue status this month */}
+          <div className={`${S.cardBg} rounded-xl p-6 border ${S.cardBorder} shadow-sm`}>
             <div className="flex items-center justify-between mb-4">
-              <DollarSign className="h-8 w-8 text-emerald-600" />
-              <span className="text-2xl font-bold text-slate-900">{monthlyProfit.toLocaleString()}</span>
+              <DollarSign className={`h-8 w-8 ${t.primaryText}`} />
+              <span className={`text-2xl font-bold ${S.textPrimary}`}>{monthlyProfit.toLocaleString()}</span>
             </div>
-            <p className="text-sm text-slate-600">This Month's Profit</p>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className={`text-sm ${S.textMuted}`}>This Month's Profit</p>
+            <p className={`text-xs ${S.textFaint} mt-1`}>
               Revenue from completed/confirmed bookings this calendar month
             </p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm mb-6">
+        <div className={`${S.cardBg} rounded-xl p-6 border ${S.cardBorder} shadow-sm mb-6`}>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${S.textFaint}`} />
                 <input
                   type="text"
                   placeholder="Search by name or email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full pl-10 pr-4 py-2 border ${S.inputBorder} rounded-lg ${S.inputBg} ${S.textPrimary} ${focusRing}`}
                 />
               </div>
             </div>
@@ -264,7 +295,7 @@ export default function AdminDashboard() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`px-4 py-2 border ${S.inputBorder} rounded-lg ${S.selectBg} ${S.selectText} ${focusRing}`}
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -277,24 +308,24 @@ export default function AdminDashboard() {
         </div>
 
         {/* Bookings Table */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className={`${S.cardBg} rounded-xl border ${S.cardBorder} shadow-sm overflow-hidden`}>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className={`${S.mutedBg} border-b ${S.cardBorder}`}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Service</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Date & Time</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Media</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Price</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Customer</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Service</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Date & Time</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Media</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Price</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Status</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className={`divide-y ${S.borderSubtle}`}>
                 {filteredBookings.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                    <td colSpan={7} className={`px-6 py-12 text-center ${S.textSubtle}`}>
                       No bookings found
                     </td>
                   </tr>
@@ -302,26 +333,26 @@ export default function AdminDashboard() {
                   filteredBookings.map((booking) => {
                     const kind = booking.image_url ? (isVideoUrl(booking.image_url) ? 'video' as const : 'image' as const) : null;
                     return (
-                    <tr key={booking.id} className="hover:bg-slate-50">
+                    <tr key={booking.id} className={S.optionHoverBg}>
                       <td className="px-6 py-4">
                         <div>
-                          <div className="font-medium text-slate-900">{booking.customer_name}</div>
-                          <div className="text-sm text-slate-500">{booking.customer_email}</div>
+                          <div className={`font-medium ${S.textPrimary}`}>{booking.customer_name}</div>
+                          <div className={`text-sm ${S.textSubtle}`}>{booking.customer_email}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-slate-900">{booking.service_type}</div>
+                        <div className={`text-sm ${S.textPrimary}`}>{booking.service_type}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-slate-900">{booking.booking_date}</div>
-                        <div className="text-sm text-slate-500">{booking.booking_time}</div>
+                        <div className={`text-sm ${S.textPrimary}`}>{booking.booking_date}</div>
+                        <div className={`text-sm ${S.textSubtle}`}>{booking.booking_time}</div>
                       </td>
                       <td className="px-6 py-4">
                         {booking.image_url && kind ? (
                           <button
                             type="button"
                             onClick={() => setLightbox({ url: booking.image_url!, kind })}
-                            className="block h-12 w-12 overflow-hidden rounded-lg border border-slate-200 hover:ring-2 hover:ring-blue-500"
+                            className={`block h-12 w-12 overflow-hidden rounded-lg border ${S.inputBorder} ${focusRing}`}
                             title="View client media"
                           >
                             {kind === 'video' ? (
@@ -340,11 +371,11 @@ export default function AdminDashboard() {
                             )}
                           </button>
                         ) : (
-                          <span className="text-sm text-slate-400">—</span>
+                          <span className={`text-sm ${S.textFaint}`}>—</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-slate-900">${booking.price}</div>
+                        <div className={`text-sm font-medium ${S.textPrimary}`}>${booking.price}</div>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}>
@@ -354,12 +385,12 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           {updatingId === booking.id ? (
-                            <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                            <Loader2 className={`h-5 w-5 animate-spin ${t.primaryText}`} />
                           ) : (
                             <select
                               value={booking.status}
                               onChange={(e) => handleStatusChange(booking.id, e.target.value as Booking['status'])}
-                              className="px-3 py-1 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className={`px-3 py-1 border ${S.inputBorder} rounded-lg text-sm ${S.selectBg} ${S.selectText} ${focusRing}`}
                             >
                               <option value="pending">Pending</option>
                               <option value="confirmed">Confirmed</option>
@@ -373,7 +404,7 @@ export default function AdminDashboard() {
                             <button
                               type="button"
                               onClick={() => handleDelete(booking.id, booking.customer_name)}
-                              className="p-2 rounded-lg text-red-600 hover:bg-red-50 border border-slate-200 hover:border-red-300"
+                              className={`p-2 rounded-lg text-red-600 ${S.optionHoverBg} border ${S.inputBorder} hover:border-red-300 ${focusRing}`}
                               title="Delete booking"
                             >
                               <Trash2 className="h-4 w-4" />
