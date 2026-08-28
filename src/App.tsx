@@ -6,6 +6,18 @@ import { PRESETS, DEFAULT_PRESET_ID } from "./config/presets";
 import { EmbedClient } from "./app/embed/[clientId]/embed-client";
 import AdminDashboard from "./pages/AdminDashboard";
 
+/**
+ * Default tenant served at the site root. Driven by the build-time env var
+ * VITE_DEFAULT_TENANT (e.g. "detailing" for a dedicated brand deployment), and
+ * falling back to the repo default (cleaning) when unset. This lets the SAME
+ * multi-tenant build serve e.g. autodetaildemo at its root without changing
+ * the default `pullupandclean` deployment. Registered ids only; unknown values
+ * fall back to the repo default.
+ */
+const configuredDefault = import.meta.env.VITE_DEFAULT_TENANT as string | undefined;
+const DEFAULT_TENANT_ID =
+  configuredDefault && PRESETS[configuredDefault] ? configuredDefault : DEFAULT_PRESET_ID;
+
 function EmbedWrapper() {
   const { clientId } = useParams();
   const config =
@@ -15,12 +27,12 @@ function EmbedWrapper() {
 
 /**
  * Tenant-aware admin route. Resolves the /admin/:tenantId param against the
- * registered presets. Unknown/missing tenantIds fall back to the default
- * (cleaning) tenant so the dashboard never renders without a valid preset.
+ * registered presets. Unknown/missing tenantIds fall back to the configured
+ * default tenant so the dashboard never renders without a valid preset.
  */
 function AdminRoute() {
   const { tenantId } = useParams();
-  const id = tenantId && PRESETS[tenantId] ? tenantId : DEFAULT_PRESET_ID;
+  const id = tenantId && PRESETS[tenantId] ? tenantId : DEFAULT_TENANT_ID;
   return <AdminDashboard tenantId={id} />;
 }
 
@@ -28,20 +40,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Main Website Route */}
-        <Route path="/" element={<CleaningLayout config={cleaningPreset} />} />
+        {/* Main Website Route — serves the configured default tenant */}
+        <Route
+          path="/"
+          element={<CleaningLayout config={DEFAULT_TENANT_ID === "detailing" ? detailingPreset : cleaningPreset} />}
+        />
 
         {/* Car Detailing Tenant Route */}
-        <Route
-          path="/detailing"
-          element={<CleaningLayout config={detailingPreset} />}
-        />
+        <Route path="/detailing" element={<CleaningLayout config={detailingPreset} />} />
 
         {/* Dynamic Embed Route for Clients */}
         <Route path="/embed/:clientId" element={<EmbedWrapper />} />
 
-        {/* Admin Dashboard Routes: /admin defaults to cleaning, /admin/:tenantId scopes per tenant */}
-        <Route path="/admin" element={<Navigate to={`/admin/${DEFAULT_PRESET_ID}`} replace />} />
+        {/* Admin Dashboard Routes: /admin defaults to configured tenant, /admin/:tenantId scopes per tenant */}
+        <Route path="/admin" element={<Navigate to={`/admin/${DEFAULT_TENANT_ID}`} replace />} />
         <Route path="/admin/:tenantId" element={<AdminRoute />} />
       </Routes>
     </BrowserRouter>
