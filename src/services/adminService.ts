@@ -20,17 +20,26 @@ export interface Booking {
   image_url?: string;
 }
 
-export async function fetchBookings(): Promise<{ success: boolean; bookings?: Booking[]; error?: string }> {
+/**
+ * Fetch bookings. When `tenantId` is provided the query is scoped with
+ * `.eq('tenant_id', tenantId)` so each tenant admin sees ONLY its own bookings.
+ * Passing no `tenantId` returns all rows (backward-compatible with the original
+ * unfiltered behavior).
+ */
+export async function fetchBookings(tenantId?: string): Promise<{ success: boolean; bookings?: Booking[]; error?: string }> {
   if (!isSupabaseConfigured || !supabase) {
     console.error('Supabase Error: not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). Cannot fetch bookings.');
     return { success: true, bookings: [], error: undefined };
   }
 
   try {
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .order('created_at', { ascending: false });
+    let query = supabase.from('bookings').select('*');
+
+    if (tenantId) {
+      query = query.eq('tenant_id', tenantId);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
       console.error('Supabase Error:', error);
