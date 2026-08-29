@@ -21,7 +21,11 @@ const DEFAULT_TENANT_ID =
 function EmbedWrapper() {
   const { clientId } = useParams();
   const config =
-    clientId === "detailing" ? detailingPreset : cleaningPreset;
+    clientId === "detailing"
+      ? detailingPreset
+      : clientId === "idreamofcleaning"
+        ? PRESETS.idreamofcleaning
+        : cleaningPreset;
   return <EmbedClient config={config} />;
 }
 
@@ -43,11 +47,21 @@ function App() {
         {/* Main Website Route — serves the configured default tenant */}
         <Route
           path="/"
-          element={<CleaningLayout config={DEFAULT_TENANT_ID === "detailing" ? detailingPreset : cleaningPreset} />}
+          element={
+            <CleaningLayout
+              config={PRESETS[DEFAULT_TENANT_ID] ?? cleaningPreset}
+            />
+          }
         />
 
         {/* Car Detailing Tenant Route */}
         <Route path="/detailing" element={<CleaningLayout config={detailingPreset} />} />
+
+        {/* I Dream of Cleaning Tenant Route */}
+        <Route
+          path="/idreamofcleaning"
+          element={<CleaningLayout config={PRESETS.idreamofcleaning} />}
+        />
 
         {/* Dynamic Embed Route for Clients */}
         <Route path="/embed/:clientId" element={<EmbedWrapper />} />
