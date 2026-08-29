@@ -22,6 +22,16 @@ export const idreamofcleaningPreset: IndustryConfig = {
   id: "idreamofcleaning",
   name: "Cleaning",
 
+  // The three owner-provided genie poses, used as decorative brand art. They
+  // alternate (Pose 1 -> 2 -> 3 -> repeat) down the residential service cards
+  // and are also swapped in for the AI-generated Lucide icons in the trust
+  // badges + service-area summary cards so the genie becomes the brand stamp.
+  genieImages: [
+    "/images/idreamofcleaning-genie1.jpg",
+    "/images/idreamofcleaning-genie2.jpg",
+    "/images/idreamofcleaning-genie3.jpg",
+  ],
+
   brand: {
     businessName: "I Dream of Cleaning LLC",
     tagline: "Residential & Small Commercial Cleaning",
@@ -67,6 +77,16 @@ export const idreamofcleaningPreset: IndustryConfig = {
     footerHeading: "text-white",
     footerMuted: "text-purple-100",
     footerBase: "text-white/60",
+    // Floating AI chat widget — purple -> magenta gradient (vivid brand accent)
+    // on a purple launcher/header, purple bubbles + send button, magenta ping
+    // dot + header sparkle. These override the shared royal-blue defaults only
+    // for this tenant; other tenants keep royal/gold.
+    chatGradient: "linear-gradient(135deg, #b134eb, #d234eb)",
+    chatAccentBg: "bg-dream",
+    chatSoftBg: "bg-dream-magenta",
+    chatSoftText: "text-dream-magenta",
+    chatFaqHover: "hover:border-dream hover:text-dream",
+    chatInputFocus: "focus:border-dream",
   },
 
   // Light, airy surfaces with plain-BLACK text (owner directive). Purple/magenta
@@ -142,9 +162,21 @@ export const idreamofcleaningPreset: IndustryConfig = {
   },
 
   trustBadges: [
-    { label: "Beauty Restored, Detail Observed", icon: "sparkles" },
-    { label: "Pet Friendly Cleaners", icon: "shield" },
-    { label: "100% Satisfaction Guarantee", icon: "check-circle" },
+    {
+      label: "Beauty Restored, Detail Observed",
+      icon: "sparkles",
+      iconImage: "/images/idreamofcleaning-genie1.jpg",
+    },
+    {
+      label: "Pet Friendly Cleaners",
+      icon: "shield",
+      iconImage: "/images/idreamofcleaning-genie2.jpg",
+    },
+    {
+      label: "100% Satisfaction Guarantee",
+      icon: "check-circle",
+      iconImage: "/images/idreamofcleaning-genie3.jpg",
+    },
   ],
 
   services: {

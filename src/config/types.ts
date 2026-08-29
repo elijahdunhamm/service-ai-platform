@@ -49,6 +49,24 @@ export interface ThemeColors {
   primaryDeep: string;
   /** Hover text color for accent-tinted links (full literal class). */
   primaryHoverText: string;
+  /**
+   * Floating AI chat widget theming (OPTIONAL). These all default to the shared
+   * "royal blue + gold" look in ChatWidget, so any tenant that omits them keeps
+   * the original chatbot appearance verbatim. A tenant like idreamofcleaning can
+   * override them to match its own palette without touching the shared widget.
+   */
+  /** Launcher button + header background gradient (inline CSS). */
+  chatGradient?: string;
+  /** Solid accent background for the user bubble + send button (class). */
+  chatAccentBg?: string;
+  /** Accent "soft" background for the launcher ping dot (class). */
+  chatSoftBg?: string;
+  /** Accent "soft" text for the header sparkle icon (class). */
+  chatSoftText?: string;
+  /** FAQ quick-chip hover state classes (full literal). */
+  chatFaqHover?: string;
+  /** Input focus ring classes (full literal). */
+  chatInputFocus?: string;
   /** Footer background. */
   footerBg: string;
   /** Footer border color. */
@@ -104,6 +122,13 @@ export interface NavLink {
 export interface TrustBadge {
   label: string;
   icon: IconName;
+  /**
+   * Optional image URL rendered INSTEAD of the Lucide icon (e.g. a brand/genie
+   * stamp). When set, the layout shows this image in the icon slot rather than
+   * resolving `icon` from the icon map. Kept optional so existing tenants are
+   * unaffected.
+   */
+  iconImage?: string;
 }
 
 export interface ResidentialService {
@@ -507,7 +532,14 @@ export interface IndustryConfig {
   sections: SectionCopy;
   estimator: EstimatorConfig;
   booking: BookingConfig;
+  /** Customer media upload storage configuration. */
   storage: StorageConfig;
+  /**
+   * Optional decorative brand images (e.g. the tenant's genie pose set). Consumed
+   * by tenant-specific layouts for alternating corner art. Optional so existing
+   * tenants are unaffected.
+   */
+  genieImages?: string[];
   testimonials: {
     rating: number;
     items: Testimonial[];

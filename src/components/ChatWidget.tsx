@@ -28,6 +28,19 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
   ]);
   const [input, setInput] = useState("");
 
+  // THEME-DRIVEN widget colors. Every value is read from config.theme with the
+  // original shared "royal blue + gold" look as the default, so tenants that
+  // don't override these (cleaning / hvac / detailing) keep the exact current
+  // appearance. A tenant adds its own palette by setting these fields in its
+  // preset's `theme` — no tenant color is hardcoded here, only the fallback.
+  const chatGradient =
+    t.chatGradient ?? "linear-gradient(135deg, #1E3A8A, #16295F)";
+  const chatAccentBg = t.chatAccentBg ?? "bg-royal";
+  const chatSoftBg = t.chatSoftBg ?? "bg-gold";
+  const chatSoftText = t.chatSoftText ?? "text-gold";
+  const chatFaqHover = t.chatFaqHover ?? "hover:border-royal hover:text-royal";
+  const chatInputFocus = t.chatInputFocus ?? "focus:border-royal";
+
   const faqAnswer = (text: string): Faq | undefined => {
     const lower = text.toLowerCase();
     // Score each FAQ by how many of its question keywords appear in the input.
@@ -84,7 +97,7 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
         aria-label={open ? "Close chat" : "Open support chat"}
         className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-xl ring-2 ring-white/40 transition-transform hover:scale-105"
         style={{
-          background: "linear-gradient(135deg, #1E3A8A, #16295F)",
+          background: chatGradient,
         }}
       >
         {open ? (
@@ -93,8 +106,12 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
           <>
             <MessageCircle className="h-6 w-6 text-white" />
             <span className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
-              <span className="relative inline-flex h-3.5 w-3.5 rounded-full bg-gold" />
+              <span
+                className={`absolute inline-flex h-full w-full animate-ping rounded-full ${chatSoftBg} opacity-75`}
+              />
+              <span
+                className={`relative inline-flex h-3.5 w-3.5 rounded-full ${chatSoftBg}`}
+              />
             </span>
           </>
         )}
@@ -107,10 +124,10 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
           <div
             className="flex items-center gap-2 px-4 py-3 text-white"
             style={{
-              background: "linear-gradient(135deg, #1E3A8A, #16295F)",
+              background: chatGradient,
             }}
           >
-            <Sparkles className="h-5 w-5 text-gold" />
+            <Sparkles className={`h-5 w-5 ${chatSoftText}`} />
             <span className="font-bold">{chat.title}</span>
           </div>
 
@@ -122,7 +139,7 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
                 className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
                   m.from === "bot"
                     ? `rounded-tl-sm ${t.primaryLightBg} text-slate-800`
-                    : "ml-auto rounded-tr-sm bg-royal text-white"
+                    : `ml-auto rounded-tr-sm ${chatAccentBg} text-white`
                 }`}
               >
                 {m.text}
@@ -137,7 +154,7 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
                 key={faq.question}
                 type="button"
                 onClick={() => ask(faq.question)}
-                className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition-colors hover:border-royal hover:text-royal"
+                className={`inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition-colors ${chatFaqHover}`}
               >
                 {faq.question}
                 <ChevronRight className="h-3 w-3" />
@@ -157,12 +174,12 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={chat.placeholder}
-              className="w-full rounded-full border border-slate-200 px-3 py-2 text-sm outline-none focus:border-royal"
+              className={`w-full rounded-full border border-slate-200 px-3 py-2 text-sm outline-none ${chatInputFocus}`}
             />
             <button
               type="submit"
               aria-label="Send message"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-royal text-white transition-transform hover:scale-105"
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${chatAccentBg} text-white transition-transform hover:scale-105`}
             >
               <Send className="h-4 w-4" />
             </button>
