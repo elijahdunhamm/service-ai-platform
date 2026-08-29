@@ -36,6 +36,19 @@ export default {
           DEFAULT: "#F5F2EA", // soft off-white text
           muted: "#BDB8AD", // muted body text on dark
         },
+        // "Dream" palette — I Dream of Cleaning LLC. Vivid purple + magenta
+        // brand accents on plain-black text. Surrounding shades are derived to
+        // follow the client's purple/magenta genie logo (assumed — pending owner
+        // confirmation of the exact derived shade values).
+        dream: {
+          DEFAULT: "#b134eb", // vivid purple (primary brand accent)
+          magenta: "#d234eb", // magenta / pink (secondary brand accent)
+          dark: "#8f1dc3", // deeper purple for hover states
+          deep: "#5c117e", // deepest purple for footer / dark surfaces
+          soft: "#f4e5fc", // very light purple background (pills, icon boxes)
+          light: "#faf3ff", // light purple surface tint
+          pale: "#e6c4fb", // light purple border / outline
+        },
       },
     },
   },
