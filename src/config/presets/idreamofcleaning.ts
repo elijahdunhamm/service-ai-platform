@@ -3,15 +3,20 @@ import type { IndustryConfig } from "../types";
 
 /**
  * Preset for "I Dream of Cleaning LLC" — a residential / small-commercial
- * cleaning brand (tenant id: "idreamofcleaning"). Mirrors the IndustryConfig
- * schema used by the existing cleaning / detailing presets so the shared layout
- * renders a fully themed cleaning site from this single object.
+ * cleaning brand (tenant id: "idreamofcleaning"). Rendered by the dedicated
+ * IdreamofcleaningLayout (an editorial, distinctive presentation) which consumes
+ * this single config object.
  *
- * All content was lifted from the reference site content doc
- * (/home/team/shared/idreamofcleaning-content.md). The reference screenshots
- * contain NO explicit prices — only the disclaimer below — so the numeric
- * service prices here are PLACEHOLDER estimates modeled on the cleaning preset's
- * base-price pattern. They need owner confirmation before going live.
+ * BRAND (owner directive): vivid purple #b134eb + magenta #d234eb are the ACCENT
+ * colors only. Body/headline text is plain BLACK for readability. Surrounding
+ * shades (dark/deep/soft/light/pale) are derived to follow the client's genie
+ * logo palette and are listed as assumptions for owner confirmation.
+ *
+ * All service copy was lifted verbatim from the owner's content doc
+ * (/home/team/shared/idreamofcleaning-content.md) — the FULL included-task
+ * catalog, feature-by-feature. The reference contains NO explicit prices, so the
+ * numeric prices here are PLACEHOLDER estimates (kept from the earlier preset)
+ * awaiting owner confirmation. The pricing disclaimer appears on every service.
  */
 export const idreamofcleaningPreset: IndustryConfig = {
   id: "idreamofcleaning",
@@ -35,49 +40,110 @@ export const idreamofcleaningPreset: IndustryConfig = {
     phoneHref: "tel:+15550100231",
     email: "hello@idreamofcleaning.com",
     heroEyebrow: "Trusted House Cleaning Service",
-    heroHeadline: "A Clean Home, Dreamed Into Reality.",
+    heroHeadline: "A Clean Home,\nDreamed Into Reality.",
     heroSubhead:
-      "I Dream of Cleaning LLC is your new trusted House Cleaning service — always high quality, with a great attention to detail. General, bedroom, bathroom, kitchen, and living-area cleaning with pet-friendly cleaners.",
+      "I Dream of Cleaning LLC is your new trusted House Cleaning service — always high quality, with a great attention to detail. General, bedroom, bathroom, kitchen, and living-area cleaning with pet-friendly cleaners, plus small commercial care.",
     footerBlurb:
       "Professional residential and small commercial cleaning. Pet-friendly cleaners with a great attention to detail — spotless results every time.",
     copyrightName: "I Dream of Cleaning LLC",
   },
 
+  // Vivid purple / magenta ACCENTS on plain-black text. Deep purple used for the
+  // dark footer & dark surfaces. `surface` below carries the light page skin.
   theme: {
-    primaryBg: "bg-royal",
-    primaryBgHover: "hover:bg-royal-dark",
-    primaryText: "text-royal",
-    primaryLightBg: "bg-royal-light",
-    primaryLightBgHover: "hover:bg-royal-light",
-    primaryLightText: "text-royal-dark",
-    primaryBorder: "border-royal",
-    primaryBorderHover: "hover:border-gold",
-    primarySoft: "text-royal-soft",
-    primaryDeep: "text-gold",
-    primaryHoverText: "hover:text-gold",
-    footerBg: "bg-royal-dark",
-    footerBorder: "border-royal-dark",
-    footerHeading: "text-amber-50",
-    footerMuted: "text-slate-300",
-    footerBase: "text-slate-400",
+    primaryBg: "bg-dream",
+    primaryBgHover: "hover:bg-dream-dark",
+    primaryText: "text-dream",
+    primaryLightBg: "bg-dream-soft",
+    primaryLightBgHover: "hover:bg-dream-pale",
+    primaryLightText: "text-dream-dark",
+    primaryBorder: "border-dream",
+    primaryBorderHover: "hover:border-dream-magenta",
+    primarySoft: "text-dream-pale",
+    primaryDeep: "text-dream-magenta",
+    primaryHoverText: "hover:text-dream-dark",
+    footerBg: "bg-dream-deep",
+    footerBorder: "border-dream-deep",
+    footerHeading: "text-white",
+    footerMuted: "text-purple-100",
+    footerBase: "text-white/60",
   },
 
+  // Light, airy surfaces with plain-BLACK text (owner directive). Purple/magenta
+  // appear only as accents, soft tints, and borders.
+  surface: {
+    surfaceBg: "bg-white",
+    cardBg: "bg-white",
+    cardBorder: "border-dream-pale",
+    borderSubtle: "border-dream-pale/70",
+    textPrimary: "text-black",
+    textSecondary: "text-black/80",
+    textMuted: "text-black/65",
+    textSubtle: "text-black/55",
+    textFaint: "text-black/45",
+    headerBg: "bg-white/90",
+    headerBorder: "border-dream-pale/80",
+    navHoverBg: "hover:bg-dream-soft",
+    mobileNavBg: "bg-white",
+    mobileNavBorder: "border-dream-pale",
+    mobileNavText: "text-black",
+    heroBg: "bg-white",
+    secondaryButton:
+      "border border-black/20 bg-white text-black hover:bg-dream-soft",
+    imageFrameBg: "bg-dream-soft",
+    imageFrameBorder: "border-dream-pale",
+    residentialOverlay: "bg-gradient-to-b from-white/90 via-white/80 to-white/90",
+    sectionAltBg: "bg-dream-soft/50",
+    mutedBg: "bg-dream-soft/50",
+    mutedBorder: "border-dream-pale/70",
+    inputBg: "bg-white",
+    inputBorder: "border-black/20",
+    selectBg: "bg-white",
+    selectText: "text-black",
+    stepBg: "bg-dream-soft",
+    stepHoverBg: "hover:bg-dream-pale",
+    stepText: "text-black",
+    takenBg: "bg-black/5",
+    takenBorder: "border-black/10",
+    takenText: "text-black/40",
+    slotBg: "bg-white",
+    slotText: "text-black",
+    optionBorder: "border-black/10",
+    optionText: "text-black",
+    optionHoverBg: "hover:bg-dream-soft",
+    uploadBorder: "border-black/30",
+    uploadHoverBorder: "hover:border-dream",
+    successBadge: "bg-dream-soft text-dream-dark",
+    closeButton: "text-black/50 hover:text-black hover:bg-dream-soft",
+    cardHover: "hover:shadow-2xl hover:-translate-y-1",
+    heroOverlay: "bg-gradient-to-r from-black/80 via-black/60 to-black/30",
+    statementOverlay: "bg-dream-deep/90",
+  },
+
+  // Playfair Display (elegant serif) headings + Lato (clean sans) body.
+  fonts: {
+    heading: "font-display",
+    body: "font-body",
+  },
+
+  // Only links backed by real on-page sections + the booking CTA. "Results"
+  // (before/after) was pruned — no owner-provided before/after content, only
+  // placeholder stock images. Commercial is a real section (small commercial
+  // cleaning). Locations renders but stays reachable from the footer.
   navigation: {
     cta: "Book Now",
     links: [
       { label: "Services", href: "#services" },
-      { label: "Results", href: "#results" },
-      { label: "Locations", href: "#service-areas" },
       { label: "Commercial", href: "#commercial" },
-      { label: "Estimate", href: "#estimate" },
+      { label: "Pricing", href: "#estimate" },
       { label: "Reviews", href: "#reviews" },
       { label: "Contact", href: "#contact" },
     ],
   },
 
   trustBadges: [
-    { label: "Licensed & Insured", icon: "shield" },
-    { label: "Pet Friendly Cleaners", icon: "sparkles" },
+    { label: "Beauty Restored, Detail Observed", icon: "sparkles" },
+    { label: "Pet Friendly Cleaners", icon: "shield" },
     { label: "100% Satisfaction Guarantee", icon: "check-circle" },
   ],
 
@@ -86,102 +152,131 @@ export const idreamofcleaningPreset: IndustryConfig = {
       {
         title: "House Cleaning",
         price: "$120",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "Our House Cleaning service is always high quality with a great attention to detail. I Dream of Cleaning LLC is your new trusted House Cleaning service! We cover the general, bedroom, bathroom, kitchen, and living areas with pet-friendly cleaners.",
+          "Our House Cleaning service is always high quality with a great attention to detail. I Dream of Cleaning LLC is your new trusted House Cleaning service!",
         features: [
-          "General, Bedroom, Bathroom & Kitchen",
-          "Living-Area Refresh",
+          "General Cleaning",
+          "Bedroom Cleaning",
+          "Bathroom Cleaning",
+          "Kitchen Cleaning",
+          "Living Area Cleaning",
           "Pet Friendly Cleaners",
+          "Add-ons available: Power Washing (concrete, brick & hard surfaces only), Refrigerator Deep Cleaning, Stove Top / Oven Cleaning, Interior Window Cleaning",
         ],
       },
       {
         title: "General Cleaning",
         price: "$100",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "A full-house general cleaning covering all areas of the home — dusting, vacuuming, mopping, and more, top to bottom.",
+          "A full-house general cleaning covering all areas of the home, top to bottom.",
         features: [
-          "Dust Surfaces & Furniture Tops",
-          "Dust Baseboards, Chair Rails & Door Panels",
-          "Vacuum Carpets & Damp Mop Floors",
-          "Dust Blinds, Window Sills & Lock Ledges",
-          "Dust & Clean Mirrors, Frames, Lamps & Shades",
-          "Empty All Trash",
+          "All areas of the house",
+          "Dust surfaces",
+          "Dust and hand wipe furniture tops",
+          "Dust baseboards, chair rails, and door panels",
+          "Dust ceiling fans (within reach)",
+          "Vacuum carpets",
+          "Vacuum and damp mop floors",
+          "Dust blinds, window sills, and lock ledges",
+          "Dust furniture",
+          "Dust picture frames",
+          "Dust lamps and lamp shades",
+          "Dust and clean mirrors",
+          "Empty all trash",
         ],
       },
       {
         title: "Bedrooms Cleaning",
         price: "$60",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "A thorough bedroom clean — dusting, vacuuming, and bed linen care on request to leave your bedroom fresh and inviting.",
+          "A thorough bedroom clean — dusting, vacuuming, and bed-linen care on request to leave your bedroom fresh and inviting.",
         features: [
-          "Dust Surfaces & Furniture Tops",
-          "Dust Baseboards, Chair Rails & Door Panels",
-          "Vacuum Carpets & Damp Mop Floors",
-          "Change Sheets (upon request)",
-          "Make Beds (upon request)",
-          "Empty Trash",
+          "Dust surfaces",
+          "Dust and hand wipe furniture tops",
+          "Dust furniture",
+          "Dust baseboards, chair rails, and door panels",
+          "Dust blinds, window sills, and lock ledges",
+          "Vacuum carpets",
+          "Vacuum and damp mop floors (if non-carpet)",
+          "Change sheets (upon request)",
+          "Make beds (upon request)",
+          "Empty trash",
         ],
       },
       {
         title: "Bathroom Cleaning",
         price: "$50",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
           "A detailed, disinfected bathroom clean — surfaces, showers, tubs, and toilets cleaned, disinfected, and left shining.",
         features: [
-          "Clean & Disinfect Surfaces",
-          "Clean, Disinfect & Shine Showers & Tubs",
-          "Clean & Disinfect Toilets Inside & Out",
-          "Clean & Disinfect Door Knobs & Switch Plates",
-          "Shine Fixtures",
-          "Vacuum & Damp Mop Floors",
+          "Dust surfaces",
+          "Dust blinds, window sills, and lock ledges",
+          "Dust cabinets, door panels, and baseboards",
+          "Clean and disinfect surfaces",
+          "Spot clean cabinet fronts",
+          "Clean, disinfect, and shine showers and tubs",
+          "Clean and disinfect toilets inside and out",
+          "Clean and disinfect door knobs and switch plates",
+          "Shine fixtures",
+          "Vacuum and damp mop floors",
+          "Empty trash",
         ],
       },
       {
         title: "Kitchens Cleaning",
         price: "$80",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
           "A deep clean of the heart of your home — counter tops, appliances, sinks, and cabinets disinfected and polished.",
         features: [
-          "Clean & Disinfect Counter Tops",
-          "Clean Inside & Out of Microwave",
-          "Shine Outside of Oven, Dishwasher & Fridge",
-          "Clean & Disinfect Sink & Kitchen Table",
-          "Spot Clean Cabinet Fronts",
-          "Vacuum & Damp Mop Floors",
+          "Dust surfaces",
+          "Dust blinds, window sills, and lock ledges",
+          "Dust chair rails, cabinets, door panels, and baseboards",
+          "Dust top of refrigerator",
+          "Clean and disinfect counter tops",
+          "Spot clean cabinet fronts",
+          "Clean and disinfect door knobs and switch plates",
+          "Clean and disinfect sink",
+          "Clean and disinfect microwave inside and out",
+          "Clean, disinfect, and shine outside of oven and top of range",
+          "Clean, disinfect, and shine outside of dishwasher",
+          "Clean, disinfect, and shine outside of refrigerator",
+          "Clean and disinfect kitchen table",
+          "Vacuum and damp mop floors",
+          "Empty trash",
         ],
       },
       {
         title: "Deep Cleaning Services",
         price: "$200",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
           "Everything included in our regular cleaning, plus a deeper top-to-bottom treatment of baseboards, doors, cabinets, and more.",
         features: [
-          "Everything in Regular Cleaning, Plus:",
-          "Damp Wipe Baseboards & Window Sills",
-          "Damp Wipe Door Panels & Frames",
-          "Vacuum Upholstered Furniture",
-          "Remove Cobwebs",
-          "Damp Wipe Kitchen & Bath Cabinets",
+          "Everything in regular cleaning, plus:",
+          "Damp wipe baseboards and window sills",
+          "Damp wipe door panels and frames",
+          "Vacuum upholstered furniture",
+          "Remove cobwebs",
+          "Damp wipe kitchen and bathroom cabinets",
         ],
       },
       {
         title: "Move-In / Move-Out Cleaning",
         price: "$250",
-        priceSuffix: "per visit (est.)",
+        priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "A comprehensive deep clean that covers all the regular cleaning tasks combined with additional deep cleaning chores and a few extra services — ideal for moving day. Same thorough standard for move-outs as move-ins.",
+          "Move-in cleaning covers all the regular cleaning tasks in combination with additional deep cleaning chores and a few extra services — ideal for moving day. The same thorough standard applies to move-outs as to move-ins.",
         features: [
-          "Oven Cleaning",
-          "Fridge Cleaning",
-          "Clean Inside of Cabinets",
-          "Comprehensive Deep Cleaning Tasks",
-          "All Regular Cleaning Tasks Included",
+          "Oven cleaning",
+          "Fridge cleaning",
+          "Cleaning the inside of your cabinets",
+          "A comprehensive list of thorough deep cleaning tasks",
+          "All regular cleaning tasks included, plus extra services",
         ],
       },
       {
@@ -189,38 +284,40 @@ export const idreamofcleaningPreset: IndustryConfig = {
         price: "Custom",
         priceSuffix: "quote after consultation",
         description:
-          "Only need specific areas cleaned? That's a Custom Cleaning. Customers choose this to save money when they don't need the whole house done — either by the hour based on budget, or by cleaning specific areas.",
+          "Only need specific areas cleaned? That's a Custom Cleaning. Customers choose it to save money when they don't need the whole house done — either by the hour based on budget, or by cleaning specific areas of the home. Each method has its advantages and disadvantages.",
         features: [
-          "Choose the Areas You Need Cleaned",
-          "Hire by the Hour Based on Your Budget, or",
-          "Hire for Specific Areas of the House",
+          "Hire for a certain amount of hours based on your budget, or",
+          "Hire for cleaning certain areas of the house",
+          "Save money by cleaning only what you need",
         ],
       },
       {
         title: "Air BnB Cleaning Services",
         price: "$150",
-        priceSuffix: "per turnover (est.)",
+        priceSuffix: "per turnover (PLACEHOLDER)",
         description:
           "Reliable turnover cleaning that keeps your listing guest-ready — beds made, dishes done, surfaces wiped, and inventory checked.",
         features: [
-          "Making the Beds",
-          "Cleaning & Putting Away Dishes",
-          "Sweeping & Mopping Floors",
-          "Vacuuming Carpets & Rugs",
-          "Clean Toilets, Bathtubs & Showers",
-          "Check for Damages & Report Low Inventory",
+          "Making the beds",
+          "Cleaning and putting away the dishes",
+          "Sweeping and mopping floors",
+          "Vacuuming carpets and rugs",
+          "Cleaning toilets, bathtubs, and showers",
+          "Taking out the trash",
+          "Wiping countertops, door handles, and light switches",
+          "Checking for damages and reporting low inventory",
         ],
       },
       {
         title: "Ozone Generator Services",
         price: "$75",
-        priceSuffix: "per treatment (est.)",
+        priceSuffix: "per treatment (PLACEHOLDER)",
         description:
-          "Ozone generator sanitization for areas that have suffered from smoke odors, mold, bacteria, and most viruses.",
+          "Ozone generator sanitation for areas that have suffered from smoke odors, mold, bacteria, and most viruses.",
         features: [
-          "Removes Smoke Odors & Mold Affects",
-          "Kills Bacteria & Most Viruses",
-          "99.98% Bacteria Killing Rate",
+          "Sanitize areas affected by smoke odors and mold",
+          "Eliminates bacteria and most viruses",
+          "99.98% bacteria killing rate",
         ],
       },
     ],
@@ -228,39 +325,42 @@ export const idreamofcleaningPreset: IndustryConfig = {
       {
         title: "Small Commercial Business Cleaning",
         description:
-          "A thorough, disinfected clean for small businesses — surfaces, showers, tubs, toilets, and fixtures left sparkling for your customers and staff.",
-      },
-      {
-        title: "Offices & Reception Areas",
-        description:
-          "Recurring cleaning for offices, waiting areas, and shared spaces to keep your workplace presentable and professional.",
-      },
-      {
-        title: "Retail & Storefronts",
-        description:
-          "Regular maintenance so your storefront and sales areas stay clean and inviting every day.",
+          "A thorough, disinfected clean for small businesses — dusting, disinfection, and shine across surfaces, showers, tubs, toilets, and fixtures, left sparkling for your customers and staff.",
+        features: [
+          "Dust surfaces",
+          "Dust blinds, window sills, and lock ledges",
+          "Dust cabinets, door panels, and baseboards",
+          "Clean and disinfect surfaces",
+          "Spot clean cabinet fronts",
+          "Clean, disinfect, and shine showers and tubs",
+          "Clean and disinfect toilets inside and out",
+          "Clean and disinfect door knobs and switch plates",
+          "Shine fixtures",
+          "Vacuum and damp mop floors",
+          "Empty trash",
+        ],
       },
     ],
     addonsTitle: "House Cleaning Add-ons",
     addons: [
       {
-        name: "Power Washing Services (concrete, brick, hard surfaces only)",
+        name: "Power Washing Services (concrete, brick & hard surfaces only)",
         price: "Quote",
         duration: "Varies",
       },
       {
         name: "Refrigerator Deep Cleaning",
-        price: "$45",
+        price: "$45 (PLACEHOLDER)",
         duration: "30 mins",
       },
       {
         name: "Stove Top / Oven Cleaning Services",
-        price: "$40",
+        price: "$40 (PLACEHOLDER)",
         duration: "30 mins",
       },
       {
         name: "Interior Window Cleaning",
-        price: "$35",
+        price: "$35 (PLACEHOLDER)",
         duration: "30 mins",
       },
     ],
@@ -268,27 +368,10 @@ export const idreamofcleaningPreset: IndustryConfig = {
 
   beforeAfter: {
     title: "Before & After Results",
-    description:
-      "Real transformations from our recent jobs. See the difference an I Dream of Cleaning visit makes.",
+    description: "Real transformations from our recent jobs.",
     beforeLabel: "Before",
     afterLabel: "After",
-    results: [
-      {
-        beforeImage: "/images/before-after/kitchen-before.jpg",
-        afterImage: "/images/before-after/kitchen-after.jpg",
-        caption: "Kitchen deep clean",
-      },
-      {
-        beforeImage: "/images/before-after/living-before.jpg",
-        afterImage: "/images/before-after/living-after.jpg",
-        caption: "Living room refresh",
-      },
-      {
-        beforeImage: "/images/before-after/bath-before.jpg",
-        afterImage: "/images/before-after/bath-after.jpg",
-        caption: "Bathroom detail",
-      },
-    ],
+    results: [],
   },
 
   serviceAreas: [
@@ -303,17 +386,17 @@ export const idreamofcleaningPreset: IndustryConfig = {
 
   sections: {
     residential: {
-      eyebrow: "Home Care Experts",
-      title: "Residential Cleaning Services",
+      eyebrow: "Our Cleaning Services",
+      title: "A Service for Every Space",
       description:
-        "Customized cleaning plans tailored to your home and routine. Our House Cleaning service is always high quality with a great attention to detail. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
-      icon: "home",
+        "From a quick freshen-up to a total deep clean, every visit is high quality with a great attention to detail. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
+      icon: "sparkles",
     },
     commercial: {
       eyebrow: "Business & Facilities",
       title: "Small Commercial Business Cleaning",
       description:
-        "We also keep local offices, storefronts, and small commercial facilities spotless with the same detailed, disinfected standard we bring to your home.",
+        "We keep local small businesses spotless with the same detailed, disinfected standard we bring to your home. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
       icon: "building",
     },
     estimator: {
@@ -330,8 +413,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
     beforeAfter: {
       eyebrow: "See the Difference",
       title: "Before & After Results",
-      description:
-        "Real transformations from our recent jobs. Slide between before and after to see what an I Dream of Cleaning visit can do.",
+      description: "Real transformations from our recent jobs.",
       icon: "sparkles",
     },
     serviceAreas: {
@@ -373,6 +455,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
       { id: "move-in-out", label: "Move-In / Move-Out Cleaning" },
       { id: "customized", label: "Customized Cleaning" },
       { id: "airbnb", label: "Air BnB Cleaning" },
+      { id: "ozone", label: "Ozone Generator" },
     ],
     frequencies: [
       { id: "one-time", label: "One-Time Service", multiplier: 1 },
@@ -493,7 +576,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
       {
         question: "Pricing",
         answer:
-          "Our house cleaning starts at $120, with general cleaning at $100, deep cleaning at $200, and move-in/move-out at $250. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms. Use the Service Price Estimator for an instant quote.",
+          "Our house cleaning starts at $120, with general cleaning at $100, deep cleaning at $200, and move-in/move-out at $250 (all placeholder estimates). Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms. Use the Service Price Estimator for an instant quote.",
       },
       {
         question: "Booking",
@@ -518,7 +601,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
     showCommercial: true,
     showEstimator: true,
     showReviews: true,
-    showBeforeAfter: true,
+    showBeforeAfter: false,
     showServiceAreas: true,
     showBooking: true,
     showContact: true,

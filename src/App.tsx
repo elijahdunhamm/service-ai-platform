@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useParams, Navigate } from "react-router-dom";
 import CleaningLayout from "./components/CleaningLayout";
+import IdreamofcleaningLayout from "./components/IdreamofcleaningLayout";
 import { cleaningPreset } from "./config/presets/cleaning";
 import { detailingPreset } from "./config/presets/detailing";
 import { PRESETS, DEFAULT_PRESET_ID } from "./config/presets";
@@ -48,19 +49,23 @@ function App() {
         <Route
           path="/"
           element={
-            <CleaningLayout
-              config={PRESETS[DEFAULT_TENANT_ID] ?? cleaningPreset}
-            />
+            DEFAULT_TENANT_ID === "idreamofcleaning" ? (
+              <IdreamofcleaningLayout config={PRESETS.idreamofcleaning} />
+            ) : (
+              <CleaningLayout
+                config={PRESETS[DEFAULT_TENANT_ID] ?? cleaningPreset}
+              />
+            )
           }
         />
 
         {/* Car Detailing Tenant Route */}
         <Route path="/detailing" element={<CleaningLayout config={detailingPreset} />} />
 
-        {/* I Dream of Cleaning Tenant Route */}
+        {/* I Dream of Cleaning Tenant Route — dedicated editorial layout */}
         <Route
           path="/idreamofcleaning"
-          element={<CleaningLayout config={PRESETS.idreamofcleaning} />}
+          element={<IdreamofcleaningLayout config={PRESETS.idreamofcleaning} />}
         />
 
         {/* Dynamic Embed Route for Clients */}

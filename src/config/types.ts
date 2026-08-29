@@ -125,6 +125,8 @@ export interface ResidentialService {
 export interface CommercialService {
   title: string;
   description: string;
+  /** Optional included-task bullets (e.g. for a thorough commercial clean). */
+  features?: string[];
 }
 
 /** A compact add-on offering listed alongside the service catalog. */
