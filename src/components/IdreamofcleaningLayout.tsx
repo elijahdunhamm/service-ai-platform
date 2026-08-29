@@ -261,11 +261,20 @@ export default function IdreamofcleaningLayout({
               >
                 {config.trustBadges.map((badge, idx) => (
                   <div key={idx} className="flex items-center gap-3">
-                    <span
-                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${t.primaryLightBg}`}
-                    >
-                      <Check className={`h-5 w-5 ${t.primaryText}`} />
-                    </span>
+                    {badge.iconImage ? (
+                      <img
+                        src={badge.iconImage}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-11 w-11 shrink-0 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${t.primaryLightBg}`}
+                      >
+                        <Check className={`h-5 w-5 ${t.primaryText}`} />
+                      </span>
+                    )}
                     <span className={`text-sm font-semibold ${S.textSecondary}`}>
                       {badge.label}
                     </span>
@@ -388,6 +397,20 @@ export default function IdreamofcleaningLayout({
                       </li>
                     ))}
                   </ul>
+
+                  {/* Alternating genie corner art — "hugging" the card's
+                      bottom-right edge. Cycles Pose 1 -> 2 -> 3 -> repeat by
+                      card index. Decorative only (pointer-events-none, hidden
+                      from screen readers) so it never blocks interaction or
+                      readability. */}
+                  {config.genieImages && config.genieImages.length > 0 && (
+                    <img
+                      src={config.genieImages[idx % config.genieImages.length]}
+                      alt=""
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -bottom-4 -right-4 h-24 w-24 rounded-2xl object-cover shadow-lg ring-1 ring-black/5 md:h-28 md:w-28"
+                    />
+                  )}
                 </article>
               ))}
             </div>
@@ -559,7 +582,16 @@ export default function IdreamofcleaningLayout({
                   <span
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${t.primaryLightBg}`}
                   >
-                    <MapPin className={`h-4 w-4 ${t.primaryText}`} />
+                    {config.genieImages && config.genieImages.length > 0 ? (
+                      <img
+                        src={config.genieImages[idx % config.genieImages.length]}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-9 w-9 rounded-full object-cover"
+                      />
+                    ) : (
+                      <MapPin className={`h-4 w-4 ${t.primaryText}`} />
+                    )}
                   </span>
                   <span className={`text-sm font-semibold ${S.textPrimary}`}>
                     {area}
