@@ -53,4 +53,56 @@
     cursor: pointer;
     opacity: 0.6;
   }
+
+  /* ===== Accessibility: visible, keyboard-driven focus indicators =====
+     Global focus-visible ring so every interactive element (nav links, buttons,
+     chat FAQ chips, calculator steppers, form inputs, accordions/carousels)
+     shows a clear focus state for keyboard users — without changing the resting
+     look of any tenant. */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 3px solid #b134eb;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* ===== "I Dream of Cleaning" genie entrance + hover motion =====
+     [data-reveal] elements start hidden and fade/slide up once they scroll
+     into view (class .is-visible is added by an IntersectionObserver in the
+     tenant layout). Hover float is a gentle translate applied on top.
+     Disabled entirely for users who prefer reduced motion (below). */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .genie-hover {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s ease;
+  }
+  .genie-hover:hover {
+    transform: scale(1.06) translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
