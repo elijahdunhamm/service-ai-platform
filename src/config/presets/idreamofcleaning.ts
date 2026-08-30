@@ -410,14 +410,27 @@ export const idreamofcleaningPreset: IndustryConfig = {
   },
 
   serviceAreas: [
-    "Stockton",
-    "Elk Grove",
-    "Pleasanton",
-    "Tracy",
-    "Manteca",
-    "Lathrop",
-    "Modesto",
+    "Richmond",
+    "Berkeley",
+    "Albany",
+    "El Cerrito",
+    "Oakland",
+    "Emeryville",
+    "San Leandro",
+    "Hayward",
+    "Fremont",
+    "Union City",
   ],
+
+  // About Us — owner-provided copy, rendered verbatim on the page. Config-driven
+  // so the editorial layout stays content-free of hardcoded tenant copy.
+  about: {
+    eyebrow: "About Us",
+    title: "A Helping Hand With a Personal Touch",
+    paragraphs: [
+      "I Dream of Cleaning LLC is an owner operated housekeeping business founded in 2018 by Akilah Norris. Her small business company was created to lend a helping hand to individuals who have the desire to clean but may not have the time or energy with the hustle and bustle of life. With many clients now juggling work, children, marriage or just the everyday chores and necessity of running a complicated household, we are available to ease your load, relax your mind, and leave the cleaning to our professional staff of housekeepers. Our brand is based on the business principles of clear and frequent communication, establishing a friendly family rapport, schedule flexibility, quality work, attention to details, and good customer service. We aim to please and our business and workers are fully bonded & insured.",
+    ],
+  },
 
   sections: {
     residential: {
@@ -455,7 +468,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
       eyebrow: "Where We Work",
       title: "Proudly Serving Your Neighborhood",
       description:
-        "Cleaning teams covering the San Joaquin Valley and East Bay. If your city is listed, we'll come to your door.",
+        "Cleaning teams covering the San Francisco Bay Area. If your city is listed, we'll come to your door.",
       icon: "home",
     },
   },
@@ -519,7 +532,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
       "2026-09-02": ["11:00 AM", "03:00 PM"],
     },
     copy: {
-      schedulerBadge: "Automated AI Scheduler",
+      schedulerBadge: "Book your cleaning now",
       title: "Select Date & Available Time",
       subtitle:
         "Conflicting slots are automatically disabled based on real-time availability.",

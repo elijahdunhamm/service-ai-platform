@@ -488,6 +488,16 @@ export interface ChatConfig {
   faqs: Faq[];
 }
 
+/** Optional "About Us" section (config-driven body copy, rendered verbatim). */
+export interface AboutConfig {
+  eyebrow?: string;
+  title: string;
+  /** Short optional intro line under the heading. */
+  description?: string;
+  /** Full paragraphs of the About Us body copy (rendered verbatim). */
+  paragraphs: string[];
+}
+
 /** Full description of one tenant's site. */
 export interface IndustryConfig {
   /** Stable slug identifying the preset (e.g. "cleaning"). */
@@ -508,6 +518,8 @@ export interface IndustryConfig {
   craftsmanship?: CraftsmanshipConfig;
   /** Optional full-width brand statement section (feature-flagged). */
   statement?: StatementConfig;
+  /** Optional "About Us" section (rendered by layouts that support it). */
+  about?: AboutConfig;
   /** Hero layout overrides (optional, light stays split). */
   hero?: {
     /** Render a full-width cinematic hero with background image + overlay. */
