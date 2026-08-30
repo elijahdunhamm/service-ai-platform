@@ -1,11 +1,22 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, useParams, Navigate } from "react-router-dom";
-import CleaningLayout from "./components/CleaningLayout";
-import IdreamofcleaningLayout from "./components/IdreamofcleaningLayout";
 import { cleaningPreset } from "./config/presets/cleaning";
 import { detailingPreset } from "./config/presets/detailing";
 import { PRESETS, DEFAULT_PRESET_ID } from "./config/presets";
-import { EmbedClient } from "./app/embed/[clientId]/embed-client";
-import AdminDashboard from "./pages/AdminDashboard";
+
+/**
+ * Route components are lazy-loaded via dynamic import so each tenant route only
+ * downloads the code it needs (Vite emits per-tenant chunks) instead of one
+ * monolithic umbrella bundle. The two tenant layouts share the booking UI, which
+ * lives in src/components/booking.tsx as its own chunk. Admin/embed routes are
+ * also deferred so they never load unless visited.
+ */
+const CleaningLayout = lazy(() => import("./components/CleaningLayout"));
+const IdreamofcleaningLayout = lazy(() => import("./components/IdreamofcleaningLayout"));
+const EmbedClient = lazy(() =>
+  import("./app/embed/[clientId]/embed-client").then((m) => ({ default: m.EmbedClient }))
+);
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 
 /**
  * Default tenant served at the site root. Driven by the build-time env var
@@ -41,40 +52,52 @@ function AdminRoute() {
   return <AdminDashboard tenantId={id} />;
 }
 
+// Minimal fallback shown briefly while a lazy route chunk loads. Purely
+// cosmetic — no layout/theme logic, so it stays out of tenant styling.
+function RouteFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50" aria-busy="true">
+      <div className="size-10 animate-spin rounded-full border-[3px] border-blue-900/15 border-t-blue-900" />
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Main Website Route — serves the configured default tenant */}
-        <Route
-          path="/"
-          element={
-            DEFAULT_TENANT_ID === "idreamofcleaning" ? (
-              <IdreamofcleaningLayout config={PRESETS.idreamofcleaning} />
-            ) : (
-              <CleaningLayout
-                config={PRESETS[DEFAULT_TENANT_ID] ?? cleaningPreset}
-              />
-            )
-          }
-        />
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          {/* Main Website Route — serves the configured default tenant */}
+          <Route
+            path="/"
+            element={
+              DEFAULT_TENANT_ID === "idreamofcleaning" ? (
+                <IdreamofcleaningLayout config={PRESETS.idreamofcleaning} />
+              ) : (
+                <CleaningLayout
+                  config={PRESETS[DEFAULT_TENANT_ID] ?? cleaningPreset}
+                />
+              )
+            }
+          />
 
-        {/* Car Detailing Tenant Route */}
-        <Route path="/detailing" element={<CleaningLayout config={detailingPreset} />} />
+          {/* Car Detailing Tenant Route */}
+          <Route path="/detailing" element={<CleaningLayout config={detailingPreset} />} />
 
-        {/* I Dream of Cleaning Tenant Route — dedicated editorial layout */}
-        <Route
-          path="/idreamofcleaning"
-          element={<IdreamofcleaningLayout config={PRESETS.idreamofcleaning} />}
-        />
+          {/* I Dream of Cleaning Tenant Route — dedicated editorial layout */}
+          <Route
+            path="/idreamofcleaning"
+            element={<IdreamofcleaningLayout config={PRESETS.idreamofcleaning} />}
+          />
 
-        {/* Dynamic Embed Route for Clients */}
-        <Route path="/embed/:clientId" element={<EmbedWrapper />} />
+          {/* Dynamic Embed Route for Clients */}
+          <Route path="/embed/:clientId" element={<EmbedWrapper />} />
 
-        {/* Admin Dashboard Routes: /admin defaults to configured tenant, /admin/:tenantId scopes per tenant */}
-        <Route path="/admin" element={<Navigate to={`/admin/${DEFAULT_TENANT_ID}`} replace />} />
-        <Route path="/admin/:tenantId" element={<AdminRoute />} />
-      </Routes>
+          {/* Admin Dashboard Routes: /admin defaults to configured tenant, /admin/:tenantId scopes per tenant */}
+          <Route path="/admin" element={<Navigate to={`/admin/${DEFAULT_TENANT_ID}`} replace />} />
+          <Route path="/admin/:tenantId" element={<AdminRoute />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

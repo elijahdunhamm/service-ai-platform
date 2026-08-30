@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import type { IndustryConfig } from "../config/types";
 import { lightSurface, defaultFonts } from "../config/theme";
-import { BookingModal, PriceCalculator } from "./CleaningLayout";
+import { BookingModal, PriceCalculator } from "./booking";
 import Testimonials from "./Testimonials";
 import ChatWidget from "./ChatWidget";
 import BrandLogo from "./BrandLogo";
@@ -337,6 +337,7 @@ export default function IdreamofcleaningLayout({
                   <img
                     src={config.brand.heroImage}
                     alt={`${config.brand.businessName} — a bright, freshly cleaned interior`}
+                    fetchPriority="high"
                     className="h-full w-full object-cover"
                     onError={(e) => {
                       e.currentTarget.src = config.brand.heroImageFallback;
@@ -490,6 +491,7 @@ export default function IdreamofcleaningLayout({
                       <img
                         src={config.genieImages[idx % config.genieImages.length]}
                         alt=""
+                        loading="lazy"
                         className="genie-hover h-20 w-20 rounded-2xl object-cover opacity-85 shadow-md transition-opacity duration-300 group-hover:opacity-100 md:h-24 md:w-24 [mask-image:radial-gradient(6.5rem_at_100%_100%,#000_45%,transparent_75%)]"
                       />
                     </div>
@@ -622,6 +624,7 @@ export default function IdreamofcleaningLayout({
                   <img
                     src={config.brand.commercialImage}
                     alt="Clean commercial space"
+                    loading="lazy"
                     className="h-[420px] w-full object-cover"
                     onError={(e) => {
                       e.currentTarget.src = config.brand.commercialImageFallback;
@@ -670,6 +673,7 @@ export default function IdreamofcleaningLayout({
                         src={config.genieImages[idx % config.genieImages.length]}
                         alt=""
                         aria-hidden="true"
+                        loading="lazy"
                         className="genie-hover h-9 w-9 rounded-full object-cover"
                       />
                     ) : (
