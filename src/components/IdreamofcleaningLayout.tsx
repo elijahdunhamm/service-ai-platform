@@ -390,6 +390,67 @@ export default function IdreamofcleaningLayout({
         </div>
       </section>
 
+      {/* ================= ABOUT US ================= */}
+      {config.about && (
+        <section
+          id="about"
+          className={`relative overflow-hidden py-20 md:py-24 ${S.surfaceBg} border-t ${S.cardBorder}`}
+        >
+          {/* soft purple -> magenta glow accents */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-gradient-to-br from-dream/15 to-dream-magenta/15 blur-3xl"
+          />
+          <div className="relative mx-auto max-w-7xl px-6">
+            <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
+              {/* Genie logo visual accent (decorative) */}
+              {config.genieImages && config.genieImages[0] && (
+                <div className="lg:col-span-3">
+                  <div
+                    data-reveal
+                    aria-hidden="true"
+                    className="mx-auto flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-2 border-dream-pale bg-dream-soft shadow-xl"
+                  >
+                    <img
+                      src={config.genieImages[0]}
+                      alt=""
+                      className="genie-hover h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div
+                className={`${config.genieImages && config.genieImages[0] ? "lg:col-span-9" : "lg:col-span-12"}`}
+              >
+                <span
+                  className={`text-xs font-bold uppercase tracking-[0.2em] ${t.primaryText}`}
+                >
+                  {config.about.eyebrow ?? "About Us"}
+                </span>
+                <h2
+                  className={`mt-3 text-4xl md:text-5xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                >
+                  {config.about.title}
+                </h2>
+                {config.about.description && (
+                  <p className={`mt-4 ${S.textMuted} leading-relaxed`}>
+                    {config.about.description}
+                  </p>
+                )}
+                <div className={`mt-6 space-y-5 ${S.textPrimary} leading-relaxed`}>
+                  {config.about.paragraphs.map((copy, pIdx) => (
+                    <p key={pIdx} className="text-base md:text-lg">
+                      {copy}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ================= SERVICES — NUMBERED EDITORIAL CARDS ================= */}
       {f.showResidential && (
         <section id="services" className={`relative py-24 ${S.surfaceBg}`}>
@@ -455,7 +516,7 @@ export default function IdreamofcleaningLayout({
                   </p>
 
                   <ul
-                    className={`mt-6 space-y-2 border-t ${S.borderSubtle} pt-6 pr-14 md:pr-20`}
+                    className={`mt-6 space-y-2 border-t ${S.borderSubtle} pt-6 pr-20 md:pr-28`}
                   >
                     {service.features.map((feature, fIdx) => (
                       <li
@@ -472,15 +533,14 @@ export default function IdreamofcleaningLayout({
 
                   {/* Alternating genie corner art — "hugging" the card's
                       bottom-right edge. Cycles Pose 1 -> 2 -> 3 -> repeat by
-                      card index. Reworked to blend naturally into the card:
-                        - pulled further into the empty corner (bottom/right)
-                          and sized down so it never crosses the last feature
-                          line's tail;
-                        - a radial gradient mask fades its top/left edge toward
-                          the text area, leaving the outer corner opaque;
-                        - reduced opacity + softened shadow (no harsh ring);
-                        - right padding is reserved on the features list so no
-                          text is ever obscured at any breakpoint.
+                      card index. FULLY OPAQUE (owner request) — no opacity or
+                      radial-gradient mask, so the genie shows 100% sharp and
+                      crisp. Text safety is handled entirely by reserved padding:
+                      the card keeps its bottom padding and the features list
+                      reserves generous right padding (pr-20 md:pr-28) so no
+                      feature text ever reaches the genie's horizontal span at
+                      any breakpoint. Slight size + a crisp shadow keep it a
+                      sharp, fully-visible brand stamp.
                       Decorative only: pointer-events-none and aria-hidden. */}
                   {config.genieImages && config.genieImages.length > 0 && (
                     <div
@@ -492,7 +552,7 @@ export default function IdreamofcleaningLayout({
                         src={config.genieImages[idx % config.genieImages.length]}
                         alt=""
                         loading="lazy"
-                        className="genie-hover h-20 w-20 rounded-2xl object-cover opacity-85 shadow-md transition-opacity duration-300 group-hover:opacity-100 md:h-24 md:w-24 [mask-image:radial-gradient(6.5rem_at_100%_100%,#000_45%,transparent_75%)]"
+                        className="genie-hover h-16 w-16 rounded-2xl object-cover shadow-md md:h-20 md:w-20"
                       />
                     </div>
                   )}
