@@ -369,6 +369,10 @@ export interface BookingCopy {
   namePlaceholder: string;
   emailLabel: string;
   emailPlaceholder: string;
+  /** Label for the customer service-address field. */
+  addressLabel: string;
+  /** Placeholder text for the service-address field. */
+  addressPlaceholder: string;
   confirmButton: string;
   /** Label for the required media (photo/video) upload field. */
   mediaLabel: string;

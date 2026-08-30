@@ -1,8 +1,9 @@
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, useParams, Navigate } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useParams, Navigate, useLocation } from "react-router-dom";
 import { cleaningPreset } from "./config/presets/cleaning";
 import { detailingPreset } from "./config/presets/detailing";
 import { PRESETS, DEFAULT_PRESET_ID } from "./config/presets";
+import type { IndustryConfig } from "./config/types";
 
 /**
  * Route components are lazy-loaded via dynamic import so each tenant route only
@@ -30,6 +31,39 @@ const configuredDefault = import.meta.env.VITE_DEFAULT_TENANT as string | undefi
 const DEFAULT_TENANT_ID =
   configuredDefault && PRESETS[configuredDefault] ? configuredDefault : DEFAULT_PRESET_ID;
 
+/**
+ * Resolve the active tenant preset for a given pathname so the document title
+ * reflects the tenant actually being viewed. Mirrors the route wiring below
+ * (root default, /detailing, /idreamofcleaning, /embed/:clientId, /admin).
+ * Falls back to the configured default tenant preset for any unknown path.
+ */
+function resolvePresetForPath(pathname: string): IndustryConfig {
+  if (pathname.startsWith("/detailing")) return detailingPreset;
+  if (pathname.startsWith("/idreamofcleaning")) return PRESETS.idreamofcleaning;
+  if (pathname.startsWith("/embed/")) {
+    const clientId = pathname.split("/")[2];
+    if (clientId === "detailing") return detailingPreset;
+    if (clientId === "idreamofcleaning") return PRESETS.idreamofcleaning;
+    return cleaningPreset;
+  }
+  const adminMatch = pathname.match(/^\/admin\/([^/]+)/);
+  if (adminMatch && PRESETS[adminMatch[1]]) return PRESETS[adminMatch[1]];
+  return PRESETS[DEFAULT_TENANT_ID] ?? cleaningPreset;
+}
+/**
+ * Keeps the browser document <title> in sync with the active tenant's
+ * `businessName` (falling back to the preset's `name` if a preset ever lacks a
+ * businessName). This replaces the stale hardcoded title in index.html so each
+ * tenant shows its own brand in the browser tab.
+ */
+function DocumentTitle() {
+  const { pathname } = useLocation();
+  const config = resolvePresetForPath(pathname);
+  useEffect(() => {
+    document.title = config.brand.businessName || config.name;
+  }, [config]);
+  return null;
+}
 function EmbedWrapper() {
   const { clientId } = useParams();
   const config =
@@ -65,6 +99,7 @@ function RouteFallback() {
 function App() {
   return (
     <BrowserRouter>
+      <DocumentTitle />
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           {/* Main Website Route — serves the configured default tenant */}

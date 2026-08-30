@@ -316,6 +316,7 @@ export default function AdminDashboard({ tenantId = DEFAULT_PRESET_ID }: { tenan
                   <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Customer</th>
                   <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Service</th>
                   <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Date & Time</th>
+                  <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Address</th>
                   <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Media</th>
                   <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Price</th>
                   <th className={`px-6 py-3 text-left text-xs font-semibold ${S.textMuted} uppercase tracking-wider`}>Status</th>
@@ -325,7 +326,7 @@ export default function AdminDashboard({ tenantId = DEFAULT_PRESET_ID }: { tenan
               <tbody className={`divide-y ${S.borderSubtle}`}>
                 {filteredBookings.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className={`px-6 py-12 text-center ${S.textSubtle}`}>
+                    <td colSpan={8} className={`px-6 py-12 text-center ${S.textSubtle}`}>
                       No bookings found
                     </td>
                   </tr>
@@ -346,6 +347,11 @@ export default function AdminDashboard({ tenantId = DEFAULT_PRESET_ID }: { tenan
                       <td className="px-6 py-4">
                         <div className={`text-sm ${S.textPrimary}`}>{booking.booking_date}</div>
                         <div className={`text-sm ${S.textSubtle}`}>{booking.booking_time}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className={`text-sm ${S.textPrimary}`}>
+                          {booking.address || <span className={S.textFaint}>—</span>}
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         {booking.image_url && kind ? (

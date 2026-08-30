@@ -76,6 +76,7 @@ export function BookingModal({
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
   const [bookedSlots, setBookedSlots] = useState<Record<string, string[]>>(
     b.initialBookedSlots
   );
@@ -152,6 +153,7 @@ export function BookingModal({
         timeSlot: selectedTime,
         customerName,
         customerEmail,
+        customerAddress,
         serviceType: serviceDetails.serviceType,
         estimatedPrice,
         imageUrl,
@@ -195,6 +197,7 @@ export function BookingModal({
     setWarning(null);
     setImageFile(null);
     setImagePreview(null);
+    setCustomerAddress("");
     onClose();
   };
 
@@ -234,6 +237,11 @@ export function BookingModal({
                 <strong>{b.copy.clientLabel}:</strong> {customerName} (
                 {customerEmail})
               </p>
+              {customerAddress && (
+                <p>
+                  <strong>{b.copy.addressLabel}:</strong> {customerAddress}
+                </p>
+              )}
             </div>
             <button
               onClick={resetAndClose}
@@ -333,6 +341,19 @@ export function BookingModal({
                   placeholder={b.copy.emailPlaceholder}
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
+                  className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
+                />
+              </div>
+              <div>
+                <label className={`block text-xs font-bold ${S.textSecondary} mb-1`}>
+                  {b.copy.addressLabel}
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder={b.copy.addressPlaceholder}
+                  value={customerAddress}
+                  onChange={(e) => setCustomerAddress(e.target.value)}
                   className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
                 />
               </div>

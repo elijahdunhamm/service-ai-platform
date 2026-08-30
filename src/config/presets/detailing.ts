@@ -387,6 +387,8 @@ export const detailingPreset: IndustryConfig = {
       namePlaceholder: "Jane Doe",
       emailLabel: "Email Address",
       emailPlaceholder: "jane@example.com",
+      addressLabel: "Service Address",
+      addressPlaceholder: "Street address where service is needed",
       confirmButton: "Confirm Booking",
       mediaLabel: "Attach Photos of Your Vehicle (required)",
       mediaHint:

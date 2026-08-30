@@ -18,6 +18,8 @@ export interface Booking {
    * present when the upload succeeded.
    */
   image_url?: string;
+  /** Customer's service address (street line), stored when the column exists. */
+  address?: string;
 }
 
 /**
