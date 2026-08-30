@@ -257,6 +257,8 @@ export const hvacPreset: IndustryConfig = {
       namePlaceholder: "Jane Doe",
       emailLabel: "Email Address",
       emailPlaceholder: "jane@example.com",
+      addressLabel: "Service Address",
+      addressPlaceholder: "Street address where service is needed",
       confirmButton: "Confirm Booking",
       mediaLabel: "Attach a Photo or Video (required)",
       mediaHint: "Upload a photo or video of the equipment or area needing service.",

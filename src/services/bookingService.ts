@@ -10,6 +10,8 @@ export interface BookingData {
   estimatedPrice: number;
   /** Public URL / path of a customer-uploaded image, when the upload succeeds. */
   imageUrl?: string;
+  /** Customer's service address (street line). Stored when the bookings table has the column. */
+  address?: string;
 }
 export interface Booking {
   id: string;
@@ -24,6 +26,7 @@ export interface Booking {
   status: 'pending' | 'confirmed' | 'cancelled';
   createdAt: string;
   imageUrl?: string;
+  address?: string;
 }
 /**
  * Discriminated availability result:
@@ -166,13 +169,17 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       // table lacks the column the insert will fail, so we retry below without
       // the image to keep the booking itself intact.
       ...(bookingData.imageUrl ? { image_url: bookingData.imageUrl } : {}),
+      // Only try to write the address column when one was captured. If the
+      // table lacks the column the insert would fail, so it is omitted from the
+      // retry below to keep the booking itself intact until the migration runs.
+      ...(bookingData.address ? { address: bookingData.address } : {}),
     });
 
-    // Defensive fallback: the "bookings" table may not have an image column yet
-    // (it cannot be altered from the client). Retry without image_url so the
-    // booking still saves.
-    if (error && bookingData.imageUrl) {
-      console.error('Supabase Error (image insert, retrying without image):', error.message);
+    // Defensive fallback: the "bookings" table may not have an image and/or
+    // address column yet (they cannot be altered from the client). Retry with
+    // the base payload (no image, no address) so the booking still saves.
+    if (error && (bookingData.imageUrl || bookingData.address)) {
+      console.error('Supabase Error (insert with optional cols, retrying minimal):', error.message);
       ({ data, error } = await insertRow(basePayload));
     }
 
@@ -196,6 +203,7 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       status: (row.status as Booking['status']) ?? 'pending',
       createdAt: String(row.created_at),
       imageUrl: row.image_url ? String(row.image_url) : bookingData.imageUrl,
+      address: row.address ? String(row.address) : bookingData.address,
     };
 
     return { success: true, booking };
