@@ -37,6 +37,7 @@ import { BookingModal, PriceCalculator } from "./booking";
 import Testimonials from "./Testimonials";
 import ChatWidget from "./ChatWidget";
 import BrandLogo from "./BrandLogo";
+import MagicCarpetIntro from "./MagicCarpetIntro";
 
 interface ServiceDetails {
   serviceType: string;
@@ -126,6 +127,9 @@ export default function IdreamofcleaningLayout({
 
   return (
     <div className={`min-h-screen ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
+      {/* Page-load intro: genie on a magic carpet flies across once on first
+          load (config.intro driven — only active when the preset opts in). */}
+      <MagicCarpetIntro config={config} />
       {f.showBooking && (
         <BookingModal
           config={config}
