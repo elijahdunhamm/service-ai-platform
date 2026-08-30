@@ -644,6 +644,27 @@ export const idreamofcleaningPreset: IndustryConfig = {
     ],
   },
 
+  // Page-load intro: the brand genie flies across the screen riding a magic
+  // carpet drawn in the tenant's purple/magenta theme. Optional + default-OFF
+  // on IndustryConfig, so only this tenant (and any that opt in) gets it.
+  intro: {
+    enabled: true,
+    // Reuse the same genie poses used elsewhere (corner art, trust badges).
+    images: [
+      "/images/idreamofcleaning-genie1.jpg",
+      "/images/idreamofcleaning-genie2.jpg",
+      "/images/idreamofcleaning-genie3.jpg",
+    ],
+    // Colors derived from the dream palette (tailwind.config.js): deep purple
+    // body, magenta fringe/glow, soft purple highlight — mirrors the brand.
+    colors: {
+      primary: "#8f1dc3", // dream.dark (carpet body)
+      accent: "#d234eb", // dream.magenta (fringe + glow)
+      highlight: "#e6c4fb", // dream.pale (outline / sheen)
+      glow: "rgba(178, 52, 235, 0.55)", // purple glow behind the rider
+    },
+    durationMs: 2600,
+  },
   features: {
     showResidential: true,
     showCommercial: true,

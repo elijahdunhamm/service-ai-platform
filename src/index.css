@@ -91,6 +91,73 @@
     transform: scale(1.06) translateY(-3px);
   }
 
+  /* ===== Page-load "magic carpet" intro (opt-in, config-driven) =====
+     Rendered by MagicCarpetIntro for tenants with IndustryConfig.intro.enabled
+     (only idreamofcleaning). All colors are injected as inline styles from the
+     preset's intro.colors; this layer only handles the motion (no hardcoded
+     hues). pointer-events:none everywhere so it never blocks the page. */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none; /* cosmetic only — never blocks scroll/click/chat */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .intro-overlay--exit {
+    opacity: 0;
+  }
+  .intro-rider {
+    position: relative;
+    width: clamp(200px, 40vw, 340px);
+    height: clamp(150px, 28vh, 240px);
+    animation-name: intro-flight;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+    animation-fill-mode: both;
+    animation-duration: 2600ms; /* overridden inline by config.durationMs */
+    will-change: transform;
+  }
+  .intro-rider__glow {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 78%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 9999px;
+    filter: blur(2px);
+    animation-name: intro-glow;
+    animation-duration: 1800ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+  .intro-rider__genie {
+    position: absolute;
+    left: 50%;
+    top: 2%;
+    width: clamp(92px, 30vw, 168px);
+    height: clamp(92px, 30vw, 168px);
+    object-fit: contain;
+    transform: translateX(-50%);
+    animation-name: intro-bob;
+    animation-duration: 1300ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+  .intro-rider__carpet {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    transform: translateX(-50%);
+    animation-name: intro-bob-carpet;
+    animation-duration: 1100ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -104,5 +171,56 @@
       opacity: 1;
       transform: none;
     }
+  }
+}
+
+/* Genie flies across the viewport on its magic carpet. Starts fully off the
+   left edge, glides across with a gentle banking tilt + vertical rise/fall,
+   and ends fully off the right edge — then the overlay fades and unmounts.
+   (MagicCarpetIntro also skips entirely for prefers-reduced-motion.) */
+@keyframes intro-flight {
+  0% {
+    transform: translate3d(-118vw, 8vh, 0) rotate(-5deg);
+  }
+  20% {
+    transform: translate3d(-6vw, -8vh, 0) rotate(-2deg);
+  }
+  50% {
+    transform: translate3d(20vw, 3vh, 0) rotate(3deg);
+  }
+  78% {
+    transform: translate3d(56vw, -6vh, 0) rotate(-2deg);
+  }
+  100% {
+    transform: translate3d(122vw, 8vh, 0) rotate(5deg);
+  }
+}
+@keyframes intro-bob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+@keyframes intro-bob-carpet {
+  0%,
+  100% {
+    transform: translateX(-50%) translateZ(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px) scale(1.02);
+  }
+}
+@keyframes intro-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
   }
 }

@@ -498,6 +498,38 @@ export interface AboutConfig {
   paragraphs: string[];
 }
 
+/**
+ * Optional page-load intro / loader animation, drawn in the tenant's brand
+ * theme (e.g. a genie riding a magic carpet flying across the screen). Only
+ * rendered by tenant-specific layouts that opt in. Optional and default-OFF so
+ * existing tenants (cleaning, hvac, detailing) are completely unaffected.
+ */
+export interface IntroAnimationConfig {
+  /** Master switch: render the intro on initial page load only when true. */
+  enabled: boolean;
+  /**
+   * Images to fly across the screen (e.g. genie poses). Defaults to the
+   * preset's `genieImages` first entry, then `brand.logo` as a fallback.
+   */
+  images?: string[];
+  /**
+   * Brand-theme colors for the magic carpet (drawn as inline SVG, so these are
+   * literal hex/rgba values derived from the tenant's theme). The `primary` /
+   * `accent` pair should mirror the tenant's brand purple/magenta.
+   */
+  colors: {
+    /** Deep shade — carpet body fill (e.g. deep purple). */
+    primary: string;
+    /** Bright accent — carpet fringe/tassels + glow (e.g. magenta). */
+    accent: string;
+    /** Highlight — light outline / sheen along the carpet. */
+    highlight: string;
+    /** Semi-transparent glow used behind the flying genie. */
+    glow: string;
+  };
+  /** Approximate total animation duration in ms. Defaults to ~2600ms. */
+  durationMs?: number;
+}
 /** Full description of one tenant's site. */
 export interface IndustryConfig {
   /** Stable slug identifying the preset (e.g. "cleaning"). */
@@ -552,6 +584,12 @@ export interface IndustryConfig {
    * tenants are unaffected.
    */
   genieImages?: string[];
+  /**
+   * Optional page-load intro animation (e.g. a themed genie flying on a magic
+   * carpet). Rendered only by tenant layouts that opt in, and only when
+   * `enabled`. Optional + default-OFF so existing tenants are unaffected.
+   */
+  intro?: IntroAnimationConfig;
   testimonials: {
     rating: number;
     items: Testimonial[];
