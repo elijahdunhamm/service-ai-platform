@@ -7,7 +7,7 @@ import { useState } from "react";
 import {
   PriceCalculator,
   BookingModal,
-} from "../../../components/CleaningLayout";
+} from "../../../components/booking";
 import type { IndustryConfig } from "../../../config/types";
 
 interface ServiceDetails {

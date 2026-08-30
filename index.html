@@ -6,10 +6,28 @@
     <title>Meridian Commercial Cleaning</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Critical route fonts (Lato + Playfair for the cleaning-family tenants).
+         display=swap keeps text from blocking on font load. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <!-- Nunito is used only by the I Dream of Cleaning tenant (/idreamofcleaning),
+         so it is deferred (non-blocking) out of the critical path instead of
+         competing with Lato/Playfair on every tenant's first paint. It still
+         loads right after render (display=swap), so no tenant loses its font. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

@@ -15,7 +15,7 @@ export const detailingPreset: IndustryConfig = {
     tagline: "Premium Mobile Car Detailing",
     logo: "/images/detailing-logo.png",
     heroImage:
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80",
     commercialImage:
       "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",
     residentialImage:
@@ -127,7 +127,7 @@ export const detailingPreset: IndustryConfig = {
     description:
       "Every detail is performed by certified technicians using studio-grade compounds, dual-action polishers, and premium coatings. We don't cut corners — we cut swirls. The result is a finish that looks poured-on and stays protected long after we roll away.",
     image:
-      "https://images.unsplash.com/photo-1600661653561-629509216228?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1600661653561-629509216228?auto=format&fit=crop&w=1200&q=80",
     bullets: [
       "Multi-stage machine polishing & paint correction",
       "Premium ceramic coatings and hydrophobic sealants",
@@ -144,7 +144,7 @@ export const detailingPreset: IndustryConfig = {
     name: "Team autodetaildemo",
     role: "Certified detail technicians",
     backgroundImage:
-      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80",
   },
 
   navigation: {
