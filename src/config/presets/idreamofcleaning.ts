@@ -99,8 +99,8 @@ export const idreamofcleaningPreset: IndustryConfig = {
     textPrimary: "text-black",
     textSecondary: "text-black/80",
     textMuted: "text-black/65",
-    textSubtle: "text-black/55",
-    textFaint: "text-black/45",
+    textSubtle: "text-black/60",
+    textFaint: "text-black/50",
     headerBg: "bg-white/90",
     headerBorder: "border-dream-pale/80",
     navHoverBg: "hover:bg-dream-soft",
@@ -140,10 +140,13 @@ export const idreamofcleaningPreset: IndustryConfig = {
     statementOverlay: "bg-dream-deep/90",
   },
 
-  // Playfair Display (elegant serif) headings + Lato (clean sans) body.
+  // Nunito — friendly, rounded sans chosen by the owner ("replace the font with
+  // google font style nunito"). Applied to BOTH headings and body for this
+  // tenant only; other tenants keep Playfair Display + Lato. Paragraph copy is
+  // unchanged — only the typeface switches.
   fonts: {
-    heading: "font-display",
-    body: "font-body",
+    heading: "font-nunito",
+    body: "font-nunito",
   },
 
   // Only links backed by real on-page sections + the booking CTA. "Results"

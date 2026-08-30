@@ -95,7 +95,7 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open support chat"}
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-xl ring-2 ring-white/40 transition-transform hover:scale-105"
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-xl ring-2 ring-white/40 transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-dream focus-visible:ring-offset-2"
         style={{
           background: chatGradient,
         }}
@@ -154,7 +154,7 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
                 key={faq.question}
                 type="button"
                 onClick={() => ask(faq.question)}
-                className={`inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition-colors ${chatFaqHover}`}
+                className={`inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition-colors ${chatFaqHover} focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-1`}
               >
                 {faq.question}
                 <ChevronRight className="h-3 w-3" />
@@ -174,12 +174,13 @@ export default function ChatWidget({ config }: { config: IndustryConfig }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={chat.placeholder}
-              className={`w-full rounded-full border border-slate-200 px-3 py-2 text-sm outline-none ${chatInputFocus}`}
+              aria-label={chat.placeholder}
+              className={`w-full rounded-full border border-slate-200 px-3 py-2 text-sm outline-none ${chatInputFocus} focus-visible:ring-2 focus-visible:ring-dream`}
             />
             <button
               type="submit"
               aria-label="Send message"
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${chatAccentBg} text-white transition-transform hover:scale-105`}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${chatAccentBg} text-white transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
             >
               <Send className="h-4 w-4" />
             </button>

@@ -16,7 +16,7 @@
 //  - Reuses BookingModal + PriceCalculator (shared components) so the existing
 //    booking flow stays identical.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Menu,
   X,
@@ -100,6 +100,30 @@ export default function IdreamofcleaningLayout({
 
   const ComIcon: LucideIcon = Building2;
 
+  // Reveal-on-scroll for genie artwork. Observes every [data-reveal] element and
+  // adds .is-visible once it enters the viewport, triggering the CSS fade/slide
+  // in. Respects prefers-reduced-motion via CSS (see index.css). Decorative only.
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll("[data-reveal]"));
+    if (!els.length || typeof IntersectionObserver === "undefined") {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className={`min-h-screen ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
       {f.showBooking && (
@@ -113,12 +137,17 @@ export default function IdreamofcleaningLayout({
         />
       )}
 
-      {/* ================= HEADER ================= */}
-      <header
-        className={`sticky top-0 z-40 backdrop-blur border-b ${S.headerBg} ${S.headerBorder}`}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <a href="#top" className="flex items-center gap-3">
+      {/* ================= HEADER — floating pill ================= */}
+      {/* Sticky top with a translucent, blurred rounded container that floats
+          above the hero (backdrop-blur + soft shadow + border). Entrance is a
+          gentle slide-down via the [data-reveal] reveal (CSS). Keyboard users
+          get a visible focus-visible ring on every link/button. */}
+      <header className="sticky top-3 z-40 mt-2 px-3 sm:px-6">
+        <div
+          data-reveal
+          className={`mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-md sm:px-6 ${S.headerBg} ${S.headerBorder}`}
+        >
+          <a href="#top" className="flex items-center gap-3 focus-visible:rounded-lg">
             <BrandLogo
               src={config.brand.logo}
               alt={`${config.brand.businessName} Logo`}
@@ -131,7 +160,7 @@ export default function IdreamofcleaningLayout({
                 {config.brand.businessName}
               </span>
               <span
-                className={`block text-[11px] uppercase tracking-[0.18em] ${t.primaryText} font-semibold`}
+                className={`block text-[11px] uppercase tracking-[0.18em] ${t.primaryLightText} font-semibold`}
               >
                 {config.brand.tagline}
               </span>
@@ -139,13 +168,14 @@ export default function IdreamofcleaningLayout({
           </a>
 
           <nav
+            aria-label="Main navigation"
             className={`hidden items-center gap-1 text-sm font-medium ${S.textMuted} lg:flex`}
           >
             {config.navigation.links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-4 py-2 font-medium text-sm ${S.textSecondary} transition-colors ${S.navHoverBg} ${t.primaryHoverText}`}
+                className={`rounded-full px-4 py-2 font-medium text-sm ${S.textSecondary} transition-colors ${S.navHoverBg} ${t.primaryHoverText} focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
               >
                 {link.label}
               </a>
@@ -155,7 +185,7 @@ export default function IdreamofcleaningLayout({
           <div className="flex items-center gap-3">
             <a
               href={config.brand.phoneHref}
-              className={`hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold ${S.textSecondary} sm:flex`}
+              className={`hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold ${S.textSecondary} sm:flex focus-visible:rounded-full`}
             >
               <Phone className={`h-4 w-4 ${t.primaryText}`} />
               {config.brand.phone}
@@ -163,14 +193,16 @@ export default function IdreamofcleaningLayout({
             {f.showBooking && (
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className={`inline-flex items-center gap-1.5 rounded-full ${t.primaryBg} px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5`}
+                className={`inline-flex items-center gap-1.5 rounded-full ${t.primaryBg} px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
               >
                 <Calendar className="h-4 w-4" /> {config.navigation.cta}
               </button>
             )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`p-2 ${S.textMuted} lg:hidden`}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              className={`p-2 rounded-lg ${S.textMuted} lg:hidden focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -179,15 +211,18 @@ export default function IdreamofcleaningLayout({
 
         {mobileMenuOpen && (
           <div
-            className={`border-b ${S.mobileNavBorder} ${S.mobileNavBg} px-6 py-4 lg:hidden`}
+            className={`mx-auto mt-2 max-w-7xl rounded-2xl border shadow-xl backdrop-blur-md ${S.mobileNavBorder} ${S.mobileNavBg} px-6 py-4 lg:hidden`}
           >
-            <nav className={`flex flex-col gap-4 text-sm font-medium ${S.mobileNavText}`}>
+            <nav
+              aria-label="Mobile navigation"
+              className={`flex flex-col gap-4 text-sm font-medium ${S.mobileNavText}`}
+            >
               {config.navigation.links.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={t.primaryHoverText}
+                  className={`${t.primaryHoverText} focus-visible:rounded-lg`}
                 >
                   {link.label}
                 </a>
@@ -198,7 +233,7 @@ export default function IdreamofcleaningLayout({
                     setMobileMenuOpen(false);
                     setBookingModalOpen(true);
                   }}
-                  className={`rounded-full ${t.primaryBg} px-5 py-2.5 text-sm font-bold text-white text-center ${t.primaryBgHover}`}
+                  className={`rounded-full ${t.primaryBg} px-5 py-2.5 text-sm font-bold text-white text-center ${t.primaryBgHover} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
                 >
                   {config.navigation.cta}
                 </button>
@@ -243,13 +278,13 @@ export default function IdreamofcleaningLayout({
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <button
                   onClick={() => setBookingModalOpen(true)}
-                  className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5`}
+                  className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
                 >
                   {config.navigation.cta} <ArrowRight className="h-4 w-4" />
                 </button>
                 <a
                   href="#services"
-                  className={`inline-flex items-center gap-2 rounded-full ${S.secondaryButton} px-7 py-3.5 text-base font-bold transition-colors`}
+                  className={`inline-flex items-center gap-2 rounded-full ${S.secondaryButton} px-7 py-3.5 text-base font-bold transition-colors focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
                 >
                   Explore Services
                 </a>
@@ -266,7 +301,7 @@ export default function IdreamofcleaningLayout({
                         src={badge.iconImage}
                         alt=""
                         aria-hidden="true"
-                        className="h-11 w-11 shrink-0 rounded-full object-cover"
+                        className="genie-hover h-11 w-11 shrink-0 rounded-full object-cover"
                       />
                     ) : (
                       <span
@@ -283,34 +318,68 @@ export default function IdreamofcleaningLayout({
               </div>
             </div>
 
-            {/* Right — editorial framed image */}
+            {/* Right — artistic stacked/mosaic visual (chosen option B) */}
+            {/* A layered composition: one large framed photo + two offset
+                smaller cards, so the hero reads as a curated editorial collage
+                rather than a single static frame. Uses only preset imagery
+                (hero / commercial / genie), no hardcoded paths. */}
             <div className="lg:col-span-5">
-              <div className="relative">
+              <div className="relative h-[440px] lg:h-[560px]">
                 <div
                   aria-hidden="true"
-                  className={`absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-dream to-dream-magenta opacity-20 blur-xl`}
+                  className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-dream to-dream-magenta opacity-20 blur-xl"
                 />
+                {/* main framed photo */}
                 <div
-                  className={`relative overflow-hidden rounded-[2rem] border ${S.imageFrameBorder} shadow-2xl ${S.imageFrameBg}`}
+                  data-reveal
+                  className={`absolute right-0 top-2 h-[80%] w-[88%] overflow-hidden rounded-[2rem] border ${S.imageFrameBorder} shadow-2xl ${S.imageFrameBg}`}
                 >
                   <img
                     src={config.brand.heroImage}
-                    alt={config.brand.businessName}
-                    className="h-[420px] w-full object-cover lg:h-[520px]"
+                    alt={`${config.brand.businessName} — a bright, freshly cleaned interior`}
+                    className="h-full w-full object-cover"
                     onError={(e) => {
                       e.currentTarget.src = config.brand.heroImageFallback;
                     }}
                   />
                 </div>
-                {/* floating accent card */}
+                {/* offset small card — lower-left, gently rotated */}
                 <div
-                  className={`absolute -bottom-6 -left-6 rounded-2xl ${t.primaryBg} px-6 py-4 text-white shadow-xl`}
+                  data-reveal
+                  className="absolute bottom-4 left-0 h-[46%] w-[40%] -rotate-3 rounded-2xl border border-dream-pale bg-white p-1.5 shadow-xl"
+                >
+                  <img
+                    src={config.brand.commercialImage}
+                    alt="Meticulous detail cleaning, corner to corner"
+                    className="h-full w-full rounded-xl object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = config.brand.commercialImageFallback;
+                    }}
+                  />
+                </div>
+                {/* genie brand stamp — top-left mini card (decorative) */}
+                {config.genieImages && config.genieImages[0] && (
+                  <div
+                    data-reveal
+                    aria-hidden="true"
+                    className="absolute left-[5%] top-0 h-16 w-16 rotate-6 overflow-hidden rounded-full border-2 border-white shadow-lg"
+                  >
+                    <img
+                      src={config.genieImages[0]}
+                      alt=""
+                      className="genie-hover h-full w-full object-cover"
+                    />
+                  </div>
+                )}
+                {/* floating accent rating card */}
+                <div
+                  className={`absolute -bottom-5 right-[14%] rounded-2xl ${t.primaryBg} px-5 py-3.5 text-white shadow-xl`}
                 >
                   <p className={`${F.heading} text-2xl font-semibold leading-none`}>
                     {config.testimonials.rating}
-                    <span className="text-dream-pale">.0</span>
+                    <span className="text-white/85">.0</span>
                   </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/80">
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/90">
                     Rated by your neighbors
                   </p>
                 </div>
@@ -384,7 +453,9 @@ export default function IdreamofcleaningLayout({
                     {service.description}
                   </p>
 
-                  <ul className={`mt-6 space-y-2 border-t ${S.borderSubtle} pt-6`}>
+                  <ul
+                    className={`mt-6 space-y-2 border-t ${S.borderSubtle} pt-6 pr-14 md:pr-20`}
+                  >
                     {service.features.map((feature, fIdx) => (
                       <li
                         key={fIdx}
@@ -400,16 +471,28 @@ export default function IdreamofcleaningLayout({
 
                   {/* Alternating genie corner art — "hugging" the card's
                       bottom-right edge. Cycles Pose 1 -> 2 -> 3 -> repeat by
-                      card index. Decorative only (pointer-events-none, hidden
-                      from screen readers) so it never blocks interaction or
-                      readability. */}
+                      card index. Reworked to blend naturally into the card:
+                        - pulled further into the empty corner (bottom/right)
+                          and sized down so it never crosses the last feature
+                          line's tail;
+                        - a radial gradient mask fades its top/left edge toward
+                          the text area, leaving the outer corner opaque;
+                        - reduced opacity + softened shadow (no harsh ring);
+                        - right padding is reserved on the features list so no
+                          text is ever obscured at any breakpoint.
+                      Decorative only: pointer-events-none and aria-hidden. */}
                   {config.genieImages && config.genieImages.length > 0 && (
-                    <img
-                      src={config.genieImages[idx % config.genieImages.length]}
-                      alt=""
+                    <div
+                      data-reveal
                       aria-hidden="true"
-                      className="pointer-events-none absolute -bottom-4 -right-4 h-24 w-24 rounded-2xl object-cover shadow-lg ring-1 ring-black/5 md:h-28 md:w-28"
-                    />
+                      className="pointer-events-none absolute -bottom-2 -right-2"
+                    >
+                      <img
+                        src={config.genieImages[idx % config.genieImages.length]}
+                        alt=""
+                        className="genie-hover h-20 w-20 rounded-2xl object-cover opacity-85 shadow-md transition-opacity duration-300 group-hover:opacity-100 md:h-24 md:w-24 [mask-image:radial-gradient(6.5rem_at_100%_100%,#000_45%,transparent_75%)]"
+                      />
+                    </div>
                   )}
                 </article>
               ))}
@@ -587,7 +670,7 @@ export default function IdreamofcleaningLayout({
                         src={config.genieImages[idx % config.genieImages.length]}
                         alt=""
                         aria-hidden="true"
-                        className="h-9 w-9 rounded-full object-cover"
+                        className="genie-hover h-9 w-9 rounded-full object-cover"
                       />
                     ) : (
                       <MapPin className={`h-4 w-4 ${t.primaryText}`} />

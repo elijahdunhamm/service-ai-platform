@@ -11,6 +11,10 @@ export default {
         display: ['"Playfair Display"', "Georgia", "serif"],
         // Clean modern sans for body (Lato).
         body: ["Lato", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Rounded, friendly sans used by the "I Dream of Cleaning" tenant
+        // (headings + body) per owner request. Only tenants that opt in via
+        // their preset's `fonts` use this — other tenants keep Playfair/Lato.
+        nunito: ["Nunito", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
         // "Modern Royal Elegance" palette — Royal Blue primary + Gold accents
