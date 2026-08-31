@@ -679,8 +679,8 @@ export const idreamofcleaningPreset: IndustryConfig = {
     logo: "/images/idreamofcleaning-genie-logo.png",
     tagline: "I Dream of Cleaning LLC",
     durationMs: 2500,
-    background: "#12051f", // deep midnight purple
-    glow: "rgba(178, 52, 235, 0.55)", // purple halo behind the genie
+    background: "#ffffff", // white — loader reads clearly on a light splash
+    glow: "rgba(178, 52, 235, 0.5)", // soft purple halo behind the genie on white
   },
 
   // Service-area -> city-skyline background image mapping for the location
