@@ -190,7 +190,7 @@ export default function IdreamofcleaningLayout({
               <a
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-4 py-2 font-medium text-sm ${S.textSecondary} transition-colors ${S.navHoverBg} ${t.primaryHoverText} focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
+                className={`rounded-full px-4 py-2 font-medium text-sm ${S.textSecondary} transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${S.navHoverBg} ${t.primaryHoverText} active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
               >
                 {link.label}
               </a>
@@ -208,7 +208,7 @@ export default function IdreamofcleaningLayout({
             {f.showBooking && (
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className={`inline-flex items-center gap-1.5 rounded-full ${t.primaryBg} px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
+                className={`inline-flex items-center gap-1.5 rounded-full ${t.primaryBg} px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-dream/25 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${t.primaryBgHover} hover:-translate-y-0.5 hover:shadow-xl hover:shadow-dream/30 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
               >
                 <Calendar className="h-4 w-4" /> {config.navigation.cta}
               </button>
@@ -283,58 +283,35 @@ export default function IdreamofcleaningLayout({
 
         <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-center px-6 py-24 md:py-28 lg:py-32">
           <div className="max-w-2xl">
-            <div
-              className={`inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-white backdrop-blur-sm mb-7`}
-            >
-              <Sparkles className="h-4 w-4" /> {config.brand.heroEyebrow}
-            </div>
-
+            {/* Hero stack is deliberately restrained: headline, subhead, CTAs.
+                The config eyebrow pill + trust-badge row are REMOVED per owner
+                direction (no decorative badge clutter) — elevation comes from
+                spacing, type, and motion. Hero data keys (heroEyebrow,
+                trustBadges) stay in the preset for schema fidelity. */}
             <h1
-              className={`${F.heading} text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-tight text-white whitespace-pre-line`}
+              className={`${F.heading} whitespace-pre-line text-5xl font-bold leading-[1.08] tracking-tight text-white text-balance md:text-6xl lg:text-7xl`}
             >
               {config.brand.heroHeadline}
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90">
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 md:text-xl">
               {config.brand.heroSubhead}
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
+                className={`group inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${t.primaryBgHover} hover:-translate-y-0.5 hover:shadow-xl hover:shadow-dream/30 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
               >
-                {config.navigation.cta} <ArrowRight className="h-4 w-4" />
+                {config.navigation.cta}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1" />
               </button>
               <a
                 href="#services"
-                className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:bg-white/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2`}
+                className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-white/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2`}
               >
                 Explore Services
               </a>
-            </div>
-
-            {/* Trust badges */}
-            <div className="mt-12 grid grid-cols-1 gap-4 border-t border-white/20 pt-8 sm:grid-cols-3 sm:gap-6">
-              {config.trustBadges.map((badge, idx) => (
-                <div key={idx} className="flex items-center gap-3">
-                  {badge.iconImage ? (
-                    <img
-                      src={badge.iconImage}
-                      alt=""
-                      aria-hidden="true"
-                      className="genie-hover h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-white/40"
-                    />
-                  ) : (
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15">
-                      <Check className="h-5 w-5 text-white" />
-                    </span>
-                  )}
-                  <span className="text-sm font-semibold text-white">
-                    {badge.label}
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -344,7 +321,7 @@ export default function IdreamofcleaningLayout({
       {config.about && (
         <section
           id="about"
-          className={`relative overflow-hidden py-20 md:py-24 ${S.surfaceBg} border-t ${S.cardBorder}`}
+          className={`relative overflow-hidden py-24 md:py-28 ${S.surfaceBg} border-t ${S.cardBorder}`}
         >
           {/* soft purple -> magenta glow accents */}
           <div
@@ -359,7 +336,7 @@ export default function IdreamofcleaningLayout({
                   <div
                     data-reveal
                     aria-hidden="true"
-                    className="mx-auto flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-2 border-dream-pale bg-dream-soft shadow-xl"
+                    className="mx-auto flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-2 border-dream-pale bg-dream-soft shadow-lg shadow-dream/25 ring-1 ring-white/60"
                   >
                     <img
                       src={config.genieImages[0]}
@@ -374,7 +351,7 @@ export default function IdreamofcleaningLayout({
                 className={`${config.genieImages && config.genieImages[0] ? "lg:col-span-9" : "lg:col-span-12"}`}
               >
                 <h2
-                  className={`text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight md:text-5xl`}
+                  className={`text-4xl font-bold ${F.heading} ${S.textPrimary} leading-tight tracking-tight text-balance md:text-5xl`}
                 >
                   {config.about.title}
                 </h2>
@@ -408,7 +385,7 @@ export default function IdreamofcleaningLayout({
                   {config.sections.residential.eyebrow}
                 </span>
                 <h2
-                  className={`mt-3 text-4xl md:text-5xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                  className={`mt-3 text-4xl font-bold md:text-5xl ${F.heading} ${S.textPrimary} leading-tight tracking-tight text-balance`}
                 >
                   {config.sections.residential.title}
                 </h2>
@@ -429,7 +406,7 @@ export default function IdreamofcleaningLayout({
               {config.services.residential.map((service, idx) => (
                 <article
                   key={idx}
-                  className={`group relative flex flex-col border border-transparent bg-white p-8 transition-all duration-300 hover:z-10 hover:border-dream-pale/70 md:p-10 ${S.cardHover}`}
+                  className={`group relative flex flex-col border border-transparent bg-white p-8 transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:z-10 hover:border-dream-pale/80 md:p-10 ${S.cardHover}`}
                 >
                   <div className="mb-6 flex items-baseline justify-between gap-4">
                     <span
@@ -524,7 +501,7 @@ export default function IdreamofcleaningLayout({
                   {config.services.addons.map((addon, idx) => (
                     <div
                       key={idx}
-                      className={`rounded-2xl border ${S.mutedBorder} bg-white p-5 shadow-sm`}
+                      className={`rounded-2xl border ${S.mutedBorder} bg-white p-5 shadow-sm transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-dream-pale hover:shadow-md hover:shadow-dream/10`}
                     >
                       <p className={`text-sm font-bold ${S.textPrimary}`}>{addon.name}</p>
                       <div className="mt-3 flex flex-wrap items-baseline gap-2">
@@ -563,7 +540,7 @@ export default function IdreamofcleaningLayout({
           >
             <div className="order-2 lg:order-1">
               <h2
-                className={`text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                className={`text-4xl font-bold ${F.heading} ${S.textPrimary} leading-tight tracking-tight text-balance`}
               >
                 {config.sections.commercial.title}
               </h2>
@@ -575,7 +552,7 @@ export default function IdreamofcleaningLayout({
                 {config.services.commercial.map((cService, idx) => (
                   <div
                     key={idx}
-                    className={`rounded-3xl border ${S.mutedBorder} p-7 ${S.mutedBg}`}
+                    className={`rounded-3xl border ${S.mutedBorder} p-7 ${S.mutedBg} transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-dream-pale/70 hover:shadow-lg hover:shadow-dream/10`}
                   >
                     <div className="flex items-center gap-3">
                       <span
@@ -646,7 +623,7 @@ export default function IdreamofcleaningLayout({
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-12 max-w-2xl">
               <h2
-                className={`text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                className={`text-4xl font-bold ${F.heading} ${S.textPrimary} leading-tight tracking-tight text-balance`}
               >
                 {config.sections.serviceAreas.title}
               </h2>
@@ -660,7 +637,7 @@ export default function IdreamofcleaningLayout({
                 return (
                   <div
                     key={idx}
-                    className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-lg transition-all hover:-translate-y-1 hover:shadow-2xl"
+                    className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-lg transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-2xl hover:shadow-dream/20"
                   >
                     {skyline ? (
                       <>
@@ -716,7 +693,7 @@ export default function IdreamofcleaningLayout({
                 {config.sections.estimator.eyebrow}
               </span>
               <h2
-                className={`mt-3 text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                className={`mt-3 text-4xl font-bold ${F.heading} ${S.textPrimary} leading-tight tracking-tight text-balance`}
               >
                 {config.sections.estimator.title}
               </h2>
