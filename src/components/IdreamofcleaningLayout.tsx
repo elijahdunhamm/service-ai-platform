@@ -258,148 +258,83 @@ export default function IdreamofcleaningLayout({
         )}
       </header>
 
-      {/* ================= EDITORIAL HERO ================= */}
-      <section id="top" className={`relative overflow-hidden ${S.heroBg}`}>
-        {/* soft purple -> magenta gradient glows */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -right-24 h-[32rem] w-[32rem] rounded-full bg-gradient-to-br from-dream/25 to-dream-magenta/25 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 -left-20 h-[28rem] w-[28rem] rounded-full bg-gradient-to-tr from-dream-magenta/20 to-dream/15 blur-3xl"
-        />
+      {/* ================= HERO — FULL-BLEED BACKGROUND ================= */}
+      {/* The largest hero image (config.brand.heroImage) fills the section as a
+          full-bleed background with a legibility overlay. Headline, subhead,
+          copy and CTAs sit on top. (The previous offset photo-card collage was
+          removed per owner direction; the page loader/intro logic is untouched.) */}
+      <section id="top" className="relative isolate overflow-hidden">
+        {/* full-bleed background image */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src={config.brand.heroImage}
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = config.brand.heroImageFallback;
+            }}
+          />
+          {/* legibility overlay — darkens the image so white copy reads clearly */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/30" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
+        </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-28 lg:py-32">
-          <div className="grid items-center gap-14 lg:grid-cols-12">
-            {/* Left — copy */}
-            <div className="lg:col-span-7">
-              <div
-                className={`inline-flex items-center gap-2 rounded-full ${t.primaryLightBg} px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] ${t.primaryLightText} mb-7`}
-              >
-                <Sparkles className="h-4 w-4" /> {config.brand.heroEyebrow}
-              </div>
-
-              <h1
-                className={`${F.heading} text-5xl md:text-6xl lg:text-7xl ${S.textPrimary} font-semibold leading-[1.02] tracking-tight whitespace-pre-line`}
-              >
-                {config.brand.heroHeadline}
-              </h1>
-
-              <p className={`mt-6 max-w-xl text-lg ${S.textMuted} leading-relaxed`}>
-                {config.brand.heroSubhead}
-              </p>
-
-              <div className="mt-9 flex flex-wrap items-center gap-4">
-                <button
-                  onClick={() => setBookingModalOpen(true)}
-                  className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
-                >
-                  {config.navigation.cta} <ArrowRight className="h-4 w-4" />
-                </button>
-                <a
-                  href="#services"
-                  className={`inline-flex items-center gap-2 rounded-full ${S.secondaryButton} px-7 py-3.5 text-base font-bold transition-colors focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
-                >
-                  Explore Services
-                </a>
-              </div>
-
-              {/* Trust badges */}
-              <div
-                className={`mt-12 grid grid-cols-1 gap-4 border-t ${S.borderSubtle} pt-8 sm:grid-cols-3 sm:gap-6`}
-              >
-                {config.trustBadges.map((badge, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    {badge.iconImage ? (
-                      <img
-                        src={badge.iconImage}
-                        alt=""
-                        aria-hidden="true"
-                        className="genie-hover h-11 w-11 shrink-0 rounded-full object-cover"
-                      />
-                    ) : (
-                      <span
-                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${t.primaryLightBg}`}
-                      >
-                        <Check className={`h-5 w-5 ${t.primaryText}`} />
-                      </span>
-                    )}
-                    <span className={`text-sm font-semibold ${S.textSecondary}`}>
-                      {badge.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
+        <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+          <div className="max-w-2xl">
+            <div
+              className={`inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-white backdrop-blur-sm mb-7`}
+            >
+              <Sparkles className="h-4 w-4" /> {config.brand.heroEyebrow}
             </div>
 
-            {/* Right — artistic stacked/mosaic visual (chosen option B) */}
-            {/* A layered composition: one large framed photo + two offset
-                smaller cards, so the hero reads as a curated editorial collage
-                rather than a single static frame. Uses only preset imagery
-                (hero / commercial / genie), no hardcoded paths. */}
-            <div className="lg:col-span-5">
-              <div className="relative h-[440px] lg:h-[560px]">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-dream to-dream-magenta opacity-20 blur-xl"
-                />
-                {/* main framed photo */}
-                <div
-                  data-reveal
-                  className={`absolute right-0 top-2 h-[80%] w-[88%] overflow-hidden rounded-[2rem] border ${S.imageFrameBorder} shadow-2xl ${S.imageFrameBg}`}
-                >
-                  <img
-                    src={config.brand.heroImage}
-                    alt={`${config.brand.businessName} — a bright, freshly cleaned interior`}
-                    fetchPriority="high"
-                    className="h-full w-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = config.brand.heroImageFallback;
-                    }}
-                  />
-                </div>
-                {/* offset small card — lower-left, gently rotated */}
-                <div
-                  data-reveal
-                  className="absolute bottom-4 left-0 h-[46%] w-[40%] -rotate-3 rounded-2xl border border-dream-pale bg-white p-1.5 shadow-xl"
-                >
-                  <img
-                    src={config.brand.commercialImage}
-                    alt="Meticulous detail cleaning, corner to corner"
-                    className="h-full w-full rounded-xl object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = config.brand.commercialImageFallback;
-                    }}
-                  />
-                </div>
-                {/* genie brand stamp — top-left mini card (decorative) */}
-                {config.genieImages && config.genieImages[0] && (
-                  <div
-                    data-reveal
-                    aria-hidden="true"
-                    className="absolute left-[5%] top-0 h-16 w-16 rotate-6 overflow-hidden rounded-full border-2 border-white shadow-lg"
-                  >
+            <h1
+              className={`${F.heading} text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.02] tracking-tight text-white whitespace-pre-line`}
+            >
+              {config.brand.heroHeadline}
+            </h1>
+
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90">
+              {config.brand.heroSubhead}
+            </p>
+
+            <div className="mt-9 flex flex-wrap items-center gap-4">
+              <button
+                onClick={() => setBookingModalOpen(true)}
+                className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
+              >
+                {config.navigation.cta} <ArrowRight className="h-4 w-4" />
+              </button>
+              <a
+                href="#services"
+                className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2`}
+              >
+                Explore Services
+              </a>
+            </div>
+
+            {/* Trust badges */}
+            <div className="mt-12 grid grid-cols-1 gap-4 border-t border-white/20 pt-8 sm:grid-cols-3 sm:gap-6">
+              {config.trustBadges.map((badge, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  {badge.iconImage ? (
                     <img
-                      src={config.genieImages[0]}
+                      src={badge.iconImage}
                       alt=""
-                      className="genie-hover h-full w-full object-cover"
+                      aria-hidden="true"
+                      className="genie-hover h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-white/40"
                     />
-                  </div>
-                )}
-                {/* floating accent rating card */}
-                <div
-                  className={`absolute -bottom-5 right-[14%] rounded-2xl ${t.primaryBg} px-5 py-3.5 text-white shadow-xl`}
-                >
-                  <p className={`${F.heading} text-2xl font-semibold leading-none`}>
-                    {config.testimonials.rating}
-                    <span className="text-white/85">.0</span>
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/90">
-                    Rated by your neighbors
-                  </p>
+                  ) : (
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15">
+                      <Check className="h-5 w-5 text-white" />
+                    </span>
+                  )}
+                  <span className="text-sm font-semibold text-white">
+                    {badge.label}
+                  </span>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
