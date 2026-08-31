@@ -272,7 +272,7 @@
   width: clamp(130px, 36vw, 230px);
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 12px 32px rgba(210, 52, 235, 0.45));
+  filter: drop-shadow(0 12px 32px rgba(120, 20, 150, 0.25));
 }
 .page-loader__tagline {
   position: relative;
@@ -281,14 +281,14 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: #5b1270;
 }
 .page-loader__bar {
   position: relative;
   width: min(230px, 60vw);
   height: 4px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(91, 18, 112, 0.15);
   overflow: hidden;
 }
 .page-loader__bar-fill {
