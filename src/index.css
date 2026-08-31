@@ -245,28 +245,35 @@
   gap: 1.5rem;
   overflow: hidden;
 }
+/* The drifting unit: holds the genie + its glow together so the glow glides
+   with the logo. The whole unit performs a slow, calm, looped drift (a gentle
+   translate x/y path + slight rotate). Transform/opacity only — no layout-
+   thrashing properties — and long, eased keyframes so it reads as one fluid,
+   premium float rather than a choppy in-place pulse. */
+.page-loader__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation:
+    loader-fadein 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
+    loader-float 13s cubic-bezier(0.45, 0, 0.55, 1) 0.35s infinite;
+  will-change: transform;
+}
 .page-loader__glow {
   position: absolute;
   left: 50%;
-  top: 42%;
-  width: min(90vw, 560px);
+  top: 50%;
+  width: min(80vw, 520px);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 9999px;
-  filter: blur(6px);
-  animation-name: loader-glow;
-  animation-duration: 2400ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  filter: blur(8px);
+  animation: loader-glow 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 .page-loader__logo {
   position: relative;
-  animation-name: loader-fadein, loader-pulse;
-  animation-duration: 0.9s, 2.4s;
-  animation-fill-mode: both, none;
-  animation-delay: 0s, 0.35s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease-in-out;
-  animation-iteration-count: 1, infinite;
+  animation: loader-breathe 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 .page-loader__img {
   width: clamp(130px, 36vw, 230px);
@@ -303,6 +310,7 @@
 }
 /* Reduced-motion: static logo, no animation (component marks the --static
    class; the global reduce block below also zeroes durations as a backstop). */
+.page-loader--static .page-loader__stage,
 .page-loader--static .page-loader__glow,
 .page-loader--static .page-loader__logo,
 .page-loader--static .page-loader__bar-fill {
@@ -312,31 +320,50 @@
 @keyframes loader-fadein {
   from {
     opacity: 0;
-    transform: scale(0.9);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
-@keyframes loader-pulse {
+/* Slow, calm drift for the whole genie+glow unit: a gentle looped path across
+   a small portion of the screen with a slight banked tilt. Small vw/vh
+   amplitudes keep it fully on-screen and centered-ish; the eased curve makes
+   each segment glide smoothly into the next. */
+@keyframes loader-float {
+  0% {
+    transform: translate3d(0vw, 0vh, 0) rotate(-2.5deg);
+  }
+  25% {
+    transform: translate3d(3.6vw, -3vh, 0) rotate(-0.5deg);
+  }
+  50% {
+    transform: translate3d(1.2vw, -5.6vh, 0) rotate(1.9deg);
+  }
+  75% {
+    transform: translate3d(-3.8vw, -1.8vh, 0) rotate(0.6deg);
+  }
+  100% {
+    transform: translate3d(0vw, 0vh, 0) rotate(-2.5deg);
+  }
+}
+@keyframes loader-breathe {
   0%,
   100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.045);
+    transform: scale(1.02);
   }
 }
 @keyframes loader-glow {
   0%,
   100% {
     opacity: 0.55;
-    transform: translate(-50%, -50%) scale(0.92);
+    transform: translate(-50%, -50%) scale(0.94);
   }
   50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.06);
   }
 }
 @keyframes loader-bar {

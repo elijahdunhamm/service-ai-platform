@@ -73,14 +73,18 @@ export default function PageLoader({
       className={`page-loader${reduced ? " page-loader--static" : ""}`}
       style={{ background: loader.background ?? "#12051f" }}
     >
-      <div
-        className="page-loader__glow"
-        style={{
-          background: `radial-gradient(circle, ${loader.glow ?? "rgba(178, 52, 235, 0.55)"}, rgba(255,255,255,0) 65%)`,
-        }}
-      />
-      <div className="page-loader__logo">
-        <img src={logo} alt="" className="page-loader__img" draggable={false} />
+      {/* Glow + logo ride together in one drifting "stage" so the glow glides
+          with the genie while it floats around the screen. */}
+      <div className="page-loader__stage">
+        <div
+          className="page-loader__glow"
+          style={{
+            background: `radial-gradient(circle, ${loader.glow ?? "rgba(178, 52, 235, 0.55)"}, rgba(255,255,255,0) 65%)`,
+          }}
+        />
+        <div className="page-loader__logo">
+          <img src={logo} alt="" className="page-loader__img" draggable={false} />
+        </div>
       </div>
       {loader.tagline && <p className="page-loader__tagline">{loader.tagline}</p>}
       <div className="page-loader__bar" aria-hidden="true">

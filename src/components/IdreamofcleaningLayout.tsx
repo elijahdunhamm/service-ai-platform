@@ -406,39 +406,50 @@ export default function IdreamofcleaningLayout({
               {config.services.residential.map((service, idx) => (
                 <article
                   key={idx}
-                  className={`group relative flex flex-col border border-transparent bg-white p-8 transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:z-10 hover:border-dream-pale/80 md:p-10 ${S.cardHover}`}
+                  className={`group relative flex flex-col border border-transparent bg-white p-5 transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:z-10 hover:border-dream-pale/80 md:p-6 ${S.cardHover}`}
                 >
-                  <div className="mb-6 flex items-baseline justify-between gap-4">
-                    <span
-                      className={`${F.heading} text-5xl font-medium leading-none ${t.primaryText} opacity-20 transition-opacity group-hover:opacity-40`}
-                    >
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    {service.price && (
+                  {/* Header row: nimble index + title on the left, price pill
+                      (and suffix) tucked to the right — reads like a polished
+                      menu entry rather than a big editorial block. */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-baseline gap-2.5">
                       <span
-                        className={`rounded-full ${t.primaryLightBg} px-3.5 py-1 text-xs font-bold ${t.primaryLightText} ring-1 ring-dream-pale/70`}
+                        className={`${F.heading} text-sm font-extrabold leading-none tracking-[0.14em] ${t.primaryText} opacity-25 transition-opacity group-hover:opacity-50`}
                       >
-                        {service.price}
+                        {String(idx + 1).padStart(2, "0")}
                       </span>
+                      <h3
+                        className={`text-lg font-bold ${F.heading} ${S.textPrimary} leading-snug`}
+                      >
+                        {service.title}
+                      </h3>
+                    </div>
+                    {(service.price || service.priceSuffix) && (
+                      <div className="flex shrink-0 flex-col items-end gap-0.5 pl-3">
+                        {service.price && (
+                          <span
+                            className={`rounded-full ${t.primaryLightBg} px-3 py-0.5 text-xs font-bold ${t.primaryLightText} ring-1 ring-dream-pale/70`}
+                          >
+                            {service.price}
+                          </span>
+                        )}
+                        {service.priceSuffix && (
+                          <span
+                            className={`text-[11px] font-semibold ${t.primaryText}`}
+                          >
+                            {service.priceSuffix}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
-
-                  <h3
-                    className={`text-2xl font-semibold ${F.heading} ${S.textPrimary} leading-tight`}
-                  >
-                    {service.title}
-                  </h3>
-                  {service.priceSuffix && (
-                    <span className={`mt-1 text-xs font-semibold ${t.primaryText}`}>
-                      {service.priceSuffix}
-                    </span>
+                  {service.description && (
+                    <p className={`mt-2 text-sm ${S.textMuted} leading-relaxed`}>
+                      {service.description}
+                    </p>
                   )}
-                  <p className={`mt-3 text-sm ${S.textMuted} leading-relaxed`}>
-                    {service.description}
-                  </p>
-
                   <ul
-                    className={`mt-6 space-y-2 border-t ${S.borderSubtle} pt-6 pr-20 md:pr-28`}
+                    className={`mt-4 space-y-1.5 border-t ${S.borderSubtle} pt-4 pr-16 md:pr-20`}
                   >
                     {service.features.map((feature, fIdx) => (
                       <li
@@ -446,24 +457,23 @@ export default function IdreamofcleaningLayout({
                         className={`flex items-start gap-2 text-sm font-medium ${S.textSecondary}`}
                       >
                         <CheckCircle2
-                          className={`mt-0.5 h-4 w-4 shrink-0 ${t.primaryText}`}
+                          className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${t.primaryText}`}
                         />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-
                   {/* Alternating genie corner art — "hugging" the card's
                       bottom-right edge. Cycles Pose 1 -> 2 -> 3 -> repeat by
                       card index. FULLY OPAQUE (owner request) — no opacity or
                       radial-gradient mask, so the genie shows 100% sharp and
                       crisp. Text safety is handled entirely by reserved padding:
                       the card keeps its bottom padding and the features list
-                      reserves generous right padding (pr-20 md:pr-28) so no
-                      feature text ever reaches the genie's horizontal span at
-                      any breakpoint. Slight size + a crisp shadow keep it a
-                      sharp, fully-visible brand stamp.
-                      Decorative only: pointer-events-none and aria-hidden. */}
+                      reserves right padding (pr-16 md:pr-20) so no feature text
+                      ever reaches the genie's horizontal span at any breakpoint.
+                      Slight size + a crisp shadow keep it a sharp, fully-visible
+                      brand stamp. Decorative only: pointer-events-none and
+                      aria-hidden. */}
                   {config.genieImages && config.genieImages.length > 0 && (
                     <div
                       data-reveal
@@ -501,7 +511,7 @@ export default function IdreamofcleaningLayout({
                   {config.services.addons.map((addon, idx) => (
                     <div
                       key={idx}
-                      className={`rounded-2xl border ${S.mutedBorder} bg-white p-5 shadow-sm transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-dream-pale hover:shadow-md hover:shadow-dream/10`}
+                      className={`rounded-2xl border ${S.mutedBorder} bg-white p-4 shadow-sm transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-dream-pale hover:shadow-md hover:shadow-dream/10`}
                     >
                       <p className={`text-sm font-bold ${S.textPrimary}`}>{addon.name}</p>
                       <div className="mt-3 flex flex-wrap items-baseline gap-2">
