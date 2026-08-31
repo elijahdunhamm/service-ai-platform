@@ -68,6 +68,39 @@ the new public asset is emitted.
 - `npm run dev` — Vite dev server
 - `npm run build` — `tsc && vite build` (must pass green before PRs)
 
+Node 22+ is required (`.nvmrc`, `engines`). Vite 8 bundles with rolldown, and
+older npm versions skip its native binding, which makes `vite build` fail on
+startup.
+
+## Deploying
+
+### Netlify
+
+`netlify.toml` holds the whole config: `npm run build` → publish `dist`,
+`NODE_VERSION=22`, and a catch-all `/* → /index.html 200` rewrite so
+`/detailing`, `/idreamofcleaning`, `/embed/:clientId` and `/admin/:tenantId`
+survive a hard reload. Connect the repo and set the site's environment
+variables:
+
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `VITE_SUPABASE_URL` | for bookings | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | for bookings | Supabase anon key |
+
+`VITE_DEFAULT_TENANT` (the preset id served at `/` — `cleaning`, `hvac`,
+`detailing`, `idreamofcleaning`) is set to `idreamofcleaning` in `netlify.toml`.
+Netlify gives `netlify.toml` precedence over UI-declared variables, so change
+the root tenant by editing that file rather than the site settings.
+
+`VITE_*` values are inlined at build time, so changing one requires a redeploy.
+Without the Supabase pair the site still builds and renders; bookings are not
+persisted and `/admin` shows an empty list.
+
+### Vercel
+
+`vercel.json` provides the equivalent SPA rewrite; the same environment
+variables apply.
+
 ## Notes
 
 - `src/components/CleaningAiFeatures.tsx` is currently unreferenced legacy

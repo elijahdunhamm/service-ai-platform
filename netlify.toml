@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 8 bundles with rolldown, whose native binding is only resolved by the
+  # npm shipped with Node 22+. On Node 20 the install silently skips
+  # @rolldown/binding-linux-x64-gnu and `vite build` crashes at startup.
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--include=optional"
+  # Tenant preset served at "/". Values here override same-named variables set
+  # in the Netlify UI, so change the root tenant by editing this line.
+  VITE_DEFAULT_TENANT = "idreamofcleaning"
+
+# Client-side routing: every path is served by the SPA shell so /detailing,
+# /idreamofcleaning, /embed/:clientId and /admin/:tenantId work on hard reload.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
