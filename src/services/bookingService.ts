@@ -12,6 +12,11 @@ export interface BookingData {
   imageUrl?: string;
   /** Customer's service address (street line). Stored when the bookings table has the column. */
   address?: string;
+  /**
+   * Selected add-on names, joined into a single text string (e.g. newline- or
+   * comma-separated). Stored when the bookings table has the `addons` column.
+   */
+  addons?: string;
 }
 export interface Booking {
   id: string;
@@ -27,6 +32,8 @@ export interface Booking {
   createdAt: string;
   imageUrl?: string;
   address?: string;
+  /** Selected add-on names as a single text string, when stored. */
+  addons?: string;
 }
 /**
  * Discriminated availability result:
@@ -173,12 +180,16 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       // table lacks the column the insert would fail, so it is omitted from the
       // retry below to keep the booking itself intact until the migration runs.
       ...(bookingData.address ? { address: bookingData.address } : {}),
+      // Only try to write the addons column when add-ons were selected. If the
+      // table lacks the column the insert would fail, so it is omitted from the
+      // retry below to keep the booking itself intact until the migration runs.
+      ...(bookingData.addons ? { addons: bookingData.addons } : {}),
     });
 
-    // Defensive fallback: the "bookings" table may not have an image and/or
-    // address column yet (they cannot be altered from the client). Retry with
-    // the base payload (no image, no address) so the booking still saves.
-    if (error && (bookingData.imageUrl || bookingData.address)) {
+    // Defensive fallback: the "bookings" table may not have an image/address/
+    // addons column yet (they cannot be altered from the client). Retry with
+    // the base payload (no optional columns) so the booking still saves.
+    if (error && (bookingData.imageUrl || bookingData.address || bookingData.addons)) {
       console.error('Supabase Error (insert with optional cols, retrying minimal):', error.message);
       ({ data, error } = await insertRow(basePayload));
     }
@@ -204,6 +215,7 @@ export async function createBooking(bookingData: BookingData): Promise<{ success
       createdAt: String(row.created_at),
       imageUrl: row.image_url ? String(row.image_url) : bookingData.imageUrl,
       address: row.address ? String(row.address) : bookingData.address,
+      addons: row.addons ? String(row.addons) : bookingData.addons,
     };
 
     return { success: true, booking };

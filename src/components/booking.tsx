@@ -14,6 +14,8 @@ export interface ServiceDetails {
   bedrooms: number;
   bathrooms: number;
   frequency: string;
+  /** Selected add-on names (from config.services.addons) when already chosen. */
+  addons?: string[];
 }
 
 export interface BookedInfo {
@@ -56,7 +58,7 @@ export function BookingModal({
   config,
   isOpen,
   onClose,
-  estimatedPrice,
+  estimatedPrice: _estimatedPrice,
   serviceDetails,
   onBookingConfirmed,
 }: {
@@ -86,6 +88,39 @@ export function BookingModal({
   const [warning, setWarning] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Service-type + add-ons selection. The modal is also opened directly from
+  // the hero/nav with the default service, so the customer can change it here.
+  const [selectedServiceType, setSelectedServiceType] = useState<string>(
+    serviceDetails.serviceType
+  );
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(
+    serviceDetails.addons ?? []
+  );
+
+  // Recalculate the numeric estimate exactly like PriceCalculator so the number
+  // stays consistent even when the modal is opened directly from the hero. The
+  // estimate is SERVICE-BASED ONLY — add-ons' `price` fields are display strings
+  // ("$45 (PLACEHOLDER)", "Quote"), not numbers, so they are NEVER added here.
+  const baseRate = config.estimator.baseRates[selectedServiceType] ?? 0;
+  const frequencyMultiplier =
+    config.estimator.frequencies.find((f) => f.id === serviceDetails.frequency)
+      ?.multiplier ?? 1;
+  const modalPrice = Math.round(
+    (baseRate +
+      serviceDetails.bedrooms * config.estimator.bedRate +
+      serviceDetails.bathrooms * config.estimator.bathRate) *
+      frequencyMultiplier
+  );
+  const serviceLabel =
+    config.estimator.serviceTypes.find((s) => s.id === selectedServiceType)
+      ?.label ?? selectedServiceType;
+
+  const toggleAddon = (name: string) => {
+    setSelectedAddons((prev) =>
+      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+    );
+  };
 
   if (!isOpen) return null;
 
@@ -154,9 +189,12 @@ export function BookingModal({
         customerName,
         customerEmail,
         customerAddress,
-        serviceType: serviceDetails.serviceType,
-        estimatedPrice,
+        serviceType: selectedServiceType,
+        estimatedPrice: modalPrice,
         imageUrl,
+        // Newline-joined add-on names. Stored in the `addons` column when the
+        // migration has run; the service layer degrades gracefully otherwise.
+        addons: selectedAddons.length > 0 ? selectedAddons.join("\n") : undefined,
       };
 
       const result = await createBooking(bookingData);
@@ -168,8 +206,12 @@ export function BookingModal({
           time: selectedTime,
           customerName,
           customerEmail,
-          price: estimatedPrice,
-          serviceDetails,
+          price: modalPrice,
+          serviceDetails: {
+            ...serviceDetails,
+            serviceType: selectedServiceType,
+            addons: selectedAddons,
+          },
           createdAt: result.booking.createdAt,
         };
 
@@ -226,13 +268,18 @@ export function BookingModal({
             <div className={`mt-6 ${S.mutedBg} p-4 rounded-2xl border ${S.cardBorder} text-left text-xs space-y-1.5 ${S.textSecondary}`}>
               <p>
                 <strong>{b.copy.serviceLabel}:</strong>{" "}
-                {serviceDetails.serviceType.toUpperCase()} {config.name}
+                {serviceLabel} {config.name}
               </p>
               <p>
                 <strong>{b.copy.totalLabel}:</strong>{" "}
                 {config.estimator.currency}
-                {estimatedPrice}
+                {modalPrice}
               </p>
+              {selectedAddons.length > 0 && (
+                <p>
+                  <strong>Add-ons:</strong> {selectedAddons.join(", ")}
+                </p>
+              )}
               <p>
                 <strong>{b.copy.clientLabel}:</strong> {customerName} (
                 {customerEmail})
@@ -261,6 +308,70 @@ export function BookingModal({
               <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>{b.copy.title}</h3>
               <p className={`text-xs ${S.textSubtle} mt-1`}>{b.copy.subtitle}</p>
             </div>
+
+            {/* Service Type Selection */}
+            <div>
+              <label className={`block text-xs font-bold uppercase ${S.textSecondary} mb-2`}>
+                {config.estimator.copy.serviceTypeLabel}
+              </label>
+              <div className="grid grid-cols-1 gap-2">
+                {config.estimator.serviceTypes.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setSelectedServiceType(s.id)}
+                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
+                      selectedServiceType === s.id
+                        ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
+                        : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+              <p className={`mt-2 text-xs ${S.textSubtle}`}>
+                {config.estimator.currency}
+                {modalPrice} / visit
+              </p>
+            </div>
+
+            {/* Add-ons Multi-Select */}
+            {config.services?.addons?.length > 0 && (
+              <div>
+                <label className={`block text-xs font-bold uppercase ${S.textSecondary} mb-2`}>
+                  {config.services.addonsTitle}
+                </label>
+                <div className="space-y-2">
+                  {config.services.addons.map((addon) => {
+                    const isSelected = selectedAddons.includes(addon.name);
+                    return (
+                      <button
+                        key={addon.name}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => toggleAddon(addon.name)}
+                        className={`w-full text-left px-4 py-3 rounded-xl border text-sm transition-all ${
+                          isSelected
+                            ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
+                            : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
+                        }`}
+                      >
+                        <span className="block font-semibold">{addon.name}</span>
+                        <span className={`block text-xs ${S.textSubtle}`}>
+                          {[addon.price, addon.duration].filter(Boolean).join(" · ") ||
+                            "Added to estimate"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className={`mt-2 text-xs ${S.textSubtle}`}>
+                  Add-on prices are quoted separately and are not included in the
+                  numeric estimate.
+                </p>
+              </div>
+            )}
 
             {/* Date Selection */}
             <div>
@@ -418,7 +529,7 @@ export function BookingModal({
               ) : (
                 <>
                   {b.copy.confirmButton} ({config.estimator.currency}
-                  {estimatedPrice})
+                  {modalPrice})
                 </>
               )}
             </button>
