@@ -75,6 +75,27 @@ export default function IdreamofcleaningLayout({
   const f = config.features;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  // Seamless sticky header: false while scrolled to the very top (transparent,
+  // merges with the full-bleed hero), true once we scroll past ~16px (glass +
+  // hairline + soft shadow). Lightweight passive scroll listener with rAF
+  // throttling so it never causes jank on low-end phones.
+  const [headerScrolled, setHeaderScrolled] = useState(false);
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        setHeaderScrolled(window.scrollY > 16);
+        raf = 0;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   // Sequencing between the two full-screen page overlays: the config-driven
   // PageLoader (genie splash, ~2.5s) plays FIRST, then the existing
@@ -134,6 +155,20 @@ export default function IdreamofcleaningLayout({
     return () => io.disconnect();
   }, []);
 
+  // Header legibility switch. At the very top the edge-to-edge bar is transparent
+  // and merges with the dark full-bleed hero, so its text/icon tints go light
+  // (white, scoped to this header). Once scrolled onto the light page the bar
+  // turns glass and its content reverts to the tenant's normal dark tokens.
+  const barTop = !headerScrolled;
+  const headTitle = barTop ? "text-white" : S.textPrimary;
+  const headText = barTop ? "text-white/90" : S.textSecondary;
+  const headSub = barTop ? "text-white/80" : t.primaryLightText;
+  const headAccent = barTop ? "text-white" : t.primaryText;
+  const hamburgerColor = barTop ? "text-white" : S.textMuted;
+  const navLinkText = barTop ? "text-white/90" : S.textSecondary;
+  const navLinkHoverBg = barTop ? "hover:bg-white/15" : S.navHoverBg;
+  const navLinkHoverText = barTop ? "hover:text-white" : t.primaryHoverText;
+
   return (
     <div className={`min-h-[100dvh] ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
       {/* Page-load overlays, sequenced so they never stack: the config-driven
@@ -152,30 +187,38 @@ export default function IdreamofcleaningLayout({
         />
       )}
 
-      {/* ================= HEADER — floating pill ================= */}
-      {/* Sticky top with a translucent, blurred rounded container that floats
-          above the hero (backdrop-blur + soft shadow + border). Entrance is a
-          gentle slide-down via the [data-reveal] reveal (CSS). Keyboard users
-          get a visible focus-visible ring on every link/button. */}
-      <header className="sticky top-3 z-40 mt-2 px-3 sm:px-6">
-        <div
-          data-reveal
-          className={`mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-full border py-2.5 pl-4 pr-2.5 shadow-lg shadow-dream/10 backdrop-blur-md sm:pl-5 sm:pr-3 ${S.headerBg} ${S.headerBorder}`}
-        >
-          <a href="#top" className="flex items-center gap-3 focus-visible:rounded-lg">
+      {/* ================= HEADER — seamless edge-to-edge bar ================= */}
+      {/* Full-width sticky bar pinned to top-0 with no outer gap, so it reads as
+          part of the page rather than a detached floating capsule. At the very
+          top it is transparent (bg/border/shadow off) and merges with the
+          full-bleed hero; on scroll it turns translucent glass with a hairline +
+          soft shadow. The mobile dropdown is attached flush under the bar
+          (edge-to-edge, same glass) and opens/closes smoothly via a
+          grid-template-rows transition, so it feels like the bar grows
+          downward. Keyboard users get a visible focus-visible ring on every
+          link/button. */}
+      <header
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ease-out ${
+          headerScrolled
+            ? `${S.headerBg} ${S.headerBorder} border-b shadow-sm shadow-dream/10 backdrop-blur-md`
+            : "border-b border-transparent bg-transparent shadow-none"
+        }`}
+      >
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-4 py-2 focus-visible:rounded-lg sm:gap-3 sm:px-6 sm:py-3">
+          <a href="#top" className="flex min-h-[40px] items-center gap-2.5 focus-visible:rounded-lg sm:gap-3">
             <BrandLogo
               src={config.brand.logo}
               alt={`${config.brand.businessName} Logo`}
-              className="h-10 w-auto"
+              className="h-8 w-auto sm:h-9 lg:h-10"
             />
             <span className="leading-tight">
               <span
-                className={`block font-semibold ${F.heading} ${S.textPrimary} text-lg tracking-tight`}
+                className={`block break-normal font-semibold ${F.heading} text-base tracking-tight sm:text-lg ${headTitle}`}
               >
                 {config.brand.businessName}
               </span>
               <span
-                className={`block text-[11px] uppercase tracking-[0.18em] ${t.primaryLightText} font-semibold`}
+                className={`block text-[10px] uppercase tracking-[0.16em] font-semibold sm:text-[11px] ${headSub}`}
               >
                 {config.brand.tagline}
               </span>
@@ -190,25 +233,25 @@ export default function IdreamofcleaningLayout({
               <a
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-4 py-2 font-medium text-sm ${S.textSecondary} transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${S.navHoverBg} ${t.primaryHoverText} active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
+                className={`rounded-full px-3.5 py-2 font-medium text-sm ${navLinkText} transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${navLinkHoverBg} ${navLinkHoverText} active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
               >
                 {link.label}
               </a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <a
               href={config.brand.phoneHref}
-              className={`hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold ${S.textSecondary} sm:flex focus-visible:rounded-full`}
+              className={`hidden items-center gap-1.5 whitespace-nowrap text-sm font-semibold ${headText} sm:flex focus-visible:rounded-full`}
             >
-              <Phone className={`h-4 w-4 ${t.primaryText}`} />
+              <Phone className={`h-4 w-4 ${headAccent}`} />
               {config.brand.phone}
             </a>
             {f.showBooking && (
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className={`inline-flex items-center gap-1.5 rounded-full ${t.primaryBg} px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-dream/25 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${t.primaryBgHover} hover:-translate-y-0.5 hover:shadow-xl hover:shadow-dream/30 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
+                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full ${t.primaryBg} px-4 py-2 text-sm font-bold text-white shadow-md shadow-dream/25 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${t.primaryBgHover} hover:-translate-y-0.5 hover:shadow-lg hover:shadow-dream/30 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
               >
                 <Calendar className="h-4 w-4" /> {config.navigation.cta}
               </button>
@@ -217,45 +260,55 @@ export default function IdreamofcleaningLayout({
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
-              className={`p-2 rounded-lg ${S.textMuted} lg:hidden focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
+              className={`flex h-10 w-10 items-center justify-center rounded-lg ${hamburgerColor} lg:hidden focus-visible:ring-2 focus-visible:ring-dream focus-visible:ring-offset-2`}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {mobileMenuOpen && (
-          <div
-            className={`mx-auto mt-2 max-w-7xl rounded-2xl border shadow-xl backdrop-blur-md ${S.mobileNavBorder} ${S.mobileNavBg} px-6 py-4 lg:hidden`}
-          >
-            <nav
-              aria-label="Mobile navigation"
-              className={`flex flex-col gap-4 text-sm font-medium ${S.mobileNavText}`}
+        {/* Mobile dropdown — attached flush under the bar, edge-to-edge. Always
+            in the DOM so it can animate; collapsed to 0 rows when closed. inert
+            keeps its (clipped) links out of the tab order while collapsed. */}
+        <div
+          inert={!mobileMenuOpen}
+          className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
+            mobileMenuOpen ? "[grid-template-rows:1fr]" : "[grid-template-rows:0fr]"
+          }`}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div
+              className={`w-full border-t backdrop-blur-md ${S.mobileNavBorder} ${S.mobileNavBg}`}
             >
-              {config.navigation.links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`${t.primaryHoverText} focus-visible:rounded-lg`}
-                >
-                  {link.label}
-                </a>
-              ))}
-              {f.showBooking && (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setBookingModalOpen(true);
-                  }}
-                  className={`rounded-full ${t.primaryBg} px-5 py-2.5 text-sm font-bold text-white text-center ${t.primaryBgHover} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
-                >
-                  {config.navigation.cta}
-                </button>
-              )}
-            </nav>
+              <nav
+                aria-label="Mobile navigation"
+                className={`mx-auto flex w-full max-w-7xl flex-col px-4 py-2 text-sm font-medium sm:px-6 ${S.mobileNavText}`}
+              >
+                {config.navigation.links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex min-h-[44px] items-center ${t.primaryHoverText} focus-visible:rounded-lg`}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                {f.showBooking && (
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setBookingModalOpen(true);
+                    }}
+                    className={`mb-1 mt-0.5 rounded-full ${t.primaryBg} px-5 py-2 text-sm font-bold text-white text-center ${t.primaryBgHover} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
+                  >
+                    {config.navigation.cta}
+                  </button>
+                )}
+              </nav>
+            </div>
           </div>
-        )}
+        </div>
       </header>
 
       {/* ================= HERO — FULL-BLEED BACKGROUND ================= */}
