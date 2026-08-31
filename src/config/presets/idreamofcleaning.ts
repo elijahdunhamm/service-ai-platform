@@ -21,6 +21,7 @@ import type { IndustryConfig } from "../types";
 export const idreamofcleaningPreset: IndustryConfig = {
   id: "idreamofcleaning",
   name: "Cleaning",
+  layout: "idreamofcleaning",
 
   // The three owner-provided genie poses, used as decorative brand art. They
   // alternate (Pose 1 -> 2 -> 3 -> repeat) down the residential service cards

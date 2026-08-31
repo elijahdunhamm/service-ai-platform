@@ -86,16 +86,35 @@ variables:
 | --- | --- | --- |
 | `VITE_SUPABASE_URL` | for bookings | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | for bookings | Supabase anon key |
-| `VITE_DEFAULT_TENANT` | optional | Preset id served at `/`: `cleaning` (default), `hvac`, `detailing`, `idreamofcleaning` |
+| `VITE_DEFAULT_TENANT` | rarely | Override for the root tenant; see below |
 
 Keep these in the site's settings rather than in `netlify.toml`, so the same
-repo can back several deploys with different root tenants. (Netlify gives
-`netlify.toml` precedence over UI-declared variables, so a value committed there
-could not be overridden per site.)
+repo can back several deploys. (Netlify gives `netlify.toml` precedence over
+UI-declared variables, so a value committed there could not be overridden per
+site.) `VITE_*` values are inlined at build time, so changing one requires a
+redeploy.
 
-`VITE_*` values are inlined at build time, so changing one requires a redeploy.
 Without the Supabase pair the site still builds and renders; bookings are not
 persisted and `/admin` shows an empty list.
+
+## Which tenant a deploy serves at `/`
+
+Resolved from the hostname at runtime by `src/config/resolveTenant.ts`, so a
+new site needs no build-time configuration — point a domain at the build and
+the matching tenant renders. First match wins:
+
+1. `VITE_DEFAULT_TENANT`, when set to a registered preset id.
+2. A preset whose `domains` list contains the hostname or a parent of it
+   (`www.` and preview subdomains match too).
+3. A preset whose id appears as a hostname label, ignoring punctuation — this
+   is what makes `idreamofcleaning.netlify.app` and `i-dream-of-cleaning.com`
+   resolve with nothing configured anywhere.
+4. `DEFAULT_PRESET_ID` (`cleaning`).
+
+So: name the Netlify site after the preset id, or add the custom domain to that
+preset's `domains`. Reach for `VITE_DEFAULT_TENANT` only when the hostname says
+nothing useful (a `random-name-123.netlify.app` deploy). Every tenant also stays
+reachable by path — `/idreamofcleaning`, `/detailing` — on any deploy.
 
 ### Vercel
 
