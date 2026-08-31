@@ -244,18 +244,25 @@ export function BookingModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-      <div className={`${S.cardBg} rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border ${S.cardBorder} relative max-h-[90vh] overflow-y-auto`}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={b.copy.title}
+        className={`relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-y-auto rounded-3xl border ${S.cardBorder} ${S.cardBg} p-6 shadow-[0_32px_90px_-30px_rgba(0,0,0,0.5)] sm:p-8`}
+      >
         <button
+          type="button"
           onClick={resetAndClose}
-          className={`absolute top-5 right-5 p-2 rounded-full ${S.closeButton}`}
+          aria-label="Close booking dialog"
+          className={`absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full ${S.closeButton} transition-all active:scale-90`}
         >
           <X className="h-5 w-5" />
         </button>
 
         {isSuccess ? (
           <div className="text-center py-6">
-            <div className={`w-16 h-16 ${S.successBadge} rounded-full flex items-center justify-center mx-auto mb-4`}>
+            <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${S.successBadge} ring-8 ring-black/5`}>
               <Check className="h-8 w-8" />
             </div>
             <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>
@@ -291,8 +298,9 @@ export function BookingModal({
               )}
             </div>
             <button
+              type="button"
               onClick={resetAndClose}
-              className={`mt-6 w-full py-3 text-white rounded-xl font-bold ${t.primaryBg} ${t.primaryBgHover}`}
+              className={`mt-6 w-full rounded-full py-3 font-bold text-white transition-all ${t.primaryBg} ${t.primaryBgHover} active:scale-[0.99]`}
             >
               {b.copy.doneButton}
             </button>
@@ -315,20 +323,25 @@ export function BookingModal({
                 {config.estimator.copy.serviceTypeLabel}
               </label>
               <div className="grid grid-cols-1 gap-2">
-                {config.estimator.serviceTypes.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => setSelectedServiceType(s.id)}
-                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
-                      selectedServiceType === s.id
-                        ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
-                        : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
+                {config.estimator.serviceTypes.map((s) => {
+                  const isActive = selectedServiceType === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => setSelectedServiceType(s.id)}
+                      className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-all active:scale-[0.99] ${
+                        isActive
+                          ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
+                          : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
+                      }`}
+                    >
+                      <span>{s.label}</span>
+                      {isActive && <Check className="h-4 w-4 shrink-0" />}
+                    </button>
+                  );
+                })}
               </div>
               <p className={`mt-2 text-xs ${S.textSubtle}`}>
                 {config.estimator.currency}
@@ -351,16 +364,25 @@ export function BookingModal({
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() => toggleAddon(addon.name)}
-                        className={`w-full text-left px-4 py-3 rounded-xl border text-sm transition-all ${
+                        className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-all active:scale-[0.99] ${
                           isSelected
                             ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
                             : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
                         }`}
                       >
-                        <span className="block font-semibold">{addon.name}</span>
-                        <span className={`block text-xs ${S.textSubtle}`}>
-                          {[addon.price, addon.duration].filter(Boolean).join(" · ") ||
-                            "Added to estimate"}
+                        <span
+                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border ${
+                            isSelected ? `${t.primaryBorder} ${t.primaryBg}` : `border ${S.optionBorder}`
+                          }`}
+                        >
+                          {isSelected && <Check className="h-3.5 w-3.5 text-white" />}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block font-semibold">{addon.name}</span>
+                          <span className={`block text-xs ${S.textSubtle}`}>
+                            {[addon.price, addon.duration].filter(Boolean).join(" · ") ||
+                              "Added to estimate"}
+                          </span>
                         </span>
                       </button>
                     );
@@ -386,7 +408,7 @@ export function BookingModal({
                   setSelectedDate(e.target.value);
                   setSelectedTime("");
                 }}
-                className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm font-medium ${S.inputBg}`}
+                className={`w-full rounded-xl border p-3 text-sm font-medium transition-colors ${S.inputBorder} ${S.inputBg}`}
                 required
               />
             </div>
@@ -405,9 +427,10 @@ export function BookingModal({
                     <button
                       key={slot}
                       type="button"
+                      aria-pressed={isSelected}
                       disabled={isTaken}
                       onClick={() => setSelectedTime(slot)}
-                      className={`p-3 rounded-xl text-xs font-bold border text-center transition-all ${
+                      className={`rounded-xl border p-3 text-center text-xs font-bold transition-all active:scale-[0.97] ${
                         isTaken
                           ? `${S.takenBg} border ${S.takenBorder} ${S.takenText} cursor-not-allowed line-through`
                           : isSelected
@@ -439,7 +462,7 @@ export function BookingModal({
                   placeholder={b.copy.namePlaceholder}
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
+                  className={`w-full rounded-xl border p-3 text-sm transition-colors ${S.inputBorder} ${S.inputBg}`}
                 />
               </div>
               <div>
@@ -452,7 +475,7 @@ export function BookingModal({
                   placeholder={b.copy.emailPlaceholder}
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
+                  className={`w-full rounded-xl border p-3 text-sm transition-colors ${S.inputBorder} ${S.inputBg}`}
                 />
               </div>
               <div>
@@ -465,7 +488,7 @@ export function BookingModal({
                   placeholder={b.copy.addressPlaceholder}
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
-                  className={`w-full p-3 rounded-xl border ${S.inputBorder} text-sm ${S.cardBg}`}
+                  className={`w-full rounded-xl border p-3 text-sm transition-colors ${S.inputBorder} ${S.inputBg}`}
                 />
               </div>
               {/* Mandatory photo upload */}
@@ -519,7 +542,7 @@ export function BookingModal({
             <button
               type="submit"
               disabled={!selectedTime || isLoading}
-              className={`w-full py-4 rounded-xl ${t.primaryBg} text-white font-bold text-sm shadow-md ${t.primaryBgHover} disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2`}
+              className={`flex w-full items-center justify-center gap-2 rounded-full py-4 text-sm font-bold text-white shadow-lg transition-all ${t.primaryBg} ${t.primaryBgHover} disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.99]`}
             >
               {isLoading ? (
                 <>
@@ -567,7 +590,7 @@ export function PriceCalculator({
   };
 
   return (
-    <div className={`${S.cardBg} rounded-3xl p-6 sm:p-8 border ${S.cardBorder} shadow-xl max-w-3xl mx-auto`}>
+    <div className={`${S.cardBg} mx-auto max-w-3xl rounded-3xl border ${S.cardBorder} p-6 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.25)] sm:p-8`}>
       <div className="text-center mb-8">
         <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>{est.copy.title}</h3>
         <p className={`text-sm ${S.textMuted} mt-1`}>{est.copy.subtitle}</p>
@@ -579,20 +602,25 @@ export function PriceCalculator({
             {est.copy.serviceTypeLabel}
           </label>
           <div className="space-y-2">
-            {est.serviceTypes.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => setServiceType(s.id)}
-                className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-semibold transition-all ${
-                  serviceType === s.id
-                    ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
-                    : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
+            {est.serviceTypes.map((s) => {
+              const isActive = serviceType === s.id;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => setServiceType(s.id)}
+                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-all active:scale-[0.99] ${
+                    isActive
+                      ? `${t.primaryBorder} ${t.primaryLightBg} ${t.primaryLightText}`
+                      : `border ${S.optionBorder} ${S.optionText} ${S.optionHoverBg}`
+                  }`}
+                >
+                  <span>{s.label}</span>
+                  {isActive && <Check className="h-4 w-4 shrink-0" />}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -604,8 +632,9 @@ export function PriceCalculator({
             <div className="flex items-center gap-3">
               <button
                 type="button"
+                aria-label={`${est.copy.bedroomsLabel}: decrease`}
                 onClick={() => setBedrooms(Math.max(est.minRooms, bedrooms - 1))}
-                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
+                className={`flex h-10 w-10 select-none items-center justify-center rounded-xl text-lg font-bold transition-all ${S.stepBg} ${S.stepText} ${S.stepHoverBg} active:scale-90`}
               >
                 -
               </button>
@@ -614,8 +643,9 @@ export function PriceCalculator({
               </span>
               <button
                 type="button"
+                aria-label={`${est.copy.bedroomsLabel}: increase`}
                 onClick={() => setBedrooms(bedrooms + 1)}
-                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
+                className={`flex h-10 w-10 select-none items-center justify-center rounded-xl text-lg font-bold transition-all ${S.stepBg} ${S.stepText} ${S.stepHoverBg} active:scale-90`}
               >
                 +
               </button>
@@ -629,8 +659,9 @@ export function PriceCalculator({
             <div className="flex items-center gap-3">
               <button
                 type="button"
+                aria-label={`${est.copy.bathroomsLabel}: decrease`}
                 onClick={() => setBathrooms(Math.max(est.minRooms, bathrooms - 1))}
-                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
+                className={`flex h-10 w-10 select-none items-center justify-center rounded-xl text-lg font-bold transition-all ${S.stepBg} ${S.stepText} ${S.stepHoverBg} active:scale-90`}
               >
                 -
               </button>
@@ -639,8 +670,9 @@ export function PriceCalculator({
               </span>
               <button
                 type="button"
+                aria-label={`${est.copy.bathroomsLabel}: increase`}
                 onClick={() => setBathrooms(bathrooms + 1)}
-                className={`w-10 h-10 rounded-xl ${S.stepBg} ${S.stepText} font-bold ${S.stepHoverBg}`}
+                className={`flex h-10 w-10 select-none items-center justify-center rounded-xl text-lg font-bold transition-all ${S.stepBg} ${S.stepText} ${S.stepHoverBg} active:scale-90`}
               >
                 +
               </button>
@@ -666,12 +698,12 @@ export function PriceCalculator({
         </div>
       </div>
 
-      <div className={`mt-8 pt-6 border-t ${S.borderSubtle} flex flex-col sm:flex-row items-center justify-between gap-4 ${S.mutedBg} rounded-2xl p-6`}>
+      <div className={`mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border ${S.cardBorder} ${S.mutedBg} p-6 sm:flex-row`}>
         <div>
-          <span className={`text-xs font-semibold ${S.textSubtle} uppercase tracking-wider`}>
+          <span className={`text-xs font-semibold uppercase tracking-wider ${S.textSubtle}`}>
             {est.copy.estimatedLabel}
           </span>
-          <div className={`text-3xl font-extrabold ${t.primaryText}`}>
+          <div className={`mt-1 text-3xl font-extrabold ${t.primaryText}`}>
             {est.currency}
             {total}{" "}
             <span className={`text-sm font-normal ${S.textSubtle}`}>
@@ -682,7 +714,7 @@ export function PriceCalculator({
         <button
           type="button"
           onClick={handleBookClick}
-          className={`w-full sm:w-auto text-center rounded-xl ${t.primaryBg} px-6 py-3.5 text-sm font-bold text-white ${t.primaryBgHover} shadow-md transition-colors`}
+          className={`w-full rounded-full px-6 py-3.5 text-center text-sm font-bold text-white shadow-lg transition-all sm:w-auto ${t.primaryBg} ${t.primaryBgHover} active:scale-[0.98]`}
         >
           {est.copy.bookButton}
         </button>
