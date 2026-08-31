@@ -650,7 +650,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
   // carpet drawn in the tenant's purple/magenta theme. Optional + default-OFF
   // on IndustryConfig, so only this tenant (and any that opt in) gets it.
   intro: {
-    enabled: true,
+    enabled: false,
     // Reuse the same genie poses used elsewhere (corner art, trust badges).
     images: [
       "/images/idreamofcleaning-genie1.jpg",
