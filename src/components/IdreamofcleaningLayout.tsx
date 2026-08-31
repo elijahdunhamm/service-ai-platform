@@ -135,7 +135,7 @@ export default function IdreamofcleaningLayout({
   }, []);
 
   return (
-    <div className={`min-h-screen ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
+    <div className={`min-h-[100dvh] ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
       {/* Page-load overlays, sequenced so they never stack: the config-driven
           full-screen PageLoader (genie splash) plays first, then the
           MagicCarpetIntro flies the genie on the magic carpet. */}
@@ -160,7 +160,7 @@ export default function IdreamofcleaningLayout({
       <header className="sticky top-3 z-40 mt-2 px-3 sm:px-6">
         <div
           data-reveal
-          className={`mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-md sm:px-6 ${S.headerBg} ${S.headerBorder}`}
+          className={`mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-full border py-2.5 pl-4 pr-2.5 shadow-lg shadow-dream/10 backdrop-blur-md sm:pl-5 sm:pr-3 ${S.headerBg} ${S.headerBorder}`}
         >
           <a href="#top" className="flex items-center gap-3 focus-visible:rounded-lg">
             <BrandLogo
@@ -281,7 +281,7 @@ export default function IdreamofcleaningLayout({
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+        <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-center px-6 py-24 md:py-28 lg:py-32">
           <div className="max-w-2xl">
             <div
               className={`inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] text-white backdrop-blur-sm mb-7`}
@@ -302,13 +302,13 @@ export default function IdreamofcleaningLayout({
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
+                className={`inline-flex items-center gap-2 rounded-full ${t.primaryBg} px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-dream/25 transition-all ${t.primaryBgHover} hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-dream-dark`}
               >
                 {config.navigation.cta} <ArrowRight className="h-4 w-4" />
               </button>
               <a
                 href="#services"
-                className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2`}
+                className={`inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-3.5 text-base font-bold text-white backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:bg-white/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2`}
               >
                 Explore Services
               </a>
@@ -373,13 +373,8 @@ export default function IdreamofcleaningLayout({
               <div
                 className={`${config.genieImages && config.genieImages[0] ? "lg:col-span-9" : "lg:col-span-12"}`}
               >
-                <span
-                  className={`text-xs font-bold uppercase tracking-[0.2em] ${t.primaryText}`}
-                >
-                  {config.about.eyebrow ?? "About Us"}
-                </span>
                 <h2
-                  className={`mt-3 text-4xl md:text-5xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                  className={`text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight md:text-5xl`}
                 >
                   {config.about.title}
                 </h2>
@@ -434,7 +429,7 @@ export default function IdreamofcleaningLayout({
               {config.services.residential.map((service, idx) => (
                 <article
                   key={idx}
-                  className={`group relative flex flex-col bg-white p-8 md:p-10 transition-shadow ${S.cardHover}`}
+                  className={`group relative flex flex-col border border-transparent bg-white p-8 transition-all duration-300 hover:z-10 hover:border-dream-pale/70 md:p-10 ${S.cardHover}`}
                 >
                   <div className="mb-6 flex items-baseline justify-between gap-4">
                     <span
@@ -444,7 +439,7 @@ export default function IdreamofcleaningLayout({
                     </span>
                     {service.price && (
                       <span
-                        className={`rounded-full ${t.primaryLightBg} px-3.5 py-1 text-xs font-bold ${t.primaryLightText}`}
+                        className={`rounded-full ${t.primaryLightBg} px-3.5 py-1 text-xs font-bold ${t.primaryLightText} ring-1 ring-dream-pale/70`}
                       >
                         {service.price}
                       </span>
@@ -567,13 +562,8 @@ export default function IdreamofcleaningLayout({
             className={`mx-auto max-w-7xl px-6 grid items-center gap-14 lg:grid-cols-2`}
           >
             <div className="order-2 lg:order-1">
-              <span
-                className={`text-xs font-bold uppercase tracking-[0.2em] ${t.primaryText}`}
-              >
-                {config.sections.commercial.eyebrow}
-              </span>
               <h2
-                className={`mt-3 text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                className={`text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
               >
                 {config.sections.commercial.title}
               </h2>
@@ -655,13 +645,8 @@ export default function IdreamofcleaningLayout({
         >
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-12 max-w-2xl">
-              <span
-                className={`text-xs font-bold uppercase tracking-[0.2em] ${t.primaryText}`}
-              >
-                {config.sections.serviceAreas.eyebrow}
-              </span>
               <h2
-                className={`mt-3 text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
+                className={`text-4xl font-semibold ${F.heading} ${S.textPrimary} tracking-tight`}
               >
                 {config.sections.serviceAreas.title}
               </h2>
@@ -798,7 +783,7 @@ export default function IdreamofcleaningLayout({
           className={`mx-auto max-w-7xl px-6 pt-8 mt-10 border-t ${t.footerBorder} text-center text-xs ${t.footerBase}`}
         >
           © {new Date().getFullYear()} {config.brand.copyrightName}. All rights
-          reserved. · Prices may vary depending on the square footage of the home
+          reserved. Prices may vary depending on the square footage of the home
           or property, the number of bedrooms, and bathrooms.
         </div>
       </footer>
