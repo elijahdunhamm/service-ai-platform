@@ -31,6 +31,26 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Pre-React splash: prevents a flash of unstyled content before the app
+         (and the tenant's PageLoader) mounts. Theme-neutral deep purple that
+         matches the genie palette. It self-removes once React fills #root. -->
+    <div id="app-splash" style="position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#3b1366 0%,#12051f 72%);">
+      <div style="width:44px;height:44px;border-radius:9999px;border:3px solid rgba(210,52,235,0.25);border-top-color:#d234eb;animation:splash-spin .9s linear infinite;"></div>
+      <style>@keyframes splash-spin{to{transform:rotate(360deg)}}</style>
+    </div>
+    <script>
+      (function () {
+        var s = document.getElementById("app-splash");
+        if (!s) return;
+        var t = setInterval(function () {
+          var r = document.getElementById("root");
+          if (r && r.childElementCount > 0) {
+            clearInterval(t);
+            s.remove();
+          }
+        }, 50);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -534,6 +534,29 @@ export interface IntroAnimationConfig {
   /** Approximate total animation duration in ms. Defaults to ~2600ms. */
   durationMs?: number;
 }
+
+/**
+ * Options for the optional full-screen page loader / splash. Shows a centered
+ * brand logo (e.g. the transparent genie logo) over a brand-tinted background
+ * with a soft loading treatment, then unmounts cleanly after `durationMs` so it
+ * never blocks the app. Respects `prefers-reduced-motion` (skips the animation;
+ * shows a static logo briefly or content immediately). Default-OFF on
+ * IndustryConfig so existing tenants are unaffected.
+ */
+export interface PageLoaderConfig {
+  /** Master switch: render the full-screen loader on initial page load. */
+  enabled: boolean;
+  /** Logo shown centered. Defaults to the preset's `genieImages[0]`, then `brand.logo`. */
+  logo?: string;
+  /** Optional short tagline shown under the logo. */
+  tagline?: string;
+  /** Approximate display duration in ms before unmount. Defaults to ~2500ms. */
+  durationMs?: number;
+  /** Solid CSS background behind the splash (deep purple suits the genie theme). */
+  background?: string;
+  /** Brand-tinted CSS glow color haloed behind the logo. */
+  glow?: string;
+}
 /** Full description of one tenant's site. */
 export interface IndustryConfig {
   /** Stable slug identifying the preset (e.g. "cleaning"). */
@@ -594,6 +617,22 @@ export interface IndustryConfig {
    * `enabled`. Optional + default-OFF so existing tenants are unaffected.
    */
   intro?: IntroAnimationConfig;
+  /**
+   * Optional full-screen page loader / splash shown on app mount before the
+   * site content becomes interactive. Config-driven and default-OFF on
+   * IndustryConfig, so only tenants that opt in (e.g. I Dream of Cleaning)
+   * render it. When both `loader` and `intro` are enabled the loader plays
+   * first, then the intro, so the two full-screen overlays never stack.
+   */
+  loader?: PageLoaderConfig;
+  /**
+   * Optional mapping of service-area name -> background image path (e.g. a dark
+   * city skyline) used to render service areas as skyline-backed location
+   * cards. When present, tenant layouts that support location grids render each
+   * service area as a rounded card with this background + a dark overlay.
+   * Optional so tenants that only need simple bullet lists are unaffected.
+   */
+  serviceAreaImages?: Record<string, string>;
   testimonials: {
     rating: number;
     items: Testimonial[];
