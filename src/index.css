@@ -246,10 +246,12 @@
   overflow: hidden;
 }
 /* The drifting unit: holds the genie + its glow together so the glow glides
-   with the logo. The whole unit performs a slow, calm, looped drift (a gentle
-   translate x/y path + slight rotate). Transform/opacity only — no layout-
-   thrashing properties — and long, eased keyframes so it reads as one fluid,
-   premium float rather than a choppy in-place pulse. */
+   with the logo. The whole unit performs a confident, clearly-visible looped
+   float — a wide translate x/y glide path with a pronounced banked tilt and a
+   gentle vertical bob, so it unmistakably reads as the genie gliding around
+   the screen rather than a faint drift. Transform/opacity only — no layout-
+   thrashing properties — and a faster, spring-eased cycle keeps it fluid and
+   premium (still fully on-screen, no off-screen flinging). */
 .page-loader__stage {
   position: relative;
   display: flex;
@@ -257,7 +259,7 @@
   justify-content: center;
   animation:
     loader-fadein 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
-    loader-float 13s cubic-bezier(0.45, 0, 0.55, 1) 0.35s infinite;
+    loader-float 7s cubic-bezier(0.45, 0, 0.55, 1) 0.35s infinite;
   will-change: transform;
 }
 .page-loader__glow {
@@ -325,45 +327,56 @@
     opacity: 1;
   }
 }
-/* Slow, calm drift for the whole genie+glow unit: a gentle looped path across
-   a small portion of the screen with a slight banked tilt. Small vw/vh
-   amplitudes keep it fully on-screen and centered-ish; the eased curve makes
-   each segment glide smoothly into the next. */
+/* Bold, clearly-readable float for the whole genie+glow unit: a wide looped
+   glide path (roughly ±9vw x / ±9vh y) with a pronounced banked rotate and a
+   gentle vertical bob, all eased spring-smooth so each segment glides into the
+   next. Amplitudes keep the genie fully on-screen and centered-ish — no
+   off-screen flinging — while the faster cycle makes the motion present. */
 @keyframes loader-float {
   0% {
-    transform: translate3d(0vw, 0vh, 0) rotate(-2.5deg);
+    transform: translate3d(0vw, 0vh, 0) rotate(-9deg);
   }
-  25% {
-    transform: translate3d(3.6vw, -3vh, 0) rotate(-0.5deg);
+  16% {
+    transform: translate3d(5.5vw, -4.5vh, 0) rotate(-3deg);
   }
-  50% {
-    transform: translate3d(1.2vw, -5.6vh, 0) rotate(1.9deg);
+  32% {
+    transform: translate3d(8.5vw, 2vh, 0) rotate(3deg);
   }
-  75% {
-    transform: translate3d(-3.8vw, -1.8vh, 0) rotate(0.6deg);
+  48% {
+    transform: translate3d(4vw, 8.5vh, 0) rotate(8deg);
+  }
+  66% {
+    transform: translate3d(-3vw, 9vh, 0) rotate(4deg);
+  }
+  84% {
+    transform: translate3d(-8vw, 3vh, 0) rotate(-4deg);
   }
   100% {
-    transform: translate3d(0vw, 0vh, 0) rotate(-2.5deg);
+    transform: translate3d(0vw, 0vh, 0) rotate(-9deg);
   }
 }
+/* Amplified in-step micro-scale on the logo so the genie visibly pulses while
+   it glides — a livelier but still smooth, premium breath. */
 @keyframes loader-breathe {
   0%,
   100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.02);
+    transform: scale(1.08);
   }
 }
+/* Brighter, wider glow pulse that swells in sync with the mover so the whole
+   unit reads as one energetic presence. */
 @keyframes loader-glow {
   0%,
   100% {
-    opacity: 0.55;
-    transform: translate(-50%, -50%) scale(0.94);
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.9);
   }
   50% {
-    opacity: 0.9;
-    transform: translate(-50%, -50%) scale(1.06);
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.12);
   }
 }
 @keyframes loader-bar {
