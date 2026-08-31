@@ -50,12 +50,12 @@ export const idreamofcleaningPreset: IndustryConfig = {
     phone: "(555) 010-0231",
     phoneHref: "tel:+15550100231",
     email: "hello@idreamofcleaning.com",
-    heroEyebrow: "Trusted House Cleaning Service",
+    heroEyebrow: "Bay Area House Cleaning",
     heroHeadline: "A Clean Home,\nDreamed Into Reality.",
     heroSubhead:
-      "I Dream of Cleaning LLC is your new trusted House Cleaning service — always high quality, with a great attention to detail. General, bedroom, bathroom, kitchen, and living-area cleaning with pet-friendly cleaners, plus small commercial care.",
+      "I Dream of Cleaning LLC provides residential and small commercial cleaning across the San Francisco Bay Area — general, bedroom, bathroom, kitchen, and living-area cleaning with pet-friendly cleaners.",
     footerBlurb:
-      "Professional residential and small commercial cleaning. Pet-friendly cleaners with a great attention to detail — spotless results every time.",
+      "Residential and small commercial cleaning with pet-friendly cleaners. Serving Richmond, Berkeley, Oakland, and other Bay Area cities.",
     copyrightName: "I Dream of Cleaning LLC",
   },
 
@@ -168,7 +168,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
 
   trustBadges: [
     {
-      label: "Beauty Restored, Detail Observed",
+      label: "Fully Bonded & Insured",
       icon: "sparkles",
       iconImage: "/images/idreamofcleaning-genie1.jpg",
     },
@@ -178,7 +178,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
       iconImage: "/images/idreamofcleaning-genie2.jpg",
     },
     {
-      label: "100% Satisfaction Guarantee",
+      label: "Owner Operated Since 2018",
       icon: "check-circle",
       iconImage: "/images/idreamofcleaning-genie3.jpg",
     },
@@ -191,7 +191,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
         price: "$120",
         priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "Our House Cleaning service is always high quality with a great attention to detail. I Dream of Cleaning LLC is your new trusted House Cleaning service!",
+          "A regular house clean covering general, bedroom, bathroom, kitchen, and living-area cleaning, with pet-friendly cleaners and optional add-ons.",
         features: [
           "General Cleaning",
           "Bedroom Cleaning",
@@ -229,7 +229,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
         price: "$60",
         priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "A thorough bedroom clean — dusting, vacuuming, and bed-linen care on request to leave your bedroom fresh and inviting.",
+          "A thorough bedroom clean — dusting, vacuuming, and bed-linen care on request.",
         features: [
           "Dust surfaces",
           "Dust and hand wipe furniture tops",
@@ -248,7 +248,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
         price: "$50",
         priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "A detailed, disinfected bathroom clean — surfaces, showers, tubs, and toilets cleaned, disinfected, and left shining.",
+          "A detailed, disinfected bathroom clean — surfaces, showers, tubs, and toilets cleaned and disinfected.",
         features: [
           "Dust surfaces",
           "Dust blinds, window sills, and lock ledges",
@@ -268,7 +268,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
         price: "$80",
         priceSuffix: "per visit (PLACEHOLDER)",
         description:
-          "A deep clean of the heart of your home — counter tops, appliances, sinks, and cabinets disinfected and polished.",
+          "A deep clean of your kitchen — counter tops, appliances, sinks, and cabinets disinfected and polished.",
         features: [
           "Dust surfaces",
           "Dust blinds, window sills, and lock ledges",
@@ -362,7 +362,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
       {
         title: "Small Commercial Business Cleaning",
         description:
-          "A thorough, disinfected clean for small businesses — dusting, disinfection, and shine across surfaces, showers, tubs, toilets, and fixtures, left sparkling for your customers and staff.",
+          "A detailed, disinfected clean for small businesses — dusting and disinfection across surfaces, showers, tubs, toilets, and fixtures.",
         features: [
           "Dust surfaces",
           "Dust blinds, window sills, and lock ledges",
@@ -439,14 +439,14 @@ export const idreamofcleaningPreset: IndustryConfig = {
       eyebrow: "Our Cleaning Services",
       title: "A Service for Every Space",
       description:
-        "From a quick freshen-up to a total deep clean, every visit is high quality with a great attention to detail. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
+        "Residential cleaning for every room — from a quick tidy to a full deep clean. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
       icon: "sparkles",
     },
     commercial: {
       eyebrow: "Business & Facilities",
       title: "Small Commercial Business Cleaning",
       description:
-        "We keep local small businesses spotless with the same detailed, disinfected standard we bring to your home. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
+        "Detailed, disinfected cleaning for local small businesses, using the same process we bring to homes. Prices may vary depending on the square footage of the home or property, the number of bedrooms, and bathrooms.",
       icon: "building",
     },
     estimator: {
@@ -458,7 +458,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
     reviews: {
       title: "Google & Yelp Testimonials",
       description:
-        "Real reviews from real neighbors. Rated 5.0 by homeowners across the community.",
+        "Read what clients say about our residential and small commercial cleaning, across Google and Yelp.",
     },
     beforeAfter: {
       eyebrow: "See the Difference",
@@ -468,7 +468,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
     },
     serviceAreas: {
       eyebrow: "Where We Work",
-      title: "Proudly Serving Your Neighborhood",
+      title: "Serving the Bay Area",
       description:
         "Cleaning teams covering the San Francisco Bay Area. If your city is listed, we'll come to your door.",
       icon: "home",
