@@ -557,12 +557,33 @@ export interface PageLoaderConfig {
   /** Brand-tinted CSS glow color haloed behind the logo. */
   glow?: string;
 }
+/**
+ * Layouts a tenant can render with. "classic" is the shared config-driven
+ * layout used by most tenants; "idreamofcleaning" is the dedicated editorial
+ * layout with the genie loader and location-card grid.
+ */
+export type LayoutName = "classic" | "idreamofcleaning";
+
 /** Full description of one tenant's site. */
 export interface IndustryConfig {
   /** Stable slug identifying the preset (e.g. "cleaning"). */
   id: string;
   /** Human-friendly industry label (e.g. "Cleaning"). */
   name: string;
+  /**
+   * Layout this tenant renders with. Presets that need the dedicated editorial
+   * layout set "idreamofcleaning"; everything else uses the shared layout.
+   * Keeps route wiring free of per-tenant branching.
+   */
+  layout?: LayoutName;
+  /**
+   * Hostnames this tenant is served under (apex or subdomain, no scheme, e.g.
+   * "idreamofcleaning.com"). A deploy whose hostname matches renders this
+   * tenant at "/". Subdomains of a listed domain match too. Hostnames
+   * containing the preset id — e.g. a "idreamofcleaning.netlify.app" default
+   * Netlify domain — resolve without being listed here.
+   */
+  domains?: string[];
   brand: Brand;
   theme: ThemeColors;
   /**
