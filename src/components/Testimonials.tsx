@@ -65,7 +65,7 @@ function ReviewCard({
 }) {
   const stars = item.stars ?? defaultRating;
   return (
-    <div className={`flex flex-col gap-3 rounded-2xl border ${S.cardBorder} ${S.cardBg} p-6 shadow-sm transition-shadow ${S.cardHover}`}>
+    <div className={`flex flex-col gap-3 rounded-2xl border ${S.cardBorder} ${S.cardBg} p-6 shadow-sm transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${S.cardHover}`}>
       <div className="flex items-center justify-between">
         <Stars count={Math.min(5, Math.max(1, stars))} />
         <PlatformBadge platform={item.platform} />

@@ -249,7 +249,7 @@ export function BookingModal({
         role="dialog"
         aria-modal="true"
         aria-label={b.copy.title}
-        className={`relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-y-auto rounded-3xl border ${S.cardBorder} ${S.cardBg} p-6 shadow-[0_32px_90px_-30px_rgba(0,0,0,0.5)] sm:p-8`}
+        className={`relative flex max-h-[90vh] w-full max-w-lg flex-col overflow-y-auto rounded-3xl border ${S.cardBorder} ${S.cardBg} p-6 shadow-2xl shadow-black/20 sm:p-8`}
       >
         <button
           type="button"
@@ -300,7 +300,7 @@ export function BookingModal({
             <button
               type="button"
               onClick={resetAndClose}
-              className={`mt-6 w-full rounded-full py-3 font-bold text-white transition-all ${t.primaryBg} ${t.primaryBgHover} active:scale-[0.99]`}
+              className={`mt-6 w-full rounded-full py-3 font-bold text-white transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-dream/25 active:scale-[0.99] ${t.primaryBg} ${t.primaryBgHover}`}
             >
               {b.copy.doneButton}
             </button>
@@ -542,7 +542,7 @@ export function BookingModal({
             <button
               type="submit"
               disabled={!selectedTime || isLoading}
-              className={`flex w-full items-center justify-center gap-2 rounded-full py-4 text-sm font-bold text-white shadow-lg transition-all ${t.primaryBg} ${t.primaryBgHover} disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.99]`}
+              className={`flex w-full items-center justify-center gap-2 rounded-full py-4 text-sm font-bold text-white shadow-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-dream/25 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.99] ${t.primaryBg} ${t.primaryBgHover}`}
             >
               {isLoading ? (
                 <>
@@ -590,7 +590,7 @@ export function PriceCalculator({
   };
 
   return (
-    <div className={`${S.cardBg} mx-auto max-w-3xl rounded-3xl border ${S.cardBorder} p-6 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.25)] sm:p-8`}>
+    <div className={`${S.cardBg} mx-auto max-w-3xl rounded-3xl border ${S.cardBorder} p-6 shadow-2xl shadow-dream/10 sm:p-8`}>
       <div className="text-center mb-8">
         <h3 className={`${F.heading} text-2xl font-bold ${S.textPrimary}`}>{est.copy.title}</h3>
         <p className={`text-sm ${S.textMuted} mt-1`}>{est.copy.subtitle}</p>
@@ -714,7 +714,7 @@ export function PriceCalculator({
         <button
           type="button"
           onClick={handleBookClick}
-          className={`w-full rounded-full px-6 py-3.5 text-center text-sm font-bold text-white shadow-lg transition-all sm:w-auto ${t.primaryBg} ${t.primaryBgHover} active:scale-[0.98]`}
+          className={`w-full rounded-full px-6 py-3.5 text-center text-sm font-bold text-white shadow-lg transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-dream/25 active:scale-[0.98] sm:w-auto ${t.primaryBg} ${t.primaryBgHover}`}
         >
           {est.copy.bookButton}
         </button>
