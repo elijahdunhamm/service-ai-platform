@@ -22,7 +22,6 @@ import {
   X,
   Phone,
   Mail,
-  MapPin,
   ArrowRight,
   Check,
   CheckCircle2,
@@ -38,6 +37,7 @@ import Testimonials from "./Testimonials";
 import ChatWidget from "./ChatWidget";
 import BrandLogo from "./BrandLogo";
 import MagicCarpetIntro from "./MagicCarpetIntro";
+import PageLoader from "./PageLoader";
 
 interface ServiceDetails {
   serviceType: string;
@@ -75,6 +75,15 @@ export default function IdreamofcleaningLayout({
   const f = config.features;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+
+  // Sequencing between the two full-screen page overlays: the config-driven
+  // PageLoader (genie splash, ~2.5s) plays FIRST, then the existing
+  // MagicCarpetIntro flies the genie across. `loaderDone` flips when the loader
+  // unmounts so the intro only mounts after the splash — the two overlays never
+  // stack over each other. Tenants without `config.loader` (this layout is used
+  // only by idreamofcleaning, which opts in) get the intro immediately.
+  const loaderActive = config.loader?.enabled === true;
+  const [loaderDone, setLoaderDone] = useState(false);
   const [activeEstimate, setActiveEstimate] = useState<{
     details: ServiceDetails;
     price: number;
@@ -127,9 +136,11 @@ export default function IdreamofcleaningLayout({
 
   return (
     <div className={`min-h-screen ${S.surfaceBg} ${F.body} ${S.textPrimary}`}>
-      {/* Page-load intro: genie on a magic carpet flies across once on first
-          load (config.intro driven — only active when the preset opts in). */}
-      <MagicCarpetIntro config={config} />
+      {/* Page-load overlays, sequenced so they never stack: the config-driven
+          full-screen PageLoader (genie splash) plays first, then the
+          MagicCarpetIntro flies the genie on the magic carpet. */}
+      {loaderActive && <PageLoader config={config} onDone={() => setLoaderDone(true)} />}
+      {(!loaderActive || loaderDone) && <MagicCarpetIntro config={config} />}
       {f.showBooking && (
         <BookingModal
           config={config}
@@ -723,32 +734,41 @@ export default function IdreamofcleaningLayout({
                 {config.sections.serviceAreas.description}
               </p>
             </div>
-            <div className="grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {config.serviceAreas.map((area, idx) => (
-                <div
-                  key={idx}
-                  className={`flex items-center gap-3 rounded-2xl border ${S.cardBorder} bg-white px-5 py-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg`}
-                >
-                  <span
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${t.primaryLightBg}`}
+            <div className="mx-auto grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {config.serviceAreas.map((area, idx) => {
+                const skyline = config.serviceAreaImages?.[area];
+                return (
+                  <div
+                    key={idx}
+                    className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-lg transition-all hover:-translate-y-1 hover:shadow-2xl"
                   >
-                    {config.genieImages && config.genieImages.length > 0 ? (
-                      <img
-                        src={config.genieImages[idx % config.genieImages.length]}
-                        alt=""
-                        aria-hidden="true"
-                        loading="lazy"
-                        className="genie-hover h-9 w-9 rounded-full object-cover"
-                      />
+                    {skyline ? (
+                      <>
+                        {/* city skyline background + dark overlay for legibility */}
+                        <img
+                          src={skyline}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 transition-colors group-hover:bg-black/30" />
+                      </>
                     ) : (
-                      <MapPin className={`h-4 w-4 ${t.primaryText}`} />
+                      /* graceful fallback: brand-tinted gradient card */
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${t.primaryBorder} ${t.primarySoft}`}
+                      />
                     )}
-                  </span>
-                  <span className={`text-sm font-semibold ${S.textPrimary}`}>
-                    {area}
-                  </span>
-                </div>
-              ))}
+                    {/* city name rendered prominently in white */}
+                    <div className="absolute inset-x-0 bottom-0 p-4">
+                      <span className={`${F.heading} text-xl font-bold text-white drop-shadow-md`}>
+                        {area}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

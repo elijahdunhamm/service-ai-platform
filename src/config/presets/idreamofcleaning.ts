@@ -667,6 +667,39 @@ export const idreamofcleaningPreset: IndustryConfig = {
     },
     durationMs: 2600,
   },
+  // Full-screen page loader / splash shown on app mount before the site content
+  // renders. GENIE-themed dashboard-style loader: the transparent genie logo
+  // (brand.logo) centered on a deep purple background with a soft purple glow,
+  // gentle pulse and a shimmer progress bar. Plays FIRST (before the magic-carpet
+  // intro), then the existing MagicCarpetIntro flies the genie across — the two
+  // full-screen overlays never stack. Default-OFF on IndustryConfig, so only this
+  // tenant opts in. Respects prefers-reduced-motion (static logo briefly).
+  loader: {
+    enabled: true,
+    logo: "/images/idreamofcleaning-genie-logo.png",
+    tagline: "I Dream of Cleaning LLC",
+    durationMs: 2500,
+    background: "#12051f", // deep midnight purple
+    glow: "rgba(178, 52, 235, 0.55)", // purple halo behind the genie
+  },
+
+  // Service-area -> city-skyline background image mapping for the location
+  // grid. Each Bay Area city gets its own dark, atmospheric skyline so the
+  // location cards render as rounded, skyline-backed dark cards with white
+  // city names. Keep this in the preset (config-driven), never in the layout.
+  serviceAreaImages: {
+    Richmond: "/images/idreamofcleaning-skyline-richmond.png",
+    Berkeley: "/images/idreamofcleaning-skyline-berkeley.png",
+    Albany: "/images/idreamofcleaning-skyline-albany.png",
+    "El Cerrito": "/images/idreamofcleaning-skyline-el-cerrito.png",
+    Oakland: "/images/idreamofcleaning-skyline-oakland.png",
+    Emeryville: "/images/idreamofcleaning-skyline-emeryville.png",
+    "San Leandro": "/images/idreamofcleaning-skyline-san-leandro.png",
+    Hayward: "/images/idreamofcleaning-skyline-hayward.png",
+    Fremont: "/images/idreamofcleaning-skyline-fremont.png",
+    "Union City": "/images/idreamofcleaning-skyline-union-city.png",
+  },
+
   features: {
     showResidential: true,
     showCommercial: true,

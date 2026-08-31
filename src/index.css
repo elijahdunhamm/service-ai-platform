@@ -224,3 +224,126 @@
     transform: translate(-50%, -50%) scale(1.12);
   }
 }
+
+/* ===== Full-screen page loader (PageLoader, config-driven) =====
+   GENIE-themed dashboard/splash loader for tenants that opt in via
+   IndustryConfig.loader (only idreamofcleaning). The transparent genie logo is
+   centered over a brand-tinted background with a soft purple glow, a gentle
+   pulse and a shimmer loading bar. All hues are injected as inline styles from
+   the preset (loader.background / loader.glow) — this layer only handles the
+   placement + motion. pointer-events: auto because it genuinely covers the app
+   until the splash unmounts; it self-unmounts after ~durationMs (see the
+   component) so it never blocks the page permanently. */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 120; /* above all page content; the intro (z 9999) mounts after us */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+.page-loader__glow {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: min(90vw, 560px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  filter: blur(6px);
+  animation-name: loader-glow;
+  animation-duration: 2400ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+.page-loader__logo {
+  position: relative;
+  animation-name: loader-fadein, loader-pulse;
+  animation-duration: 0.9s, 2.4s;
+  animation-fill-mode: both, none;
+  animation-delay: 0s, 0.35s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), ease-in-out;
+  animation-iteration-count: 1, infinite;
+}
+.page-loader__img {
+  width: clamp(130px, 36vw, 230px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 32px rgba(210, 52, 235, 0.45));
+}
+.page-loader__tagline {
+  position: relative;
+  font-family: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+.page-loader__bar {
+  position: relative;
+  width: min(230px, 60vw);
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+.page-loader__bar-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  background: linear-gradient(90deg, #b134eb, #d234eb);
+  animation-name: loader-bar;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+/* Reduced-motion: static logo, no animation (component marks the --static
+   class; the global reduce block below also zeroes durations as a backstop). */
+.page-loader--static .page-loader__glow,
+.page-loader--static .page-loader__logo,
+.page-loader--static .page-loader__bar-fill {
+  animation: none;
+}
+
+@keyframes loader-fadein {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes loader-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+@keyframes loader-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+@keyframes loader-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(230%);
+  }
+}
