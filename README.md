@@ -86,11 +86,12 @@ variables:
 | --- | --- | --- |
 | `VITE_SUPABASE_URL` | for bookings | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | for bookings | Supabase anon key |
+| `VITE_DEFAULT_TENANT` | optional | Preset id served at `/`: `cleaning` (default), `hvac`, `detailing`, `idreamofcleaning` |
 
-`VITE_DEFAULT_TENANT` (the preset id served at `/` — `cleaning`, `hvac`,
-`detailing`, `idreamofcleaning`) is set to `idreamofcleaning` in `netlify.toml`.
-Netlify gives `netlify.toml` precedence over UI-declared variables, so change
-the root tenant by editing that file rather than the site settings.
+Keep these in the site's settings rather than in `netlify.toml`, so the same
+repo can back several deploys with different root tenants. (Netlify gives
+`netlify.toml` precedence over UI-declared variables, so a value committed there
+could not be overridden per site.)
 
 `VITE_*` values are inlined at build time, so changing one requires a redeploy.
 Without the Supabase pair the site still builds and renders; bookings are not

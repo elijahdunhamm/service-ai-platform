@@ -8,9 +8,8 @@
   # @rolldown/binding-linux-x64-gnu and `vite build` crashes at startup.
   NODE_VERSION = "22"
   NPM_FLAGS = "--include=optional"
-  # Tenant preset served at "/". Values here override same-named variables set
-  # in the Netlify UI, so change the root tenant by editing this line.
-  VITE_DEFAULT_TENANT = "idreamofcleaning"
+  # Site-specific values (VITE_DEFAULT_TENANT, VITE_SUPABASE_*) are declared in
+  # the Netlify UI, not here, so one repo can back several deploys.
 
 # Client-side routing: every path is served by the SPA shell so /detailing,
 # /idreamofcleaning, /embed/:clientId and /admin/:tenantId work on hard reload.
