@@ -669,7 +669,7 @@ export default function IdreamofcleaningLayout({
                 {config.sections.serviceAreas.description}
               </p>
             </div>
-            <div className="mx-auto grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
               {config.serviceAreas.map((area, idx) => {
                 const skyline = config.serviceAreaImages?.[area];
                 return (
