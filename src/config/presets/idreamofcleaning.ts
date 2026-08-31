@@ -158,6 +158,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
     links: [
       { label: "Services", href: "#services" },
       { label: "Commercial", href: "#commercial" },
+      { label: "Areas", href: "#service-areas" },
       { label: "Pricing", href: "#estimate" },
       { label: "Reviews", href: "#reviews" },
       { label: "Contact", href: "#contact" },
@@ -676,7 +677,7 @@ export const idreamofcleaningPreset: IndustryConfig = {
   // tenant opts in. Respects prefers-reduced-motion (static logo briefly).
   loader: {
     enabled: true,
-    logo: "/images/idreamofcleaning-genie-logo.png",
+    logo: "/images/idreamofcleaning-genie-photoroom.png",
     tagline: "I Dream of Cleaning LLC",
     durationMs: 2500,
     background: "#ffffff", // white — loader reads clearly on a light splash
