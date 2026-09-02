@@ -47,9 +47,9 @@ export const idreamofcleaningPreset: IndustryConfig = {
       "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80",
     commercialImageFallback:
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
-    phone: "(555) 010-0231",
-    phoneHref: "tel:+15550100231",
-    email: "hello@idreamofcleaning.com",
+    phone: "(510) 260-3077",
+    phoneHref: "tel:+15102603077",
+    email: "idreamofcleaning@yahoo.com",
     heroEyebrow: "Bay Area House Cleaning",
     heroHeadline: "A Clean Home,\nDreamed Into Reality.",
     heroSubhead:
